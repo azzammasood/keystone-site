@@ -2,7 +2,9 @@
 
 Six concepts for the owner to choose from. `preview.html` (same folder) renders each concept's
 Radar and Pipeline Live hero from the real exports in `keystone-pipeline` (`data/publish/site`,
-generated 2026-10-23). Nothing is built past this gate until one concept is chosen.
+generated 2026-10-23). `site-preview.html` shows each concept as the full site (header, navigation,
+Radar, repository page, Pipeline Live, Backtests, Lineage, About, footer). Nothing is built past
+this gate until one concept is chosen.
 
 Fixed for every concept (brief section 11, not a design choice):
 

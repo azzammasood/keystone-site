@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keystone site concepts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,700&display=swap">
+<style>
+/* ---------- Viewer chrome (not part of any concept) ---------- */
+:root{--pg-bg:#e4e4e7;--pg-fg:#18181b;--pg-mute:#52525b;--pg-line:#c4c4c8;--pg-panel:#fafafa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--pg-bg:#09090b;--pg-fg:#f4f4f5;--pg-mute:#a1a1aa;--pg-line:#3f3f46;--pg-panel:#18181b}}
+:root[data-theme="dark"]{--pg-bg:#09090b;--pg-fg:#f4f4f5;--pg-mute:#a1a1aa;--pg-line:#3f3f46;--pg-panel:#18181b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--pg-bg);color:var(--pg-fg);font:14px/1.5 system-ui,sans-serif}
+.viewer{max-width:1280px;margin:0 auto;padding:16px}
+.bar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-bottom:12px}
+.bar h1{font-size:16px;margin:0 8px 0 0}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{font:inherit;font-size:13px;border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-fg);border-radius:6px;padding:4px 10px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--pg-fg);color:var(--pg-bg);border-color:var(--pg-fg)}
+.idea{color:var(--pg-mute);margin:0 0 12px;min-height:21px}
+.window{border:1px solid var(--pg-line);border-radius:10px;overflow:hidden;box-shadow:0 10px 30px #0003}
+.chrome{display:flex;align-items:center;gap:8px;background:var(--pg-panel);padding:8px 12px;border-bottom:1px solid var(--pg-line)}
+.chrome i{width:10px;height:10px;border-radius:50%;background:var(--pg-line);display:inline-block}
+.chrome .url{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--pg-bg);border-radius:6px;padding:3px 10px;color:var(--pg-mute);font:12px ui-monospace,monospace}
+
+/* ---------- Site skeleton shared by all concepts ---------- */
+.site{--bg:#fff;--fg:#000;--mute:#555;--line:#ccc;--panel:#fff;--accent:#06c;--warn:#b45309;--skel:#e5e5e5;--dim:.42;--radius:0;
+  background:var(--bg);color:var(--fg);min-height:780px;display:flex;flex-direction:column}
+.site a{color:var(--accent)}
+.site header.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;padding:14px 28px;border-bottom:1px solid var(--line)}
+.site .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;color:var(--fg);text-decoration:none}
+.site .brand svg{width:34px;height:34px;color:var(--accent)}
+.site .brand small{display:block;font-weight:400;font-size:12px;color:var(--mute)}
+.site nav.main{display:flex;flex-wrap:wrap;gap:4px 18px}
+.site nav.main a{color:var(--mute);text-decoration:none;padding:4px 0;border-bottom:2px solid transparent;cursor:pointer}
+.site nav.main a[aria-current="page"]{color:var(--fg);border-bottom-color:var(--accent)}
+.site .fresh{margin-left:auto;font-size:12px;color:var(--mute)}
+.site main{flex:1;padding:28px;max-width:1160px;width:100%}
+.site h2{margin:0 0 6px;font-size:30px;line-height:1.15}
+.site h3{margin:24px 0 8px;font-size:17px}
+.site .lead{color:var(--mute);margin:0 0 16px;max-width:760px;font-size:16px}
+.site .stamp{color:var(--mute);font-size:12px;margin:0 0 12px}
+.site .banner{border:1px solid var(--warn);border-left-width:5px;padding:10px 14px;margin:0 0 16px;background:var(--panel);border-radius:var(--radius)}
+.site .banner b{color:var(--warn);text-transform:uppercase;letter-spacing:.04em;font-size:12px;margin-right:8px}
+.site .card{border:1px solid var(--line);background:var(--panel);padding:14px 16px;border-radius:var(--radius)}
+.site .grid2{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:20px}
+.site .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.site .ctrl{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.site .ctrl input,.site .ctrl select{font:inherit;font-size:13px;padding:7px 9px;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:var(--radius);min-width:0}
+.site .ctrl input{flex:1 1 220px}
+.site .tw{overflow-x:auto}
+.site table{border-collapse:collapse;width:100%;font-size:13px}
+.site th,.site td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.site caption{caption-side:bottom;text-align:left;color:var(--mute);font-size:12px;padding-top:8px}
+.site tr.sk{cursor:pointer}
+.site tr.sk:hover td{background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.site .sk-b{display:inline-block;height:10px;border-radius:5px;background:var(--skel);vertical-align:middle}
+.site .chip{display:inline-block;font-size:11px;border:1px solid var(--line);border-radius:999px;padding:1px 8px;color:var(--mute);margin-right:4px}
+.site .badge{display:inline-block;font-size:12px;padding:2px 9px;border:1px solid var(--accent);color:var(--accent);border-radius:999px}
+.site .strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:0 0 18px;border-radius:var(--radius);overflow:hidden}
+.site .kpi{background:var(--panel);padding:10px 12px}
+.site .kpi .l{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}
+.site .kpi .v{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.25}
+.site .kpi .s{font-size:12px;color:var(--mute)}
+.site .kpi.bad .v{color:var(--warn)}
+.site .flow{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;list-style:none;padding:0}
+.site .node{flex:1 1 160px;border:1px solid var(--line);background:var(--panel);padding:8px 10px;font-size:12px;position:relative;border-radius:var(--radius)}
+.site .node .n{font-weight:700;font-size:13px}
+.site .node .r,.site .node .d{color:var(--mute)}
+.site .node.off{opacity:var(--dim)}
+.site .node.on{border-color:var(--accent)}
+.site .node .run{color:var(--accent)}
+.site .charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.site .chart svg{width:100%;height:100px;display:block}
+.site .barr{fill:var(--accent)}
+.site .barr.failed{fill:var(--warn)}
+.site .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:16px;font-size:13px}
+.site .facts div{border-top:2px solid var(--line);padding-top:6px}
+.site .facts b{font-variant-numeric:tabular-nums}
+.site .num{font-variant-numeric:tabular-nums}
+.site .lanes{display:grid;grid-template-columns:repeat(6,minmax(150px,1fr));gap:10px;overflow-x:auto}
+.site .lane h4{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute)}
+.site .lane ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.site .lane li{font-size:12px;border:1px solid var(--line);background:var(--panel);padding:5px 7px;border-radius:var(--radius);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.site .lane li.more{border-style:dashed;color:var(--mute)}
+.site footer{border-top:1px solid var(--line);padding:18px 28px;font-size:12px;color:var(--mute);display:flex;flex-wrap:wrap;gap:6px 20px}
+.site .crumb{font-size:12px;color:var(--mute);margin-bottom:8px}
+.site .score{font-size:28px;font-weight:700}
+.site dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13px}
+.site dt{color:var(--mute)}
+.site dd{margin:0}
+.site .note{font-size:12px;color:var(--mute)}
+@media (max-width:760px){.site .grid2{grid-template-columns:1fr}.site header.top,.site main,.site footer{padding-left:16px;padding-right:16px}.site .fresh{margin-left:0}}
+
+/* ---------- 1 Ledger: editorial newsprint ---------- */
+.c1{--bg:#f6f1e7;--fg:#1d1a16;--mute:#5e564b;--line:#cfc4b0;--panel:#fbf8f1;--accent:#8a2b1f;--warn:#8a5a00;--skel:#e2d8c4;font-family:"Source Serif 4",Georgia,serif}
+.c1[data-mode=dark]{--bg:#1b1916;--fg:#ece5d8;--mute:#b3a893;--line:#4a4338;--panel:#23201b;--accent:#e8836f;--warn:#e0b25a;--skel:#3a342b}
+.c1 header.top{flex-direction:column;align-items:center;text-align:center;border-bottom:3px double var(--fg);padding-top:20px}
+.c1 .brand{font-size:40px;letter-spacing:.02em;flex-direction:column;gap:2px}
+.c1 .brand small{font-style:italic;font-size:14px}
+.c1 .fresh{margin:0}
+.c1 nav.main{justify-content:center;border-top:1px solid var(--fg);padding-top:6px;width:100%}
+.c1 nav.main a{font-variant:small-caps;letter-spacing:.06em;font-size:15px}
+.c1 main{margin:0 auto}
+.c1 h2{font-size:38px}
+.c1 th{font-variant:small-caps;letter-spacing:.05em;border-bottom:2px solid var(--fg)}
+.c1 td,.c1 .kpi .v,.c1 .node,.c1 .num{font-family:"IBM Plex Mono",monospace}
+.c1 .kpi .v{font-size:18px}
+.c1 .strip{background:transparent;border:0;border-top:2px solid var(--fg);border-bottom:1px solid var(--fg);gap:0}
+.c1 .kpi{background:transparent;border-right:1px solid var(--line)}
+.c1 .node{border-width:0 0 0 2px}
+.c1 .card{border-width:1px 0 0;border-top:2px solid var(--fg);background:transparent;padding-left:0;padding-right:0}
+
+/* ---------- 2 Control Room: dark-first operations console, sidebar ---------- */
+.c2{--bg:#0b0f14;--fg:#d7e3ee;--mute:#8aa0b4;--line:#1f2c3a;--panel:#101822;--accent:#5ce1a6;--warn:#f2b84b;--skel:#1c2835;--dim:.4;font-family:"JetBrains Mono",ui-monospace,monospace;
+  display:grid;grid-template-columns:220px minmax(0,1fr);grid-template-rows:1fr auto}
+.c2[data-mode=light]{--bg:#e9eef2;--fg:#0f1a24;--mute:#4a5b6b;--line:#b8c6d3;--panel:#f6f9fb;--accent:#047857;--warn:#9a5b00;--skel:#d3dde6}
+.c2 header.top{grid-row:1/3;flex-direction:column;align-items:stretch;border-bottom:0;border-right:1px solid var(--line);padding:18px 14px;gap:18px;background:var(--panel)}
+.c2 .brand{font-size:16px;letter-spacing:.14em;text-transform:uppercase}
+.c2 nav.main{flex-direction:column;gap:2px}
+.c2 nav.main a{border:0;border-left:2px solid transparent;padding:6px 10px;font-size:13px}
+.c2 nav.main a[aria-current="page"]{border-left-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.c2 .fresh{margin:auto 0 0;border-top:1px solid var(--line);padding-top:10px}
+.c2 main{max-width:none}
+.c2 h2{font-size:20px;text-transform:uppercase;letter-spacing:.16em;color:var(--accent)}
+.c2 .kpi .v{color:var(--accent)}
+.c2 .flow{flex-direction:column;gap:0;border:1px solid var(--line)}
+.c2 .node{flex:none;display:grid;grid-template-columns:16px minmax(0,1fr) minmax(0,1.3fr) auto;gap:10px;align-items:center;border:0;border-bottom:1px solid var(--line)}
+.c2 .node::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--mute)}
+.c2 .node.on::before{background:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
+.c2 .node.off{opacity:1}.c2 .node.off .n,.c2 .node.off .r{color:var(--mute)}
+.c2 footer{grid-column:2}
+@media (max-width:760px){.c2{display:flex}.c2 header.top{border-right:0;border-bottom:1px solid var(--line)}.c2 nav.main{flex-direction:row;flex-wrap:wrap}.c2 .node{grid-template-columns:16px 1fr}}
+
+/* ---------- 3 Blueprint: technical drawing ---------- */
+.c3{--bg:#0f2a4a;--fg:#e6f2ff;--mute:#a9c8e6;--line:#2f5680;--panel:#123459;--accent:#8fd3ff;--warn:#ffcf70;--skel:#24507d;font-family:"IBM Plex Sans",sans-serif;
+  background-image:linear-gradient(#ffffff0d 1px,transparent 1px),linear-gradient(90deg,#ffffff0d 1px,transparent 1px);background-size:24px 24px}
+.c3[data-mode=light]{--bg:#f7fbff;--fg:#0b2545;--mute:#3d5a80;--line:#bcd3ec;--panel:#ffffffe6;--accent:#1d5fbf;--warn:#a15c00;--skel:#dbe8f6;
+  background-image:linear-gradient(#1d5fbf12 1px,transparent 1px),linear-gradient(90deg,#1d5fbf12 1px,transparent 1px)}
+.c3 header.top{border-bottom:1px dashed var(--accent)}
+.c3 .brand{font-family:"IBM Plex Mono",monospace;font-weight:600}
+.c3 nav.main a{font-family:"IBM Plex Mono",monospace;font-size:13px}
+.c3 h2{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:26px}
+.c3 h2::before{content:"FIG. " attr(data-fig) " · ";color:var(--mute);font-size:13px;vertical-align:middle}
+.c3 .node,.c3 .kpi,.c3 .card,.c3 .lane li{border-style:dashed}
+.c3 .flow{gap:14px}
+.c3 .node:not(:last-child)::after{content:"→";position:absolute;right:-12px;top:10px;color:var(--accent)}
+.c3 .kpi .v,.c3 td{font-family:"IBM Plex Mono",monospace}
+.c3 footer{border-top:1px dashed var(--accent);font-family:"IBM Plex Mono",monospace}
+
+/* ---------- 4 Swiss: strict grid, big numerals, one red ---------- */
+.c4{--bg:#ffffff;--fg:#0a0a0a;--mute:#525252;--line:#0a0a0a;--panel:#fff;--accent:#d61f14;--warn:#c81e12;--skel:#e5e5e5;font-family:Inter,Helvetica,Arial,sans-serif}
+.c4[data-mode=dark]{--bg:#0a0a0a;--fg:#fafafa;--mute:#a3a3a3;--line:#fafafa;--panel:#0a0a0a;--accent:#ff5a4e;--warn:#ff6a5e;--skel:#262626}
+.c4 header.top{border-bottom:6px solid var(--fg);padding-top:22px;padding-bottom:10px;align-items:flex-end}
+.c4 .brand{font-size:44px;font-weight:800;letter-spacing:-.04em}
+.c4 .brand svg{width:44px;height:44px;color:var(--fg)}
+.c4 .brand small{letter-spacing:0;font-size:13px}
+.c4 nav.main a{font-weight:600;color:var(--fg);text-transform:uppercase;font-size:12px;letter-spacing:.08em}
+.c4 nav.main a[aria-current="page"]{color:var(--accent);border-bottom-color:var(--accent)}
+.c4 h2{font-size:64px;font-weight:800;letter-spacing:-.04em;line-height:1}
+.c4 .strip{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));background:transparent;border:0;gap:0 20px}
+.c4 .kpi{border-top:4px solid var(--fg);padding:8px 0 14px}
+.c4 .kpi .v{font-size:38px;font-weight:800;letter-spacing:-.02em}
+.c4 .node{border:0;border-top:2px solid var(--fg)}
+.c4 .node.on{border-top-color:var(--accent)}
+.c4 .banner{border:0;border-left:8px solid var(--accent);background:transparent}
+.c4 .card{border:0;border-top:4px solid var(--fg);padding-left:0}
+.c4 th{border-bottom:2px solid var(--fg);text-transform:uppercase;font-size:11px;letter-spacing:.06em}
+.c4 td{border-bottom-color:color-mix(in srgb,var(--fg) 20%,transparent)}
+
+/* ---------- 5 Field Survey: cartographic, earth tones ---------- */
+.c5{--bg:#efe8da;--fg:#2b2a24;--mute:#625d4e;--line:#cbbf9f;--panel:#f7f2e7;--accent:#3f5d3c;--warn:#a34a22;--skel:#ded3bb;--radius:14px;font-family:Inter,sans-serif;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='260'%3E%3Cg fill='none' stroke='%23a8996f' stroke-opacity='.28'%3E%3Cpath d='M0 200 C100 150 200 230 300 160 S460 120 520 150'/%3E%3Cpath d='M0 160 C110 110 210 190 310 120 S460 80 520 110'/%3E%3Cpath d='M0 120 C120 70 220 150 320 80 S460 40 520 70'/%3E%3Cpath d='M0 80 C130 30 230 110 330 40 S460 0 520 30'/%3E%3C/g%3E%3C/svg%3E")}
+.c5[data-mode=dark]{--bg:#1d1f1a;--fg:#e8e2d2;--mute:#aaa38e;--line:#3e4136;--panel:#25281f;--accent:#9cc28f;--warn:#e7895a;--skel:#353a2d}
+.c5 .brand,.c5 h2,.c5 .kpi .v,.c5 .score{font-family:Fraunces,serif}
+.c5 .brand{font-size:26px}
+.c5 h2{font-size:36px}
+.c5 header.top{border-bottom:0}
+.c5 nav.main a{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+.c5 nav.main a[aria-current="page"]{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.c5 .node{border-radius:18px 4px 18px 4px}
+.c5 .flow{counter-reset:st}
+.c5 .node .n::before{counter-increment:st;content:counter(st) ". ";color:var(--accent)}
+
+/* ---------- 6 Quiet Signal: minimal, accessibility-first ---------- */
+.c6{--bg:#fafaf9;--fg:#1c1917;--mute:#57534e;--line:#e7e5e4;--panel:#ffffff;--accent:#0f766e;--warn:#a16207;--skel:#ecebea;--radius:10px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.c6[data-mode=dark]{--bg:#0c0a09;--fg:#f5f5f4;--mute:#a8a29e;--line:#292524;--panel:#1c1917;--accent:#5eead4;--warn:#facc15;--skel:#292524}
+.c6 header.top{background:var(--panel)}
+.c6 .brand{font-weight:600}
+.c6 h2{font-weight:600;font-size:28px}
+.c6 .strip{background:transparent;border:0;gap:12px;overflow:visible}
+.c6 .kpi{border:1px solid var(--line);border-radius:10px}
+.c6 .banner{border-width:1px}
+.c6 .node.on{box-shadow:inset 3px 0 0 var(--accent)}
+.c6 .card{box-shadow:0 1px 2px #0000000d}
+
+@media (prefers-reduced-motion:no-preference){.c2 .node.on.moving::before{animation:pulse var(--period,0s) linear infinite}}
+@keyframes pulse{50%{opacity:.3}}
+</style>
+</head>
+<body>
+<div class="viewer">
+  <div class="bar">
+    <h1>Keystone site concepts</h1>
+    <div class="seg" id="pick" role="group" aria-label="Concept"></div>
+    <div class="seg" role="group" aria-label="Mode"><button type="button" id="mode" aria-pressed="false">Dark mode</button></div>
+    <div class="seg" id="logo" role="group" aria-label="Logo"></div>
+  </div>
+  <p class="idea" id="idea"></p>
+  <div class="window">
+    <div class="chrome"><i></i><i></i><i></i><div class="url" id="url"></div></div>
+    <div class="site" id="site"></div>
+  </div>
+  <p class="idea" style="margin-top:12px">Every number and sentence on these pages comes from the pipeline's real export files (generated 2026-10-23). The radar has no scored rows yet, so grey bars show where rows will go; they are layout only and carry no values. Click a grey row to see the repository page layout. The site's own links, search and filters work in the real build; here only the navigation works.</p>
+</div>
+<script>
+const D = {"radar":{"generated_at":"2026-10-23T05:57:30.060036+00:00","status":{"state":"partial data","detail":"partial data: the rollup holds 0.1% of the window's hours; not scored"},"row_count":0,"window":{"start":"2025-10-01T00:00:00+00:00","end":"2026-10-01T00:00:00+00:00","periods":[]},"produced_by":{"profile":"free","fallback":true,"run_id":"0f8a5bad-75b4-4418-b62d-cc519975648f","keystone_version":"0.1.0"},"corrections":"https://github.com/azzammasood/keystone-pipeline/issues","sources":[{"name":"GH Archive","url":"https://www.gharchive.org/"},{"name":"OSV","url":"https://osv.dev/","terms":"CC-BY 4.0 (osv.dev data license)"},{"name":"ecosyste.ms","url":"https://ecosyste.ms/","terms":"CC-BY-SA 4.0"}],"privacy":{"level":"repository","people":"aggregate-only"}},"pm":{"generated_at":"2026-10-23T05:27:16.215346+00:00","profile":"free","produced_by":{"profile":"free","fallback":true,"reason":"full unhealthy: redpanda, redpanda-registry, flink, lakekeeper, rustfs down","run_id":"0f8a5bad-75b4-4418-b62d-cc519975648f","decided_at":"2026-10-23T05:27:03.449294+00:00","status":"ok","probes":[{"name":"redpanda","ok":false},{"name":"redpanda-registry","ok":false},{"name":"flink","ok":false},{"name":"lakekeeper","ok":false},{"name":"rustfs","ok":false}]},"engines":[{"name":"datacontract-cli","version":"1.2.7","role":"ODCS data contract tests","active":false,"last_used":"2026-10-21T06:38:39.230353+00:00"},{"name":"datahub","version":"v1.7.0.1","role":"metadata catalog (lineage, glossary, owners, assertions)","active":false,"last_used":"2026-10-21T06:46:16.055365+00:00"},{"name":"dbt","version":"1.12.6","role":"warehouse models and tests","active":false,"last_used":"2026-10-22T07:44:21.570418+00:00"},{"name":"duckdb","version":"1.5.6","role":"free rollup engine","active":true,"last_used":"2026-10-23T05:27:03.447168+00:00"},{"name":"duckdb-iceberg","version":"1.5.6","role":"Iceberg publish of the marts","active":false,"last_used":"2026-10-21T06:36:42.230092+00:00"},{"name":"flink","version":"2.2.1","role":"full rollup engine (stream and batch)","active":false,"last_used":"2026-10-21T06:36:30.567323+00:00"},{"name":"grafana","version":"13.2.4","role":"dashboards","active":false,"last_used":"2026-10-21T06:47:12.168611+00:00"},{"name":"keystone","version":"0.1.0","role":"metadata export and metrics","active":true,"last_used":"2026-10-23T05:27:03.449294+00:00"},{"name":"keystone-llm","version":"nvidia/nemotron-3-ultra-550b-a55b:free","role":"","active":false,"last_used":"2026-10-22T07:36:29.489919+00:00"},{"name":"keystone-parser","version":"0.1.0","role":"era-aware parsing to typed Parquet","active":false,"last_used":"2026-10-21T06:33:25.337575+00:00"},{"name":"keystone-registry","version":"0.1.0","role":"","active":false,"last_used":"2026-10-21T17:50:20.025518+00:00"},{"name":"keystone-resolve","version":"0.1.0","role":"","active":false,"last_used":"2026-10-22T07:42:18.438493+00:00"},{"name":"marquez","version":"0.51.1","role":"OpenLineage server","active":false,"last_used":"2026-10-21T06:40:12.947997+00:00"},{"name":"openlineage-dbt","version":"1.54.0","role":"dbt lineage events (dbt-ol)","active":false,"last_used":"2026-10-21T06:34:03.213634+00:00"},{"name":"otel-collector","version":"0.163.1","role":"OpenTelemetry metrics pipeline","active":false,"last_used":"2026-10-21T06:47:12.168611+00:00"},{"name":"prometheus","version":"3.15.0","role":"metrics store","active":false,"last_used":"2026-10-21T06:47:12.168611+00:00"},{"name":"redpanda","version":"v26.2.5","role":"event stream (Kafka API, schema registry)","active":false,"last_used":"2026-10-21T06:34:54.061825+00:00"},{"name":"spark","version":"4.1.3","role":"lakehouse reader (Iceberg)","active":false,"last_used":"2026-10-21T06:38:09.582432+00:00"}],"totals":{"events_processed":882216,"events_stored":2363426,"bytes_downloaded":null,"bytes_parsed":412610898,"files_parsed":24,"rollup_rows":2189426,"date_range":{"first_event":"2011-02-12T00:00:00+00:00","newest_event":"2026-10-19T23:59:59+00:00","source_hours":151},"backfill_window":{"start":"2011-02-12T00:00:00+00:00","end":"present","decision":"ADR-009"}},"last_run":{"run_id":"0f8a5bad-75b4-4418-b62d-cc519975648f","stages":[{"name":"rollup","service":"duckdb","version":"1.5.6","records_in":null,"records_out":0,"bytes_in":null,"bytes_out":null,"duration_seconds":2.167,"records_per_second":0.0,"mb_per_second":null,"status":"ok","started_at":"2026-10-23T05:27:01.279941+00:00"},{"name":"profile","service":"keystone","version":"0.1.0","records_in":5,"records_out":0,"bytes_in":null,"bytes_out":null,"duration_seconds":4.81,"records_per_second":0.0,"mb_per_second":null,"status":"ok","started_at":"2026-10-23T05:26:58.641072+00:00"}]},"freshness":{"newest_data_hour":"2026-10-19T23:00:00+00:00","lag_hours":77.455,"slo_hours":26,"status":"breach"},"quality":{"checks_passed":653,"dbt_tests_failed":0,"quarantined_rows":0,"contract_violations":0},"cost":{"usd":0.0,"basis":"no billing account exists for any service used (CLAUDE.md $0 rule)","free_quota":[{"name":"disk budget (70% of free disk, config/policy.yml)","used_pct":5.34},{"name":"GitHub Actions minutes (private repository)","used_pct":null},{"name":"ecosyste.ms anonymous API, hour of the last fetch (policy.yml)","used_pct":0.06}]},"lineage_summary":{"nodes":109,"edges":123,"documented_pct":100.0}},"runs":[{"run_id":"01a15d00-21a4-7455-80a8-4559cdd00979","started_at":"2026-10-21T05:47:36.841807+00:00","ended_at":"2026-10-21T06:00:19.380213+00:00","wall_seconds":762.538,"stages":13,"events_processed":294072,"status":"failed"},{"run_id":"01a15d0b-fe9f-7df6-b948-91feabd693d2","started_at":"2026-10-21T06:00:29.599161+00:00","ended_at":"2026-10-21T06:00:29.814465+00:00","wall_seconds":0.215,"stages":1,"events_processed":0,"status":"failed"},{"run_id":"01a15d0d-18e3-7707-9c69-6feb6b793e3a","started_at":"2026-10-21T06:01:45.708262+00:00","ended_at":"2026-10-21T06:17:12.206535+00:00","wall_seconds":926.498,"stages":14,"events_processed":294072,"status":"ok"},{"run_id":"01a15d29-6991-74e1-a8bd-b357daa00a32","started_at":"2026-10-21T06:32:42.145814+00:00","ended_at":"2026-10-21T06:47:12.168611+00:00","wall_seconds":870.023,"stages":14,"events_processed":294072,"status":"ok"},{"run_id":"01a15f70-c081-7117-9ab5-0d74146cc4ad","started_at":"2026-10-21T17:09:47.265572+00:00","ended_at":"2026-10-21T17:10:23.123543+00:00","wall_seconds":35.858,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f72-1016-7a8a-8685-6217adace5e6","started_at":"2026-10-21T17:11:13.174411+00:00","ended_at":"2026-10-21T17:11:32.194099+00:00","wall_seconds":19.02,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f73-b56a-77fe-a373-f9ca2acd1e5b","started_at":"2026-10-21T17:13:01.034263+00:00","ended_at":"2026-10-21T17:13:01.949509+00:00","wall_seconds":0.915,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f75-7573-75e5-b7f1-436742d4d0a6","started_at":"2026-10-21T17:14:55.731236+00:00","ended_at":"2026-10-21T17:15:13.002060+00:00","wall_seconds":17.271,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f75-ecb2-707b-81a8-e3790b5a6b49","started_at":"2026-10-21T17:15:26.258520+00:00","ended_at":"2026-10-21T17:15:38.377176+00:00","wall_seconds":12.119,"stages":1,"events_processed":0,"status":"failed"},{"run_id":"01a15f85-7664-7467-b9b1-8efd581d718d","started_at":"2026-10-21T17:32:24.548953+00:00","ended_at":"2026-10-21T17:32:48.231913+00:00","wall_seconds":23.683,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f6c-19c3-718b-8566-37022fc04e47","started_at":"2026-10-21T17:04:42.435659+00:00","ended_at":"2026-10-21T17:49:39.172503+00:00","wall_seconds":2696.737,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f95-9577-7dd9-a2d4-2430bc289cb3","started_at":"2026-10-21T17:50:01.079003+00:00","ended_at":"2026-10-21T17:50:20.025518+00:00","wall_seconds":18.947,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f95-fb47-7b5f-ac35-e795fa41df3e","started_at":"2026-10-21T17:50:27.143627+00:00","ended_at":"2026-10-21T17:51:15.310771+00:00","wall_seconds":48.167,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f96-ecec-7577-af62-236b7111093b","started_at":"2026-10-21T17:51:29.004207+00:00","ended_at":"2026-10-21T17:51:30.006040+00:00","wall_seconds":1.002,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f97-7e03-78dc-b403-7597f0d9a652","started_at":"2026-10-21T17:52:06.147519+00:00","ended_at":"2026-10-21T17:52:07.639524+00:00","wall_seconds":1.492,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15fa0-edc6-7e11-a182-3ee0f2bb652b","started_at":"2026-10-21T18:02:24.582323+00:00","ended_at":"2026-10-21T18:03:35.270954+00:00","wall_seconds":70.689,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15fa2-3725-74b4-a990-a51dad0721bd","started_at":"2026-10-21T18:03:48.901710+00:00","ended_at":"2026-10-21T18:03:50.228529+00:00","wall_seconds":1.327,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15fa3-c9ad-7da9-8c48-25d59ead1988","started_at":"2026-10-21T18:05:31.949096+00:00","ended_at":"2026-10-21T18:05:34.192219+00:00","wall_seconds":2.243,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a161a7-6f59-7880-b586-ff6786d7a7ae","started_at":"2026-10-22T03:28:45.401317+00:00","ended_at":"2026-10-22T03:30:10.170520+00:00","wall_seconds":84.769,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a161a8-efc7-7403-a109-a284d65d4b7a","started_at":"2026-10-22T03:30:23.815630+00:00","ended_at":"2026-10-22T03:30:25.232307+00:00","wall_seconds":1.417,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a161a9-37c2-762d-98ca-ed63b6f96059","started_at":"2026-10-22T03:30:42.242182+00:00","ended_at":"2026-10-22T03:30:44.998935+00:00","wall_seconds":2.757,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1626e-a925-72e9-bcd9-b3c8724b8f98","started_at":"2026-10-22T07:06:21.861760+00:00","ended_at":"2026-10-22T07:06:23.093026+00:00","wall_seconds":1.231,"stages":1,"events_processed":0,"status":"failed"},{"run_id":"01a1626f-d964-7edb-abb7-a901e5034e77","started_at":"2026-10-22T07:07:39.748430+00:00","ended_at":"2026-10-22T07:11:20.282384+00:00","wall_seconds":220.534,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a16273-c0ae-74e8-a5e2-bed630d54f96","started_at":"2026-10-22T07:11:55.566357+00:00","ended_at":"2026-10-22T07:15:48.499892+00:00","wall_seconds":232.934,"stages":1,"events_processed":0,"status":"failed"},{"run_id":"01a16278-76bc-7020-9462-2ec02caa9211","started_at":"2026-10-22T07:17:04.316068+00:00","ended_at":"2026-10-22T07:18:07.312479+00:00","wall_seconds":62.996,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a16279-90f4-74a2-8731-4cc5a6915b8d","started_at":"2026-10-22T07:18:16.564719+00:00","ended_at":"2026-10-22T07:18:17.963996+00:00","wall_seconds":1.399,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a16287-f686-72a5-85d5-de9f90f6cce8","started_at":"2026-10-22T07:34:00.070459+00:00","ended_at":"2026-10-22T07:36:29.489919+00:00","wall_seconds":149.419,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628a-6c83-709d-8c5a-bfa290bfbc69","started_at":"2026-10-22T07:36:41.347360+00:00","ended_at":"2026-10-22T07:37:50.409725+00:00","wall_seconds":69.062,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628b-9245-7256-b747-3e09255bf9a5","started_at":"2026-10-22T07:37:56.549574+00:00","ended_at":"2026-10-22T07:37:58.037511+00:00","wall_seconds":1.488,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628d-b043-7cb9-9341-0cdf65a51ece","started_at":"2026-10-22T07:40:15.300955+00:00","ended_at":"2026-10-22T07:40:44.117823+00:00","wall_seconds":28.817,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628e-389a-7621-b3bc-e2113b90b798","started_at":"2026-10-22T07:40:50.202362+00:00","ended_at":"2026-10-22T07:40:50.975051+00:00","wall_seconds":0.773,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628e-f81c-7fea-913c-3b2a26b3d5c3","started_at":"2026-10-22T07:41:39.228064+00:00","ended_at":"2026-10-22T07:42:08.313327+00:00","wall_seconds":29.085,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628f-8b63-749d-a2a9-17bafd0f6696","started_at":"2026-10-22T07:42:16.931719+00:00","ended_at":"2026-10-22T07:42:18.438493+00:00","wall_seconds":1.507,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a16290-f728-7b26-bb69-2bdfc4b0e0f8","started_at":"2026-10-22T07:43:50.056949+00:00","ended_at":"2026-10-22T07:44:21.570418+00:00","wall_seconds":31.513,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a16739-deec-7895-b888-acd6e21f4ca2","started_at":"2026-10-23T05:26:48.300877+00:00","ended_at":"2026-10-23T05:26:48.313083+00:00","wall_seconds":0.012,"stages":1,"events_processed":0,"status":"failed"},{"run_id":"0f8a5bad-75b4-4418-b62d-cc519975648f","started_at":"2026-10-23T05:26:58.641072+00:00","ended_at":"2026-10-23T05:27:03.449294+00:00","wall_seconds":4.808,"stages":2,"events_processed":0,"status":"ok"}],"daily":[{"date":"2026-10-21","events_processed":882216}],"backtests":{"status":{"state":"pending data","detail":"windows not loaded: event-stream, colors-faker, xz"},"rows":[{"id":"event-stream","month":"2018-11","outcome":"pending data","summary":"A new maintainer, given publish rights, added the dependency flatmap-stream with code that targeted a cryptocurrency wallet.","sources":["https://github.com/dominictarr/event-stream/issues/116","https://blog.npmjs.org/post/180565383195/details-about-the-event-stream-incident"]},{"id":"colors-faker","month":"2022-01","outcome":"pending data","summary":"The maintainer of colors and faker published versions that broke dependants on purpose.","sources":["https://github.com/Marak/colors.js/issues/285","https://github.com/advisories/GHSA-5rqg-jm4f-cqx7","https://snyk.io/blog/open-source-npm-packages-colors-faker/"]},{"id":"xz","month":"2024-03","outcome":"pending data","summary":"A backdoor in the xz release tarballs (CVE-2024-3094), added by a contributor who had become a maintainer over about two years.","sources":["https://www.openwall.com/lists/oss-security/2024/03/29/4","https://nvd.nist.gov/vuln/detail/CVE-2024-3094"]}]},"brief":{"week":"2026-W43","text":"The radar for week 2026-W43 shows partial data with the rollup holding 0.1% of the window's hours and not scored. The signals component is not scored because of the partial data. Backtest outcomes for event-stream, colors-faker, and xz are all pending data. Data freshness target was missed and the engine profile is free with a fallback from full. There are 0 repositories in the radar top list.","model":"nvidia/nemotron-3-ultra-550b-a55b:free","input_sha256":"f9f206ceade0db5eed1cd257c46de35f59d35238621ed0f9fb2648573afbfa7b","outcome":"written","detail":"every number checked against the facts"},"bench":[{"rung":"1 hour (2026-10-19 12h)","input_rows":46849,"input_mb":1.7,"engine":"DuckDB","wall_s":[2.9,1.6],"engine_s":[0.5,0.3],"peak_mb":[86.1,86.0],"rows_out":60114,"mb_out":0.8},{"rung":"1 hour (2026-10-19 12h)","input_rows":46849,"input_mb":1.7,"engine":"Spark","wall_s":[58.2,43.4],"engine_s":[55.4,41.8],"peak_mb":[680.0,650.4],"rows_out":60114,"mb_out":0.8},{"rung":"1 hour (2026-10-19 12h)","input_rows":46849,"input_mb":1.7,"engine":"Flink","wall_s":[46.7,42.5],"engine_s":null,"peak_mb":[2348.0,2167.1],"rows_out":60114,"mb_out":1.3},{"rung":"1 day (2026-10-19)","input_rows":1042693,"input_mb":37.0,"engine":"DuckDB","wall_s":[4.7,2.9],"engine_s":[2.3,1.4],"peak_mb":[369.3,453.3],"rows_out":1146460,"mb_out":12.8},{"rung":"1 day (2026-10-19)","input_rows":1042693,"input_mb":37.0,"engine":"Spark","wall_s":[64.9,67.4],"engine_s":[63.1,64.2],"peak_mb":[1082.5,1055.8],"rows_out":1146460,"mb_out":12.9},{"rung":"1 day (2026-10-19)","input_rows":1042693,"input_mb":37.0,"engine":"Flink","wall_s":[92.5,81.3],"engine_s":null,"peak_mb":[2553.3,2578.9],"rows_out":1146460,"mb_out":19.6},{"rung":"1 day (2026-08-01)","input_rows":4071556,"input_mb":77.5,"engine":"DuckDB","wall_s":[4.6,4.4],"engine_s":[2.7,2.7],"peak_mb":[565.2,558.5],"rows_out":1247387,"mb_out":13.0},{"rung":"1 day (2026-08-01)","input_rows":4071556,"input_mb":77.5,"engine":"Spark","wall_s":[71.1,71.4],"engine_s":[67.1,69.3],"peak_mb":[1188.3,1004.1],"rows_out":1247387,"mb_out":13.1},{"rung":"1 day (2026-08-01)","input_rows":4071556,"input_mb":77.5,"engine":"Flink","wall_s":[80.0,94.1],"engine_s":null,"peak_mb":[2696.5,2606.7],"rows_out":1247387,"mb_out":19.4}],"lineage":{"summary":{"nodes":109,"edges":123,"field_edges":294,"datasets":56,"jobs":53},"layers":{"warehouse":["intermediate.int_package_repo_evidence","intermediate.int_repo_name_hours","staging.stg_gharchive__repo_names","staging.stg_osv__affected","staging.stg_osv__repo_refs","staging.stg_osv__vulns","staging.stg_ref__completeness_periods","staging.stg_rollup__repo_hour"],"published":["marts.bridge_package_repo","marts.dim_package","marts.dim_repo","marts.dim_repo_name_history","marts.fct_repo_day","marts.fct_vuln","metrics.metric_maint_v1_repo_day","metrics.metric_maint_v2_repo_day","metrics.metric_release_v1_repo_day","Published marts.bridge_package_repo (Iceberg)","Published marts.dim_package (Iceberg)","Published marts.dim_repo (Iceberg)","Published marts.dim_repo_name_history (Iceberg)","Published marts.fct_repo_day (Iceberg)","Published marts.fct_vuln (Iceberg)","Published metrics.metric_maint_v1_repo_day (Iceberg)","Published metrics.metric_maint_v2_repo_day (Iceberg)","Published metrics.metric_release_v1_repo_day (Iceberg)"],"rollup":["Rollup repo_actor_day (free engine)","Rollup repo_hour (free engine)","Rollup repo_actor_day (full engine)","Flink repo_actor_day before the fold","Flink repo_actor_day before the fold","Rollup repo_hour (full engine)","Flink repo_hour before the fold","Flink repo_hour before the fold"],"silver":["GH Archive quarantine","OSV quarantine","Registry quarantine","Silver GH Archive events","Silver hour x event-type counts","Silver OSV affected packages","Silver OSV repository pointers","Silver OSV records","Silver registry claims","Silver repository names (ecosyste.ms)"],"sources":["GH Archive hourly file","GH Archive hourly file","GH Archive hourly file","GH Archive hourly file","GH Archive hourly file","GH Archive hourly file","GH Archive hourly file","GH Archive hourly file","OSV ecosystem zip","ecosyste.ms packages API (bulk lookup)","npm registry, latest version document"],"stream":["Event topic"]},"tools":{"Flink (openlineage-flink)":2,"dbt (dbt-ol)":36,"keystone CLI":15}},"catalog":[{"title":"GH Archive hourly file","layer":"sources","domain":"sources","description":"One gzipped JSON-lines file per UTC hour of public GitHub events (data.gharchive.org). Fetched politely, verified by MD5 and SHA-256, parsed and deleted; never republished."},{"title":"OSV ecosystem zip","layer":"sources","domain":"sources","description":"All OSV records of one ecosystem (osv.dev, CC BY 4.0), fetched conditionally."},{"title":"Silver GH Archive events","layer":"silver","domain":"activity","description":"One row per GH Archive event; repository facts and salted actor keys only."},{"title":"Silver hour x event-type counts","layer":"silver","domain":"activity","description":"Events per source hour and type, with the hour's era and completeness period."},{"title":"GH Archive quarantine","layer":"silver","domain":"operations","description":"Records that could not be parsed, with a reason; no record content."},{"title":"Silver OSV records","layer":"silver","domain":"vulnerabilities","description":"One row per OSV record (no free text, no credits)."},{"title":"Silver OSV affected packages","layer":"silver","domain":"vulnerabilities","description":"One row per OSV affected[] entry with a package."},{"title":"Silver OSV repository pointers","layer":"silver","domain":"packages","description":"Repository pointers in OSV records (GIT ranges and FIX references)."}]};
+const LOGOS = {"A": "<svg aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 96 96\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"4\" stroke-linejoin=\"round\"><title>Keystone arch<\/title><path d=\"M14 84V52a34 34 0 0 1 68 0v32\"/><path d=\"M40 20h16l-3 20H43z\" fill=\"currentColor\"/><path d=\"M14 64h12M70 64h12\"/><\/svg>", "B": "<svg aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 96 96\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"4\" stroke-linecap=\"round\"><title>Keystone sweep<\/title><path d=\"M30 14h36L56 82H40z\" stroke-linejoin=\"round\"/><path d=\"M48 70a10 10 0 0 0 0-20M48 80a22 22 0 0 0 0-44\" stroke-width=\"3\"/><circle cx=\"48\" cy=\"60\" r=\"3\" fill=\"currentColor\"/><\/svg>", "C": "<svg aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 96 96\" fill=\"currentColor\"><title>Keystone blocks<\/title><rect x=\"16\" y=\"16\" width=\"16\" height=\"64\" rx=\"2\"/><path d=\"M38 44h12l26-28H58z\"/><path d=\"M38 52h12l26 28H58z\" opacity=\".55\"/><\/svg>", "D": "<svg aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 96 96\" fill=\"currentColor\"><title>Keystone points<\/title><g><circle cx=\"24\" cy=\"20\" r=\"4\"/><circle cx=\"36\" cy=\"20\" r=\"4\"/><circle cx=\"48\" cy=\"20\" r=\"4\"/><circle cx=\"60\" cy=\"20\" r=\"4\"/><circle cx=\"72\" cy=\"20\" r=\"4\"/><circle cx=\"30\" cy=\"34\" r=\"4\"/><circle cx=\"42\" cy=\"34\" r=\"4\"/><circle cx=\"54\" cy=\"34\" r=\"4\"/><circle cx=\"66\" cy=\"34\" r=\"4\"/><circle cx=\"36\" cy=\"48\" r=\"4\"/><circle cx=\"48\" cy=\"48\" r=\"4\"/><circle cx=\"60\" cy=\"48\" r=\"4\"/><circle cx=\"42\" cy=\"62\" r=\"4\"/><circle cx=\"54\" cy=\"62\" r=\"4\"/><circle cx=\"48\" cy=\"76\" r=\"5\" opacity=\".5\"/><\/g><\/svg>"};
+const CONCEPTS = [
+  ["c1","Ledger","An editorial ledger: the radar reads like a newspaper's table of record. Masthead, ruled tables, serif type.","A"],
+  ["c2","Control Room","An operations console: a sidebar of pages, the pipeline as a rack of services with status lamps.","B"],
+  ["c3","Blueprint","A technical drawing: every page is a labelled figure of the machine, on grid paper.","B"],
+  ["c4","Swiss","A strict typographic grid: huge numerals, heavy black rules, one red.","C"],
+  ["c5","Field Survey","A survey map: warm earth tones, contour lines, services as numbered stations.","D"],
+  ["c6","Quiet Signal","Calm and plain: lots of space, one teal accent, built for accessibility first.","D"]
+];
+const PAGES = [["radar","Radar"],["pipeline","Pipeline Live"],["backtests","Backtests"],["lineage","Lineage"],["about","About the data"]];
+const fmt = n => n == null ? "not recorded" : Number(n).toLocaleString("en-US");
+const day = s => s ? s.slice(0,10) : "n/a";
+const utc = s => s ? s.slice(0,16).replace("T"," ") + " UTC" : "n/a";
+const mb = b => b == null ? "not recorded" : (b/1e6).toFixed(1) + " MB";
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const sk = w => `<span class="sk-b" style="width:${w}px" aria-hidden="true"></span>`;
+const ORDER = ["keystone-parser","datacontract-cli","great-expectations","duckdb","redpanda","flink","dbt","duckdb-iceberg","spark","trino","keystone-resolve","keystone-registry","openlineage-dbt","marquez","datahub","otel-collector","prometheus","grafana","keystone-llm","keystone"];
+const st = D.pm.last_run.stages;
+const RATE = st.reduce((a, s) => a + (s.records_out || 0), 0) / Math.max(st.reduce((a, s) => a + s.duration_seconds, 0), 1e-9);
+const banner = s => `<div class="banner" role="status"><b>${esc(s.state)}</b>${esc(s.detail)}</div>`;
+
+function bars(vals, label) {
+  const w = 300, h = 100, max = Math.max(...vals.map(v => v.v), 0) || 1, bw = w / Math.max(vals.length, 1);
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="${esc(label)}">` + vals.map((v, i) => {
+    const bh = Math.max(1, v.v / max * (h - 4));
+    return `<rect class="barr ${v.s || ""}" x="${(i*bw+1).toFixed(1)}" y="${(h-bh).toFixed(1)}" width="${Math.max(bw-2,1).toFixed(1)}" height="${bh.toFixed(1)}"><title>${esc(v.t)}</title></rect>`;
+  }).join("") + `</svg>`;
+}
+
+const VIEWS = {
+radar() { const r = D.radar, b = D.brief;
+  const rows = [0,1,2,3,4,5,6].map(i => `<tr class="sk" data-go="project" tabindex="0"><td class="num">${i+1}</td><td>${sk(150 - i*9)}</td><td>${sk(70)}</td><td>${sk(36)}</td><td>${sk(36)}</td><td>${sk(36)}</td><td>${sk(44)}</td><td>${sk(60)} ${sk(48)}</td></tr>`).join("");
+  return `<h2 data-fig="1">Open-source supply-chain risk signals</h2>
+  <p class="lead">Repositories behind widely used packages, ranked by measured signals of fragility and criticality. Signals, not predictions.</p>
+  <p class="stamp">Export generated ${utc(r.generated_at)} · scoring window ${day(r.window.start)} to ${day(r.window.end)} · profile ${esc(r.produced_by.profile)}${r.produced_by.fallback ? " (fallback from full)" : ""}</p>
+  ${banner(r.status)}
+  <div class="grid2"><div>
+    <div class="ctrl"><input type="search" placeholder="Search repositories or packages" aria-label="Search"><select aria-label="Ecosystem"><option>All ecosystems</option></select><select aria-label="Sort"><option>Sort by risk signal</option></select></div>
+    <div class="tw"><table><thead><tr><th>#</th><th>Repository</th><th>Packages</th><th>Risk</th><th>Fragility</th><th>Criticality</th><th>Coverage</th><th>Top signals</th></tr></thead>
+    <tbody>${rows}</tbody><caption>${fmt(r.row_count)} measured rows. Grey bars are layout only.</caption></table></div>
+  </div><aside>
+    <div class="card"><div class="stamp" style="margin:0 0 6px">Weekly brief · ${esc(b.week)}</div><p style="margin:0 0 8px">${esc(b.text)}</p><div class="note">Written by ${esc(b.model)}; ${esc(b.detail)}.</div></div>
+    <h3>How to read this</h3><p class="note" style="font-size:13px">Each row is a repository, never a person. Risk combines fragility signals with criticality (how widely the packages are used). Coverage shows how much of the window had data. <a href="#" data-go="about">Method and limits</a>.</p>
+  </aside></div>`; },
+
+project() { const r = D.radar;
+  const comp = ["Signal 1","Signal 2","Signal 3","Signal 4","Signal 5"].map((n, i) => `<tr><td>${sk(110 - i*8)}</td><td>${sk(40)}</td><td>${sk(30)}</td><td>${sk(180)}</td></tr>`).join("");
+  return `<div class="crumb"><a href="#" data-go="radar">Radar</a> / repository</div>
+  <h2 data-fig="1.1">owner/repository</h2>
+  <p class="lead">Repository page layout. It fills in once the window is scored; the name above is a placeholder, not a real repository.</p>
+  ${banner(r.status)}
+  <div class="grid3">${["Risk","Fragility","Criticality","Coverage"].map(k => `<div class="card"><div class="stamp" style="margin:0">${k}</div><div class="score">not scored</div><div class="note">pending the scoring window</div></div>`).join("")}</div>
+  <h3>Why this ranks here</h3>
+  <div class="tw"><table><thead><tr><th>Signal</th><th>Sub-score</th><th>Weight</th><th>Reason</th></tr></thead><tbody>${comp}</tbody><caption>Layout only. Components come from project_pages.json.</caption></table></div>
+  <div class="grid2" style="margin-top:8px"><div><h3>Activity timeline</h3><div class="card" style="height:130px;display:flex;align-items:flex-end;gap:4px" aria-hidden="true">${Array.from({length:24},(_, i) => `<span class="sk-b" style="flex:1;height:${20 + (i*37 % 70)}px;border-radius:2px"></span>`).join("")}</div></div>
+  <div><h3>Known vulnerabilities (OSV)</h3><div class="card">${sk(160)}<br><br>${sk(120)}<br><br>${sk(140)}</div></div></div>
+  <h3>Era caveats</h3><p class="note" style="font-size:13px">GH Archive payloads change on 2025-10-07 and before 2015. Each metric uses only fields present across its whole period; where a metric was versioned at a break, this page says so.</p>`; },
+
+pipeline() { const m = D.pm, t = m.totals, f = m.freshness, q = m.quality, pb = m.produced_by;
+  const byService = Object.fromEntries(st.map(s => [s.service, s]));
+  const eng = [...m.engines].sort((a, b) => (ORDER.indexOf(a.name) + 1 || 99) - (ORDER.indexOf(b.name) + 1 || 99));
+  const runs = D.runs.slice(-48);
+  return `<h2 data-fig="2">Pipeline Live</h2>
+  <p class="lead">How much data is processed, at what rate, and by which services.</p>
+  <p class="stamp">From pipeline_metrics.json, generated ${utc(m.generated_at)} · <span class="badge">profile ${esc(m.profile)}${pb.fallback ? " · fallback" : ""}</span> ${pb.fallback ? esc(pb.reason) : ""}</p>
+  <div class="strip">
+    <div class="kpi"><div class="l">Events processed</div><div class="v">${fmt(t.events_processed)}</div><div class="s">${fmt(t.events_stored)} stored</div></div>
+    <div class="kpi"><div class="l">Bytes parsed</div><div class="v">${mb(t.bytes_parsed)}</div><div class="s">downloaded: ${mb(t.bytes_downloaded)}</div></div>
+    <div class="kpi"><div class="l">Files parsed</div><div class="v">${fmt(t.files_parsed)}</div><div class="s">${fmt(t.date_range.source_hours)} source hours</div></div>
+    <div class="kpi"><div class="l">Date range</div><div class="v" style="font-size:15px">${day(t.date_range.first_event)} to ${day(t.date_range.newest_event)}</div><div class="s">backfill from ${day(t.backfill_window.start)}</div></div>
+    <div class="kpi"><div class="l">Last run rate</div><div class="v">${fmt(Math.round(RATE))}/s</div><div class="s">events per second</div></div>
+    <div class="kpi ${f.status === "breach" ? "bad" : ""}"><div class="l">Freshness lag</div><div class="v">${f.lag_hours == null ? "n/a" : f.lag_hours.toFixed(1) + " h"}</div><div class="s">target ${f.slo_hours} h · ${esc(f.status)}</div></div>
+    <div class="kpi"><div class="l">Cost</div><div class="v">$${m.cost.usd.toFixed(2)}</div><div class="s">no billing account</div></div>
+  </div>
+  <h3>Services</h3>
+  <ul class="flow" aria-label="Pipeline services">${eng.map(e => { const s = byService[e.name];
+    return `<li class="node ${e.active ? "on" : "off"}"><div class="n">${esc(e.name)} <span class="d">${esc(e.version)}</span></div><div class="r">${esc(e.role || "role not recorded")}</div>
+    <div class="d">${e.active ? "active" : "inactive"} · last ran ${day(e.last_used)}${s ? ` · <span class="run">last run: ${esc(s.name)}, ${fmt(s.records_out)} rows, ${s.duration_seconds.toFixed(1)} s, ${esc(s.status)}</span>` : ""}</div></li>`; }).join("")}</ul>
+  <div class="charts">
+    <div class="card chart"><div class="stamp">Run wall time, last ${runs.length} runs (warning colour = failed)</div>${bars(runs.map(x => ({v: x.wall_seconds, s: x.status, t: `${utc(x.started_at)}: ${x.wall_seconds} s, ${x.status}`})), "Run wall time per run")}</div>
+    <div class="card chart"><div class="stamp">Daily events processed: ${D.daily.length} of 30 days recorded</div>${bars(D.daily.map(x => ({v: x.events_processed, t: `${x.date}: ${fmt(x.events_processed)}`})), "Daily events processed")}</div>
+  </div>
+  <div class="facts">
+    <div>Checks passed<br><b>${fmt(q.checks_passed)}</b></div><div>dbt tests failed<br><b>${fmt(q.dbt_tests_failed)}</b></div>
+    <div>Quarantined rows<br><b>${fmt(q.quarantined_rows)}</b></div><div>Contract violations<br><b>${fmt(q.contract_violations)}</b></div>
+    ${m.cost.free_quota.map(x => `<div>${esc(x.name)}<br><b>${x.used_pct == null ? "not measured" : x.used_pct + "%"}</b></div>`).join("")}
+  </div>`; },
+
+backtests() { const b = D.backtests;
+  return `<h2 data-fig="3">Backtests</h2>
+  <p class="lead">Would the signals have stood out before known incidents? Each backtest uses only data available before the incident date.</p>
+  ${banner(b.status)}
+  <div class="grid3">${b.rows.map(x => `<article class="card"><div class="stamp" style="margin:0">incident month ${esc(x.month)}</div>
+    <h3 style="margin:4px 0 6px">${esc(x.id)}</h3><p style="margin:0 0 8px;font-size:13px">${esc(x.summary)}</p>
+    <p style="margin:0 0 8px"><span class="badge">${esc(x.outcome)}</span></p>
+    <div class="note">Sources: ${x.sources.map((u, i) => `<a href="${esc(u)}">[${i+1}]</a>`).join(" ")}</div></article>`).join("")}</div>
+  <h3>Scale: benchmark ladder</h3>
+  <div class="tw"><table><thead><tr><th>Rung</th><th>Engine</th><th>Input rows</th><th>Input MB</th><th>Wall s (runs)</th><th>Peak MB</th><th>Rows out</th></tr></thead><tbody>
+  ${D.bench.map(x => `<tr><td>${esc(x.rung)}</td><td>${esc(x.engine)}</td><td class="num">${fmt(x.input_rows)}</td><td class="num">${x.input_mb}</td><td class="num">${x.wall_s.join(", ")}</td><td class="num">${x.peak_mb.join(", ")}</td><td class="num">${fmt(x.rows_out)}</td></tr>`).join("")}</tbody></table></div>`; },
+
+lineage() { const l = D.lineage, s = l.summary, order = ["sources","silver","stream","rollup","warehouse","published"];
+  return `<h2 data-fig="4">Lineage and catalog</h2>
+  <p class="lead">Every dataset from the raw source files to the published exports, and the jobs between them.</p>
+  <p class="stamp">${fmt(s.datasets)} datasets · ${fmt(s.jobs)} jobs · ${fmt(s.edges)} edges · ${fmt(s.field_edges)} column-level edges · documented ${D.pm.lineage_summary.documented_pct}%</p>
+  <div class="lanes">${order.filter(k => l.layers[k]).map(k => { const v = l.layers[k];
+    return `<div class="lane"><h4>${k} · ${v.length}</h4><ul>${v.slice(0,7).map(n => `<li title="${esc(n)}">${esc(n)}</li>`).join("")}${v.length > 7 ? `<li class="more">and ${v.length - 7} more</li>` : ""}</ul></div>`; }).join("")}</div>
+  <h3>Jobs by tool</h3><div class="facts">${Object.entries(l.tools).map(([k, v]) => `<div>${esc(k)}<br><b>${fmt(v)} jobs</b></div>`).join("")}</div>
+  <h3>Catalog</h3><div class="tw"><table><thead><tr><th>Dataset</th><th>Layer</th><th>Domain</th><th>Description</th></tr></thead><tbody>
+  ${D.catalog.slice(0,5).map(x => `<tr><td>${esc(x.title)}</td><td>${esc(x.layer)}</td><td>${esc(x.domain)}</td><td style="white-space:normal;min-width:260px">${esc(x.description)}</td></tr>`).join("")}</tbody></table></div>`; },
+
+about() { const r = D.radar;
+  return `<h2 data-fig="5">About the data and method</h2>
+  <p class="lead">Public data only, aggregated to repositories and packages. Nothing here ranks or labels people.</p>
+  <div class="grid3">${r.sources.map(s => `<div class="card"><h3 style="margin:0 0 4px"><a href="${esc(s.url)}">${esc(s.name)}</a></h3><div class="note">${esc(s.terms || "terms on the source site")}</div></div>`).join("")}</div>
+  <h3>Privacy</h3><dl><dt>Level</dt><dd>${esc(r.privacy.level)}</dd><dt>People</dt><dd>${esc(r.privacy.people)}: shares only, no logins, no emails, bots filtered</dd></dl>
+  <h3>Wording</h3><p style="font-size:14px;max-width:720px">The site reports signals measured in public data. It does not predict that any project will fail or be abandoned.</p>
+  <h3>Corrections and removal</h3><p style="font-size:14px">Open an issue: <a href="${esc(r.corrections)}">${esc(r.corrections)}</a></p>`; }
+};
+
+let cur = 0, page = "radar", dark = matchMedia("(prefers-color-scheme: dark)").matches, logoPick = null;
+const site = document.getElementById("site");
+function draw() {
+  const [id, name, idea, defLogo] = CONCEPTS[cur], logo = logoPick || defLogo, pb = D.pm.produced_by;
+  site.className = "site " + id;
+  site.dataset.mode = dark ? "dark" : "light";
+  document.getElementById("idea").textContent = `${cur+1}. ${name}: ${idea} Logo ${logo}.`;
+  document.getElementById("url").textContent = `azzammasood.github.io/keystone-site/${page === "radar" ? "" : page + "/"}`;
+  const navPage = page === "project" ? "radar" : page;
+  site.innerHTML = `<header class="top"><a class="brand" href="#" data-go="radar">${LOGOS[logo]}<span>Keystone<small>supply-chain risk signals</small></span></a>
+    <nav class="main" aria-label="Main">${PAGES.map(([k, n]) => `<a href="#" data-go="${k}" ${k === navPage ? 'aria-current="page"' : ""}>${n}</a>`).join("")}</nav>
+    <div class="fresh">Data as of ${utc(D.pm.freshness.newest_data_hour)}<br>profile ${esc(pb.profile)}${pb.fallback ? " (fallback)" : ""}</div></header>
+    <main>${VIEWS[page]()}</main>
+    <footer><span>Data: <a href="https://www.gharchive.org/">GH Archive</a>, <a href="https://osv.dev/">OSV</a> (CC-BY 4.0), <a href="https://ecosyste.ms/">ecosyste.ms</a> (CC-BY-SA 4.0)</span><span>Repository and package level only</span><span>Cost $${D.pm.cost.usd.toFixed(2)}</span><span><a href="${esc(D.radar.corrections)}">Corrections and removal</a></span><span>Exports generated ${utc(D.radar.generated_at)}</span></footer>`;
+  if (RATE > 0) site.querySelectorAll(".c2 .node.on").forEach(n => { n.classList.add("moving"); n.style.setProperty("--period", Math.max(0.4, 4 - Math.log10(RATE)) + "s"); });
+  document.querySelectorAll("#pick button").forEach((b, i) => b.setAttribute("aria-pressed", i === cur));
+  document.querySelectorAll("#logo button").forEach(b => b.setAttribute("aria-pressed", b.dataset.l === logo));
+  const mb_ = document.getElementById("mode"); mb_.setAttribute("aria-pressed", dark); mb_.textContent = dark ? "Dark mode: on" : "Dark mode: off";
+}
+document.getElementById("pick").innerHTML = CONCEPTS.map(([, n], i) => `<button type="button" data-i="${i}">${i+1}. ${n}</button>`).join("");
+document.getElementById("logo").innerHTML = Object.keys(LOGOS).map(k => `<button type="button" data-l="${k}" title="Logo ${k}" style="display:flex;align-items:center;gap:4px">${LOGOS[k].replace("<svg ", '<svg style="width:18px;height:18px" ')} ${k}</button>`).join("");
+document.getElementById("pick").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { cur = +b.dataset.i; logoPick = null; draw(); } });
+document.getElementById("logo").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { logoPick = b.dataset.l; draw(); } });
+document.getElementById("mode").addEventListener("click", () => { dark = !dark; draw(); });
+const go = e => { const a = e.target.closest("[data-go]"); if (a) { e.preventDefault(); page = a.dataset.go; draw(); site.scrollIntoView({block: "start"}); } };
+site.addEventListener("click", go);
+site.addEventListener("keydown", e => { if (e.key === "Enter") go(e); });
+draw();
+</script>
+</body>
+</html>
