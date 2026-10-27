@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keystone sonar variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@600;800&family=Instrument+Serif:ital@0;1&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&display=swap">
+<style>
+:root{--pg-bg:#e4e4e7;--pg-fg:#18181b;--pg-mute:#52525b;--pg-line:#c4c4c8;--pg-panel:#fafafa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--pg-bg:#09090b;--pg-fg:#f4f4f5;--pg-mute:#a1a1aa;--pg-line:#3f3f46;--pg-panel:#18181b}}
+:root[data-theme="dark"]{--pg-bg:#09090b;--pg-fg:#f4f4f5;--pg-mute:#a1a1aa;--pg-line:#3f3f46;--pg-panel:#18181b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--pg-bg);color:var(--pg-fg);font:14px/1.5 system-ui,sans-serif}
+.viewer{max-width:1320px;margin:0 auto;padding:16px}
+.bar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-bottom:8px}
+.bar h1{font-size:16px;margin:0 8px 0 0}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{font:inherit;font-size:13px;border:1px solid var(--pg-line);background:var(--pg-panel);color:var(--pg-fg);border-radius:6px;padding:4px 10px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--pg-fg);color:var(--pg-bg);border-color:var(--pg-fg)}
+.idea{color:var(--pg-mute);margin:0 0 10px;max-width:1000px}
+.window{border:1px solid var(--pg-line);border-radius:10px;overflow:hidden;box-shadow:0 12px 40px #0004}
+.chrome{display:flex;align-items:center;gap:8px;background:var(--pg-panel);padding:8px 12px;border-bottom:1px solid var(--pg-line)}
+.chrome i{width:10px;height:10px;border-radius:50%;background:var(--pg-line)}
+.chrome .url{flex:1;min-width:0;overflow:hidden;white-space:nowrap;background:var(--pg-bg);border-radius:6px;padding:3px 10px;color:var(--pg-mute);font:12px ui-monospace,monospace}
+
+/* ===== Shared abyss bones ===== */
+.site{--bg:#02060d;--fg:#d5ecf4;--mute:#86a9b7;--line:#16344a;--panel:#061320;--accent:#34f5c5;--warn:#ffb454;--skel:#0f2a3a;
+  background:var(--bg);color:var(--fg);font-family:"Space Mono",monospace;position:relative;overflow:hidden}
+.site[data-mode=light]{--bg:#e8f3f2;--fg:#062a30;--mute:#3c6a70;--line:#b8d6d3;--panel:#f4fbfa;--accent:#0b8f7a;--warn:#a55b00;--skel:#cde3e0}
+.site .nav{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;padding:16px 32px;position:relative;z-index:3}
+.site .nav .logo{font:800 20px Syne,sans-serif;letter-spacing:.22em;margin-right:auto}
+.site .nav a{color:inherit;text-decoration:none;font-size:12px;opacity:.8}
+.site .hero{position:relative;height:640px}
+.site .hero canvas{position:absolute;inset:0;width:100%;height:100%}
+.site .title{position:absolute;left:32px;top:84px;z-index:3;margin:0;font:800 clamp(40px,7vw,100px)/.88 Syne,sans-serif;text-transform:uppercase;letter-spacing:-.02em;pointer-events:none}
+.site .title em{font:italic 400 1.05em "Instrument Serif",serif;text-transform:none;color:var(--accent);letter-spacing:0}
+.site .cap{position:absolute;left:32px;bottom:22px;z-index:3;font-size:12px;color:var(--mute);max-width:560px}
+.site .side{position:absolute;right:32px;bottom:22px;z-index:3;font-size:12px;text-align:right;color:var(--mute)}
+.site .side b{color:var(--accent)}
+.site section.blk{padding:44px 32px;position:relative;border-top:1px solid var(--line)}
+.site .blk h2{margin:0 0 6px;font:800 30px Syne,sans-serif;text-transform:uppercase}
+.site .stamp{font-size:12px;color:var(--mute);margin:0 0 12px}
+.site .banner{display:inline-block;border:1px solid var(--warn);padding:8px 12px;margin:0 0 14px}
+.site .banner b{color:var(--warn);text-transform:uppercase;letter-spacing:.06em;font-size:12px;margin-right:8px}
+.site .tw{overflow-x:auto}
+.site table{border-collapse:collapse;width:100%;font-size:12px}
+.site th,.site td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.site caption{caption-side:bottom;text-align:left;color:var(--mute);font-size:12px;padding-top:8px}
+.site .sk{display:inline-block;height:9px;border-radius:5px;background:var(--skel);vertical-align:middle}
+.site .two{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:28px}
+.site .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:0 0 14px}
+.site .kpi{border-left:2px solid var(--accent);padding-left:10px}
+.site .kpi .l{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute)}
+.site .kpi .v{font-size:24px;font-weight:700;color:var(--accent);line-height:1.25}
+.site .kpi .s{font-size:12px;color:var(--mute)}
+.site .kpi.bad{border-color:var(--warn)}.site .kpi.bad .v{color:var(--warn)}
+.site .svc{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0;padding:0;list-style:none}
+.site .svc li{font-size:11px;padding:3px 9px;border:1px solid var(--line);border-radius:999px;color:var(--mute)}
+.site .svc li.on{border-color:var(--accent);color:var(--fg)}
+.site .note{font-size:12px;color:var(--mute)}
+.site footer{padding:22px 32px;font-size:12px;color:var(--mute);display:flex;flex-wrap:wrap;gap:6px 22px;border-top:1px solid var(--line)}
+@media (max-width:820px){.site .two{grid-template-columns:1fr}.site .nav,.site section.blk,.site footer{padding-left:16px;padding-right:16px}.site .title,.site .cap{left:16px}.site .side{right:16px}}
+@media (prefers-reduced-motion:reduce){.site *{animation:none!important;transition:none!important}}
+
+/* A Waterfall */
+.sA{--accent:#5cf2ff}
+.sA .cap{left:auto;right:32px;top:96px;bottom:auto;text-align:right;max-width:360px}
+.sA[data-mode=light]{--accent:#0369a1}
+
+/* B Descent: scroll inside the hero to dive */
+.sB .hero{overflow-y:auto;scroll-snap-type:y proximity;background:linear-gradient(180deg,#0f6b7d 0%,#073b55 18%,#04213a 45%,#020a16 75%,#010409 100%)}
+.sB[data-mode=light] .hero{background:linear-gradient(180deg,#bdeef0 0%,#7fd0dc 20%,#3c8fa8 50%,#1b4e6b 80%,#0b2236 100%)}
+.sB .shafts{position:absolute;left:0;right:0;top:0;height:900px;pointer-events:none;background:repeating-linear-gradient(100deg,#ffffff10 0 30px,transparent 30px 120px);mask-image:linear-gradient(#000,transparent)}
+.sB .zone{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:center;padding:0 32px 0 32px;scroll-snap-align:start}
+.sB .zone h3{margin:0;font:800 clamp(30px,5vw,64px)/.9 Syne,sans-serif;text-transform:uppercase;color:#e6fbff}
+.sB .zone h3 em{font:italic 400 .7em "Instrument Serif",serif;text-transform:none;color:#7ff6dc;display:block}
+.sB .zone p{color:#b4dbe6;font-size:12px;max-width:520px}
+.sB .port{position:relative;width:300px;height:300px;perspective:700px}
+.sB .rim{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(var(--px,8deg)) rotateY(var(--py,-14deg))}
+.sB .rim i{position:absolute;inset:calc(var(--k) * 5px);border-radius:50%;border:6px solid #c9a96b;transform:translateZ(calc(var(--k) * -9px));box-shadow:0 0 0 2px #6b5530,inset 0 0 30px #0009;opacity:calc(1 - var(--k) * .08)}
+.sB .glass{position:absolute;inset:36px;border-radius:50%;transform:translateZ(-60px);overflow:hidden;background:radial-gradient(circle at 35% 30%,#ffffff2a,transparent 40%),#021624cc;
+  display:flex;flex-direction:column;justify-content:center;padding:28px;font-size:11px;color:#b9f5ea;gap:3px}
+.sB .glass span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:bdrift 6s ease-in-out infinite alternate;animation-delay:calc(var(--i) * -.7s)}
+@keyframes bdrift{to{transform:translateX(10px)}}
+.sB .gauge{position:sticky;top:0;float:right;margin-right:12px;height:640px;width:62px;z-index:4;display:flex;flex-direction:column;font-size:10px;color:#cfefff;pointer-events:none}
+.sB .gauge div{flex:var(--n);border-left:2px solid #cfefff55;padding-left:6px;display:flex;align-items:center}
+.sB .gauge div.here{border-left-color:#7ff6dc;color:#7ff6dc}
+.sB .seabed{height:220px;display:flex;align-items:flex-end;padding:0 32px 30px;color:#9cc;font-size:12px;background:radial-gradient(ellipse at 50% 120%,#3a2d1e,transparent 60%)}
+
+/* C Siphonophore */
+.sC{--accent:#ff5ad8;--warn:#ffd166}
+.sC[data-mode=light]{--accent:#b0127f}
+.sC .hero{cursor:crosshair}
+
+/* D Murk: water clarity = coverage */
+.sD .hero{perspective:900px;cursor:none}
+.sD .depth{position:absolute;inset:0;transform-style:preserve-3d}
+.sD .rows{position:absolute;left:50%;top:50%;width:min(760px,88%);transform:translate(-50%,-40%) translateZ(-520px) rotateX(18deg);font-size:13px}
+.sD .rows .r{display:grid;grid-template-columns:40px 2fr 1fr 1fr 1fr;gap:14px;align-items:center;padding:10px 12px;border:1px solid #34f5c533;margin-bottom:8px;background:#04182580}
+.sD .fog{position:absolute;inset:-20%;transform:translateZ(var(--z));background:radial-gradient(ellipse at var(--fx) var(--fy),#0b2a3a,#06202f 60%,#041722);opacity:var(--o);
+  -webkit-mask-image:radial-gradient(circle at var(--mx,50%) var(--my,50%),transparent 0 90px,#000 220px);mask-image:radial-gradient(circle at var(--mx,50%) var(--my,50%),transparent 0 90px,#000 220px)}
+.sD[data-mode=light] .fog{background:radial-gradient(ellipse at var(--fx) var(--fy),#a9cfc9,#c6e2dd 60%,#d9ece8)}
+.sD .torch{position:absolute;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;pointer-events:none;z-index:2;left:var(--mx,50%);top:var(--my,50%);
+  background:radial-gradient(circle,#c8fff455,transparent 60%);mix-blend-mode:screen}
+.sD .clar{position:absolute;right:32px;top:90px;z-index:3;text-align:right}
+.sD .clar .v{font:800 64px/1 Syne,sans-serif;color:var(--accent)}
+.sD .mote{position:absolute;width:2px;height:2px;border-radius:50%;background:#bfefff;opacity:.5;z-index:1}
+
+/* E Echo: a ping whose round trip is the freshness lag */
+.sE{--accent:#9dff6a}
+.sE[data-mode=light]{--accent:#2f7d0a}
+.sE .col{position:absolute;right:12%;top:70px;width:260px;height:520px;perspective:1000px}
+.sE .tank{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(-16deg) rotateY(-32deg)}
+.sE .tank .face{position:absolute;border:1px solid #9dff6a55;background:linear-gradient(180deg,#0a3a4a55,#02121c99)}
+.sE .tank .fr{width:200px;height:480px;transform:translateZ(60px)}
+.sE .tank .bk{width:200px;height:480px;transform:translateZ(-60px)}
+.sE .tank .lf{width:120px;height:480px;left:-60px;transform:translateX(0) rotateY(90deg)}
+.sE .tank .rt{width:120px;height:480px;left:140px;transform:rotateY(90deg)}
+.sE .tank .bt{width:200px;height:120px;top:420px;transform:rotateX(90deg);background:repeating-linear-gradient(90deg,#3a2d1e,#3a2d1e 6px,#2a2016 6px 12px)}
+.sE .mark{position:absolute;left:-40px;width:280px;height:0;border-top:1px dashed var(--c);transform:translateZ(60px);font-size:10px;color:var(--c)}
+.sE .mark span{position:absolute;right:-6px;top:-16px;transform:translateX(100%);white-space:nowrap}
+.sE .ring{position:absolute;left:100px;width:10px;height:10px;margin:-5px;border-radius:50%;border:2px solid var(--accent);transform:translateZ(0) rotateX(90deg);opacity:0}
+.sE .pulse{position:absolute;left:94px;width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 18px var(--accent);transform:translateZ(0)}
+.sE .read{position:absolute;left:32px;top:330px;z-index:3;font-size:13px;max-width:520px}
+.sE .read .v{font:800 72px/1 Syne,sans-serif;color:var(--warn)}
+@media (max-width:980px){.sE .col{right:-40px;transform:scale(.7)}.sB .zone{grid-template-columns:1fr}.sB .port{display:none}}
+</style>
+</head>
+<body>
+<div class="viewer">
+  <div class="bar"><h1>Keystone: sonar variants</h1><div class="seg" id="pick" role="group" aria-label="Variant"></div><div class="seg"><button type="button" id="mode" aria-pressed="false">Light mode</button></div></div>
+  <p class="idea" id="idea"></p>
+  <div class="window"><div class="chrome"><i></i><i></i><i></i><div class="url">azzammasood.github.io/keystone-site/</div></div><div class="site" id="site"></div></div>
+  <p class="idea" style="margin-top:12px">All five share the sonar world: abyss palette, Syne + Instrument Serif + Space Mono. Each centrepiece is built from real export data (generated 2026-10-23), and its motion comes from real values or from the pointer and scroll. No 3D library; animation pauses off-screen and stops under "reduce motion".</p>
+</div>
+<script>
+const D = {"radar":{"generated_at":"2026-10-23T05:57:30.060036+00:00","status":{"state":"partial data","detail":"partial data: the rollup holds 0.1% of the window's hours; not scored"},"row_count":0,"window":{"start":"2025-10-01T00:00:00+00:00","end":"2026-10-01T00:00:00+00:00","periods":[]},"produced_by":{"profile":"free","fallback":true,"run_id":"0f8a5bad-75b4-4418-b62d-cc519975648f","keystone_version":"0.1.0"},"corrections":"https://github.com/azzammasood/keystone-pipeline/issues","sources":[{"name":"GH Archive","url":"https://www.gharchive.org/"},{"name":"OSV","url":"https://osv.dev/","terms":"CC-BY 4.0 (osv.dev data license)"},{"name":"ecosyste.ms","url":"https://ecosyste.ms/","terms":"CC-BY-SA 4.0"}],"privacy":{"level":"repository","people":"aggregate-only"}},"pm":{"generated_at":"2026-10-23T05:27:16.215346+00:00","profile":"free","produced_by":{"profile":"free","fallback":true,"reason":"full unhealthy: redpanda, redpanda-registry, flink, lakekeeper, rustfs down","run_id":"0f8a5bad-75b4-4418-b62d-cc519975648f","decided_at":"2026-10-23T05:27:03.449294+00:00","status":"ok","probes":[{"name":"redpanda","ok":false},{"name":"redpanda-registry","ok":false},{"name":"flink","ok":false},{"name":"lakekeeper","ok":false},{"name":"rustfs","ok":false}]},"engines":[{"name":"datacontract-cli","version":"1.2.7","role":"ODCS data contract tests","active":false,"last_used":"2026-10-21T06:38:39.230353+00:00"},{"name":"datahub","version":"v1.7.0.1","role":"metadata catalog (lineage, glossary, owners, assertions)","active":false,"last_used":"2026-10-21T06:46:16.055365+00:00"},{"name":"dbt","version":"1.12.6","role":"warehouse models and tests","active":false,"last_used":"2026-10-22T07:44:21.570418+00:00"},{"name":"duckdb","version":"1.5.6","role":"free rollup engine","active":true,"last_used":"2026-10-23T05:27:03.447168+00:00"},{"name":"duckdb-iceberg","version":"1.5.6","role":"Iceberg publish of the marts","active":false,"last_used":"2026-10-21T06:36:42.230092+00:00"},{"name":"flink","version":"2.2.1","role":"full rollup engine (stream and batch)","active":false,"last_used":"2026-10-21T06:36:30.567323+00:00"},{"name":"grafana","version":"13.2.4","role":"dashboards","active":false,"last_used":"2026-10-21T06:47:12.168611+00:00"},{"name":"keystone","version":"0.1.0","role":"metadata export and metrics","active":true,"last_used":"2026-10-23T05:27:03.449294+00:00"},{"name":"keystone-llm","version":"nvidia/nemotron-3-ultra-550b-a55b:free","role":"","active":false,"last_used":"2026-10-22T07:36:29.489919+00:00"},{"name":"keystone-parser","version":"0.1.0","role":"era-aware parsing to typed Parquet","active":false,"last_used":"2026-10-21T06:33:25.337575+00:00"},{"name":"keystone-registry","version":"0.1.0","role":"","active":false,"last_used":"2026-10-21T17:50:20.025518+00:00"},{"name":"keystone-resolve","version":"0.1.0","role":"","active":false,"last_used":"2026-10-22T07:42:18.438493+00:00"},{"name":"marquez","version":"0.51.1","role":"OpenLineage server","active":false,"last_used":"2026-10-21T06:40:12.947997+00:00"},{"name":"openlineage-dbt","version":"1.54.0","role":"dbt lineage events (dbt-ol)","active":false,"last_used":"2026-10-21T06:34:03.213634+00:00"},{"name":"otel-collector","version":"0.163.1","role":"OpenTelemetry metrics pipeline","active":false,"last_used":"2026-10-21T06:47:12.168611+00:00"},{"name":"prometheus","version":"3.15.0","role":"metrics store","active":false,"last_used":"2026-10-21T06:47:12.168611+00:00"},{"name":"redpanda","version":"v26.2.5","role":"event stream (Kafka API, schema registry)","active":false,"last_used":"2026-10-21T06:34:54.061825+00:00"},{"name":"spark","version":"4.1.3","role":"lakehouse reader (Iceberg)","active":false,"last_used":"2026-10-21T06:38:09.582432+00:00"}],"totals":{"events_processed":882216,"events_stored":2363426,"bytes_downloaded":null,"bytes_parsed":412610898,"files_parsed":24,"rollup_rows":2189426,"date_range":{"first_event":"2011-02-12T00:00:00+00:00","newest_event":"2026-10-19T23:59:59+00:00","source_hours":151},"backfill_window":{"start":"2011-02-12T00:00:00+00:00","end":"present","decision":"ADR-009"}},"last_run":{"run_id":"0f8a5bad-75b4-4418-b62d-cc519975648f","stages":[{"name":"rollup","service":"duckdb","version":"1.5.6","records_in":null,"records_out":0,"bytes_in":null,"bytes_out":null,"duration_seconds":2.167,"records_per_second":0.0,"mb_per_second":null,"status":"ok","started_at":"2026-10-23T05:27:01.279941+00:00"},{"name":"profile","service":"keystone","version":"0.1.0","records_in":5,"records_out":0,"bytes_in":null,"bytes_out":null,"duration_seconds":4.81,"records_per_second":0.0,"mb_per_second":null,"status":"ok","started_at":"2026-10-23T05:26:58.641072+00:00"}]},"freshness":{"newest_data_hour":"2026-10-19T23:00:00+00:00","lag_hours":77.455,"slo_hours":26,"status":"breach"},"quality":{"checks_passed":653,"dbt_tests_failed":0,"quarantined_rows":0,"contract_violations":0},"cost":{"usd":0.0,"basis":"no billing account exists for any service used (CLAUDE.md $0 rule)","free_quota":[{"name":"disk budget (70% of free disk, config/policy.yml)","used_pct":5.34},{"name":"GitHub Actions minutes (private repository)","used_pct":null},{"name":"ecosyste.ms anonymous API, hour of the last fetch (policy.yml)","used_pct":0.06}]},"lineage_summary":{"nodes":109,"edges":123,"documented_pct":100.0}},"runs":[{"run_id":"01a15d00-21a4-7455-80a8-4559cdd00979","started_at":"2026-10-21T05:47:36.841807+00:00","ended_at":"2026-10-21T06:00:19.380213+00:00","wall_seconds":762.538,"stages":13,"events_processed":294072,"status":"failed"},{"run_id":"01a15d0b-fe9f-7df6-b948-91feabd693d2","started_at":"2026-10-21T06:00:29.599161+00:00","ended_at":"2026-10-21T06:00:29.814465+00:00","wall_seconds":0.215,"stages":1,"events_processed":0,"status":"failed"},{"run_id":"01a15d0d-18e3-7707-9c69-6feb6b793e3a","started_at":"2026-10-21T06:01:45.708262+00:00","ended_at":"2026-10-21T06:17:12.206535+00:00","wall_seconds":926.498,"stages":14,"events_processed":294072,"status":"ok"},{"run_id":"01a15d29-6991-74e1-a8bd-b357daa00a32","started_at":"2026-10-21T06:32:42.145814+00:00","ended_at":"2026-10-21T06:47:12.168611+00:00","wall_seconds":870.023,"stages":14,"events_processed":294072,"status":"ok"},{"run_id":"01a15f70-c081-7117-9ab5-0d74146cc4ad","started_at":"2026-10-21T17:09:47.265572+00:00","ended_at":"2026-10-21T17:10:23.123543+00:00","wall_seconds":35.858,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f72-1016-7a8a-8685-6217adace5e6","started_at":"2026-10-21T17:11:13.174411+00:00","ended_at":"2026-10-21T17:11:32.194099+00:00","wall_seconds":19.02,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f73-b56a-77fe-a373-f9ca2acd1e5b","started_at":"2026-10-21T17:13:01.034263+00:00","ended_at":"2026-10-21T17:13:01.949509+00:00","wall_seconds":0.915,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f75-7573-75e5-b7f1-436742d4d0a6","started_at":"2026-10-21T17:14:55.731236+00:00","ended_at":"2026-10-21T17:15:13.002060+00:00","wall_seconds":17.271,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f75-ecb2-707b-81a8-e3790b5a6b49","started_at":"2026-10-21T17:15:26.258520+00:00","ended_at":"2026-10-21T17:15:38.377176+00:00","wall_seconds":12.119,"stages":1,"events_processed":0,"status":"failed"},{"run_id":"01a15f85-7664-7467-b9b1-8efd581d718d","started_at":"2026-10-21T17:32:24.548953+00:00","ended_at":"2026-10-21T17:32:48.231913+00:00","wall_seconds":23.683,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f6c-19c3-718b-8566-37022fc04e47","started_at":"2026-10-21T17:04:42.435659+00:00","ended_at":"2026-10-21T17:49:39.172503+00:00","wall_seconds":2696.737,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f95-9577-7dd9-a2d4-2430bc289cb3","started_at":"2026-10-21T17:50:01.079003+00:00","ended_at":"2026-10-21T17:50:20.025518+00:00","wall_seconds":18.947,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f95-fb47-7b5f-ac35-e795fa41df3e","started_at":"2026-10-21T17:50:27.143627+00:00","ended_at":"2026-10-21T17:51:15.310771+00:00","wall_seconds":48.167,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f96-ecec-7577-af62-236b7111093b","started_at":"2026-10-21T17:51:29.004207+00:00","ended_at":"2026-10-21T17:51:30.006040+00:00","wall_seconds":1.002,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f97-7e03-78dc-b403-7597f0d9a652","started_at":"2026-10-21T17:52:06.147519+00:00","ended_at":"2026-10-21T17:52:07.639524+00:00","wall_seconds":1.492,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15fa0-edc6-7e11-a182-3ee0f2bb652b","started_at":"2026-10-21T18:02:24.582323+00:00","ended_at":"2026-10-21T18:03:35.270954+00:00","wall_seconds":70.689,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15fa2-3725-74b4-a990-a51dad0721bd","started_at":"2026-10-21T18:03:48.901710+00:00","ended_at":"2026-10-21T18:03:50.228529+00:00","wall_seconds":1.327,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15fa3-c9ad-7da9-8c48-25d59ead1988","started_at":"2026-10-21T18:05:31.949096+00:00","ended_at":"2026-10-21T18:05:34.192219+00:00","wall_seconds":2.243,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a161a7-6f59-7880-b586-ff6786d7a7ae","started_at":"2026-10-22T03:28:45.401317+00:00","ended_at":"2026-10-22T03:30:10.170520+00:00","wall_seconds":84.769,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a161a8-efc7-7403-a109-a284d65d4b7a","started_at":"2026-10-22T03:30:23.815630+00:00","ended_at":"2026-10-22T03:30:25.232307+00:00","wall_seconds":1.417,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a161a9-37c2-762d-98ca-ed63b6f96059","started_at":"2026-10-22T03:30:42.242182+00:00","ended_at":"2026-10-22T03:30:44.998935+00:00","wall_seconds":2.757,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1626e-a925-72e9-bcd9-b3c8724b8f98","started_at":"2026-10-22T07:06:21.861760+00:00","ended_at":"2026-10-22T07:06:23.093026+00:00","wall_seconds":1.231,"stages":1,"events_processed":0,"status":"failed"},{"run_id":"01a1626f-d964-7edb-abb7-a901e5034e77","started_at":"2026-10-22T07:07:39.748430+00:00","ended_at":"2026-10-22T07:11:20.282384+00:00","wall_seconds":220.534,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a16273-c0ae-74e8-a5e2-bed630d54f96","started_at":"2026-10-22T07:11:55.566357+00:00","ended_at":"2026-10-22T07:15:48.499892+00:00","wall_seconds":232.934,"stages":1,"events_processed":0,"status":"failed"},{"run_id":"01a16278-76bc-7020-9462-2ec02caa9211","started_at":"2026-10-22T07:17:04.316068+00:00","ended_at":"2026-10-22T07:18:07.312479+00:00","wall_seconds":62.996,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a16279-90f4-74a2-8731-4cc5a6915b8d","started_at":"2026-10-22T07:18:16.564719+00:00","ended_at":"2026-10-22T07:18:17.963996+00:00","wall_seconds":1.399,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a16287-f686-72a5-85d5-de9f90f6cce8","started_at":"2026-10-22T07:34:00.070459+00:00","ended_at":"2026-10-22T07:36:29.489919+00:00","wall_seconds":149.419,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628a-6c83-709d-8c5a-bfa290bfbc69","started_at":"2026-10-22T07:36:41.347360+00:00","ended_at":"2026-10-22T07:37:50.409725+00:00","wall_seconds":69.062,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628b-9245-7256-b747-3e09255bf9a5","started_at":"2026-10-22T07:37:56.549574+00:00","ended_at":"2026-10-22T07:37:58.037511+00:00","wall_seconds":1.488,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628d-b043-7cb9-9341-0cdf65a51ece","started_at":"2026-10-22T07:40:15.300955+00:00","ended_at":"2026-10-22T07:40:44.117823+00:00","wall_seconds":28.817,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628e-389a-7621-b3bc-e2113b90b798","started_at":"2026-10-22T07:40:50.202362+00:00","ended_at":"2026-10-22T07:40:50.975051+00:00","wall_seconds":0.773,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628e-f81c-7fea-913c-3b2a26b3d5c3","started_at":"2026-10-22T07:41:39.228064+00:00","ended_at":"2026-10-22T07:42:08.313327+00:00","wall_seconds":29.085,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628f-8b63-749d-a2a9-17bafd0f6696","started_at":"2026-10-22T07:42:16.931719+00:00","ended_at":"2026-10-22T07:42:18.438493+00:00","wall_seconds":1.507,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a16290-f728-7b26-bb69-2bdfc4b0e0f8","started_at":"2026-10-22T07:43:50.056949+00:00","ended_at":"2026-10-22T07:44:21.570418+00:00","wall_seconds":31.513,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a16739-deec-7895-b888-acd6e21f4ca2","started_at":"2026-10-23T05:26:48.300877+00:00","ended_at":"2026-10-23T05:26:48.313083+00:00","wall_seconds":0.012,"stages":1,"events_processed":0,"status":"failed"},{"run_id":"0f8a5bad-75b4-4418-b62d-cc519975648f","started_at":"2026-10-23T05:26:58.641072+00:00","ended_at":"2026-10-23T05:27:03.449294+00:00","wall_seconds":4.808,"stages":2,"events_processed":0,"status":"ok"}],"daily":[{"date":"2026-10-21","events_processed":882216}],"backtests":{"status":{"state":"pending data","detail":"windows not loaded: event-stream, colors-faker, xz"},"rows":[{"id":"event-stream","month":"2018-11","outcome":"pending data","summary":"A new maintainer, given publish rights, added the dependency flatmap-stream with code that targeted a cryptocurrency wallet.","sources":["https://github.com/dominictarr/event-stream/issues/116","https://blog.npmjs.org/post/180565383195/details-about-the-event-stream-incident"]},{"id":"colors-faker","month":"2022-01","outcome":"pending data","summary":"The maintainer of colors and faker published versions that broke dependants on purpose.","sources":["https://github.com/Marak/colors.js/issues/285","https://github.com/advisories/GHSA-5rqg-jm4f-cqx7","https://snyk.io/blog/open-source-npm-packages-colors-faker/"]},{"id":"xz","month":"2024-03","outcome":"pending data","summary":"A backdoor in the xz release tarballs (CVE-2024-3094), added by a contributor who had become a maintainer over about two years.","sources":["https://www.openwall.com/lists/oss-security/2024/03/29/4","https://nvd.nist.gov/vuln/detail/CVE-2024-3094"]}]},"brief":{"week":"2026-W43","text":"The radar for week 2026-W43 shows partial data with the rollup holding 0.1% of the window's hours and not scored. The signals component is not scored because of the partial data. Backtest outcomes for event-stream, colors-faker, and xz are all pending data. Data freshness target was missed and the engine profile is free with a fallback from full. There are 0 repositories in the radar top list.","model":"nvidia/nemotron-3-ultra-550b-a55b:free","input_sha256":"f9f206ceade0db5eed1cd257c46de35f59d35238621ed0f9fb2648573afbfa7b","outcome":"written","detail":"every number checked against the facts"},"bench":[{"rung":"1 hour (2026-10-19 12h)","input_rows":46849,"input_mb":1.7,"engine":"DuckDB","wall_s":[2.9,1.6],"engine_s":[0.5,0.3],"peak_mb":[86.1,86.0],"rows_out":60114,"mb_out":0.8},{"rung":"1 hour (2026-10-19 12h)","input_rows":46849,"input_mb":1.7,"engine":"Spark","wall_s":[58.2,43.4],"engine_s":[55.4,41.8],"peak_mb":[680.0,650.4],"rows_out":60114,"mb_out":0.8},{"rung":"1 hour (2026-10-19 12h)","input_rows":46849,"input_mb":1.7,"engine":"Flink","wall_s":[46.7,42.5],"engine_s":null,"peak_mb":[2348.0,2167.1],"rows_out":60114,"mb_out":1.3},{"rung":"1 day (2026-10-19)","input_rows":1042693,"input_mb":37.0,"engine":"DuckDB","wall_s":[4.7,2.9],"engine_s":[2.3,1.4],"peak_mb":[369.3,453.3],"rows_out":1146460,"mb_out":12.8},{"rung":"1 day (2026-10-19)","input_rows":1042693,"input_mb":37.0,"engine":"Spark","wall_s":[64.9,67.4],"engine_s":[63.1,64.2],"peak_mb":[1082.5,1055.8],"rows_out":1146460,"mb_out":12.9},{"rung":"1 day (2026-10-19)","input_rows":1042693,"input_mb":37.0,"engine":"Flink","wall_s":[92.5,81.3],"engine_s":null,"peak_mb":[2553.3,2578.9],"rows_out":1146460,"mb_out":19.6},{"rung":"1 day (2026-08-01)","input_rows":4071556,"input_mb":77.5,"engine":"DuckDB","wall_s":[4.6,4.4],"engine_s":[2.7,2.7],"peak_mb":[565.2,558.5],"rows_out":1247387,"mb_out":13.0},{"rung":"1 day (2026-08-01)","input_rows":4071556,"input_mb":77.5,"engine":"Spark","wall_s":[71.1,71.4],"engine_s":[67.1,69.3],"peak_mb":[1188.3,1004.1],"rows_out":1247387,"mb_out":13.1},{"rung":"1 day (2026-08-01)","input_rows":4071556,"input_mb":77.5,"engine":"Flink","wall_s":[80.0,94.1],"engine_s":null,"peak_mb":[2696.5,2606.7],"rows_out":1247387,"mb_out":19.4}],"lineage":{"summary":{"nodes":109,"edges":123,"field_edges":294,"datasets":56,"jobs":53},"layers":{"warehouse":["intermediate.int_package_repo_evidence","intermediate.int_repo_name_hours","staging.stg_gharchive__repo_names","staging.stg_osv__affected","staging.stg_osv__repo_refs","staging.stg_osv__vulns","staging.stg_ref__completeness_periods","staging.stg_rollup__repo_hour"],"published":["marts.bridge_package_repo","marts.dim_package","marts.dim_repo","marts.dim_repo_name_history","marts.fct_repo_day","marts.fct_vuln","metrics.metric_maint_v1_repo_day","metrics.metric_maint_v2_repo_day","metrics.metric_release_v1_repo_day","Published marts.bridge_package_repo (Iceberg)","Published marts.dim_package (Iceberg)","Published marts.dim_repo (Iceberg)","Published marts.dim_repo_name_history (Iceberg)","Published marts.fct_repo_day (Iceberg)","Published marts.fct_vuln (Iceberg)","Published metrics.metric_maint_v1_repo_day (Iceberg)","Published metrics.metric_maint_v2_repo_day (Iceberg)","Published metrics.metric_release_v1_repo_day (Iceberg)"],"rollup":["Rollup repo_actor_day (free engine)","Rollup repo_hour (free engine)","Rollup repo_actor_day (full engine)","Flink repo_actor_day before the fold","Flink repo_actor_day before the fold","Rollup repo_hour (full engine)","Flink repo_hour before the fold","Flink repo_hour before the fold"],"silver":["GH Archive quarantine","OSV quarantine","Registry quarantine","Silver GH Archive events","Silver hour x event-type counts","Silver OSV affected packages","Silver OSV repository pointers","Silver OSV records","Silver registry claims","Silver repository names (ecosyste.ms)"],"sources":["GH Archive hourly file","GH Archive hourly file","GH Archive hourly file","GH Archive hourly file","GH Archive hourly file","GH Archive hourly file","GH Archive hourly file","GH Archive hourly file","OSV ecosystem zip","ecosyste.ms packages API (bulk lookup)","npm registry, latest version document"],"stream":["Event topic"]},"tools":{"Flink (openlineage-flink)":2,"dbt (dbt-ol)":36,"keystone CLI":15}},"catalog":[{"title":"GH Archive hourly file","layer":"sources","domain":"sources","description":"One gzipped JSON-lines file per UTC hour of public GitHub events (data.gharchive.org). Fetched politely, verified by MD5 and SHA-256, parsed and deleted; never republished."},{"title":"OSV ecosystem zip","layer":"sources","domain":"sources","description":"All OSV records of one ecosystem (osv.dev, CC BY 4.0), fetched conditionally."},{"title":"Silver GH Archive events","layer":"silver","domain":"activity","description":"One row per GH Archive event; repository facts and salted actor keys only."},{"title":"Silver hour x event-type counts","layer":"silver","domain":"activity","description":"Events per source hour and type, with the hour's era and completeness period."},{"title":"GH Archive quarantine","layer":"silver","domain":"operations","description":"Records that could not be parsed, with a reason; no record content."},{"title":"Silver OSV records","layer":"silver","domain":"vulnerabilities","description":"One row per OSV record (no free text, no credits)."},{"title":"Silver OSV affected packages","layer":"silver","domain":"vulnerabilities","description":"One row per OSV affected[] entry with a package."},{"title":"Silver OSV repository pointers","layer":"silver","domain":"packages","description":"Repository pointers in OSV records (GIT ranges and FIX references)."}],"exports":[{"name":"radar.json","state":"partial data","rows":0},{"name":"project_pages.json","state":"partial data","rows":0},{"name":"backtests.json","state":"pending data","rows":3},{"name":"benchmarks.json","state":"ok","rows":9},{"name":"brief.json","state":"ok","rows":1},{"name":"metadata/catalog.json","state":"ok","rows":null},{"name":"metadata/glossary.json","state":"ok","rows":null},{"name":"metadata/lineage.json","state":"ok","rows":null},{"name":"pipeline_metrics.json","state":"ok","rows":null}]};
+const fmt = n => n == null ? "not recorded" : Number(n).toLocaleString("en-US");
+const day = s => s ? s.slice(0,10) : "n/a";
+const utc = s => s ? s.slice(0,16).replace("T"," ") + " UTC" : "n/a";
+const mb = b => b == null ? "not recorded" : (b/1e6).toFixed(1) + " MB";
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const sk = w => `<span class="sk" style="width:${w}px" aria-hidden="true"></span>`;
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const ORDER = ["keystone-parser","datacontract-cli","great-expectations","duckdb","redpanda","flink","dbt","duckdb-iceberg","spark","trino","keystone-resolve","keystone-registry","openlineage-dbt","marquez","datahub","otel-collector","prometheus","grafana","keystone-llm","keystone"];
+const M = D.pm, T = M.totals, F = M.freshness, Q = M.quality, PB = M.produced_by;
+const ENG = [...M.engines].sort((a, b) => (ORDER.indexOf(a.name) + 1 || 99) - (ORDER.indexOf(b.name) + 1 || 99));
+const LAYERS = ["sources","silver","stream","rollup","warehouse","published"].filter(k => D.lineage.layers[k]).map(k => [k, D.lineage.layers[k]]);
+const STAGE = Object.fromEntries(M.last_run.stages.map(s => [s.service, s]));
+// Scoring coverage as published in the radar status text (the export should carry it as a field; see options.md).
+const COV = (() => { const m = /([\d.]+)% of the window/.exec(D.radar.status.detail); return m ? +m[1] / 100 : null; })();
+const banner = s => `<div class="banner" role="status"><b>${esc(s.state)}</b>${esc(s.detail)}</div>`;
+const nav = () => `<nav class="nav" aria-label="Main"><span class="logo">KEYSTONE</span>${["Radar","Pipeline Live","Backtests","Lineage","About"].map(n => `<a href="#">${n}</a>`).join("")}</nav>`;
+const kpis = () => `<div class="kpis">
+  <div class="kpi"><div class="l">Events processed</div><div class="v">${fmt(T.events_processed)}</div><div class="s">${fmt(T.events_stored)} stored</div></div>
+  <div class="kpi"><div class="l">Bytes parsed</div><div class="v">${mb(T.bytes_parsed)}</div><div class="s">${fmt(T.files_parsed)} files · ${fmt(T.date_range.source_hours)} source hours</div></div>
+  <div class="kpi"><div class="l">Date range</div><div class="v" style="font-size:16px">${day(T.date_range.first_event)} → ${day(T.date_range.newest_event)}</div><div class="s">backfill from ${day(T.backfill_window.start)}</div></div>
+  <div class="kpi ${F.status === "breach" ? "bad" : ""}"><div class="l">Freshness lag</div><div class="v">${F.lag_hours.toFixed(1)} h</div><div class="s">target ${F.slo_hours} h · ${esc(F.status)}</div></div>
+  <div class="kpi"><div class="l">Cost</div><div class="v">$${M.cost.usd.toFixed(2)}</div><div class="s">no billing account</div></div>
+  <div class="kpi"><div class="l">Quality</div><div class="v">${fmt(Q.checks_passed)}</div><div class="s">checks passed · ${fmt(Q.quarantined_rows)} quarantined</div></div></div>
+  <p class="stamp">pipeline_metrics.json, generated ${utc(M.generated_at)} · profile ${esc(M.profile)}${PB.fallback ? " (fallback: " + esc(PB.reason) + ")" : ""}</p>
+  <ul class="svc">${ENG.map(e => `<li class="${e.active ? "on" : ""}">${esc(e.name)} ${esc(e.version)}</li>`).join("")}</ul>`;
+const radarTable = () => `<div class="tw"><table><thead><tr><th>#</th><th>Repository</th><th>Packages</th><th>Risk</th><th>Fragility</th><th>Criticality</th><th>Coverage</th></tr></thead><tbody>
+  ${[0,1,2,3,4].map(i => `<tr><td>${i+1}</td><td>${sk(150 - i*12)}</td><td>${sk(60)}</td><td>${sk(34)}</td><td>${sk(34)}</td><td>${sk(34)}</td><td>${sk(40)}</td></tr>`).join("")}</tbody>
+  <caption>${fmt(D.radar.row_count)} measured rows. Grey bars are layout only. Signals, not predictions.</caption></table></div>`;
+const rest = (r = "Contacts · Radar", p = "Instruments · Pipeline Live") => `<section class="blk"><h2>${r}</h2><p class="stamp">radar.json, generated ${utc(D.radar.generated_at)}</p>${banner(D.radar.status)}
+  <div class="two"><div>${radarTable()}</div><aside><div class="note">Weekly brief · ${esc(D.brief.week)}</div><p style="font-size:13px">${esc(D.brief.text)}</p><div class="note">Written by ${esc(D.brief.model)}; ${esc(D.brief.detail)}.</div></aside></div></section>
+  <section class="blk"><h2>${p}</h2>${kpis()}</section>
+  <footer><span>Data: GH Archive, OSV (CC-BY 4.0), ecosyste.ms (CC-BY-SA 4.0)</span><span>Repository and package level only</span><span>Cost $${M.cost.usd.toFixed(2)}</span><span><a style="color:inherit" href="${esc(D.radar.corrections)}">Corrections and removal</a></span></footer>`;
+
+function loop(el, frame) { let on = false, raf = 0; const t0 = performance.now();
+  const tick = t => { frame((t - t0) / 1000); raf = requestAnimationFrame(tick); };
+  const io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !on) { on = true; raf = requestAnimationFrame(tick); } else if (!e.isIntersecting && on) { on = false; cancelAnimationFrame(raf); } });
+  io.observe(el); return () => { io.disconnect(); cancelAnimationFrame(raf); }; }
+function canvas(cv) { const dpr = Math.min(devicePixelRatio || 1, 2), ctx = cv.getContext("2d");
+  const size = () => { cv.width = cv.clientWidth * dpr; cv.height = cv.clientHeight * dpr; }; size(); addEventListener("resize", size);
+  return { ctx, dpr, off: () => removeEventListener("resize", size) }; }
+const css = (el, v) => getComputedStyle(el).getPropertyValue(v).trim();
+
+const V = [
+{ id: "sA", name: "Waterfall", idea: "A sonar waterfall in 3D. Each ridge is one real pipeline run: its peak sits at the hour of day the run started (UTC) and its height is the run's wall time (log scale, 0.01 s to 45 min); failed runs glow amber. Ridges roll in from the deep one per half second, replaying the run log, oldest first.",
+  html: () => `${nav()}<div class="hero"><canvas id="cv" role="img" aria-label="Waterfall of ${D.runs.length} pipeline runs"></canvas><h1 class="title">Every run<br>leaves an <em>echo</em></h1>
+    <p class="cap">${D.runs.length} runs from pipeline_metrics.json history · x = hour of day started (UTC) · height = wall time, log scale · amber = failed (${D.runs.filter(r => r.status === "failed").length}).</p></div>${rest()}`,
+  mount(root) { const cv = root.querySelector("#cv"), { ctx, dpr, off } = canvas(cv), acc = css(root, "--accent"), warn = css(root, "--warn"), bg = css(root, "--bg"), mute = css(root, "--mute");
+    const runs = D.runs.map(r => { const d = new Date(r.started_at); return { x: (d.getUTCHours() + d.getUTCMinutes() / 60) / 24, h: Math.log10(1 + r.wall_seconds) / Math.log10(1 + 2700), s: r.status, t: r.started_at }; });
+    const N = runs.length, draw = t => { const W = cv.width, H = cv.height, shown = REDUCED ? N : Math.min(N, Math.floor(t * 2) % (N + 8));
+      ctx.clearRect(0, 0, W, H); const vx = W * .6, vy = H * .2;
+      for (let k = 0; k < shown; k++) { const i = shown - 1 - k, z = k / N, sc = 1 - z * .72, y0 = H * .9 - (H * .9 - vy) * z, w = W * .8 * sc, x0 = vx - w / 2, r = runs[N - 1 - k];
+        if (!r) continue; const steps = 140, prof = [];
+        for (let s = 0; s <= steps; s++) { const u = s / steps, d = (u - r.x) / .03; prof.push([x0 + u * w, y0 - (Math.exp(-d * d) * .85 + Math.exp(-(((u - r.x) / .1) ** 2)) * .15) * r.h * H * .42 * sc]); }
+        ctx.beginPath(); prof.forEach(([x, y], s) => s ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.lineTo(x0 + w, H); ctx.lineTo(x0, H); ctx.closePath(); ctx.fillStyle = bg; ctx.fill();
+        ctx.beginPath(); prof.forEach(([x, y], s) => s ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+        ctx.strokeStyle = r.s === "failed" ? warn : acc; ctx.globalAlpha = .2 + .8 * (1 - z); ctx.lineWidth = (1 + (1 - z) * 1.4) * dpr; ctx.stroke(); ctx.globalAlpha = 1; }
+      ctx.fillStyle = mute; ctx.font = `${11 * dpr}px Space Mono`; const fx = vx - W * .4, fw = W * .8;
+      [0, 6, 12, 18, 24].forEach(h => ctx.fillText(String(h).padStart(2, "0") + ":00", fx + fw * h / 24 - 14 * dpr, H * .97)); };
+    if (REDUCED) { draw(0); return off; } const stop = loop(cv, draw); return () => { stop(); off(); }; } },
+
+{ id: "sB", name: "Descent", idea: "Scroll inside the hero to dive. The water column is the pipeline: you start at the surface among the published exports and sink through warehouse, rollup, stream and silver down to the raw sources on the seabed. Each zone's depth is its real dataset count; the brass porthole (3D, follows the pointer) shows that zone's real datasets drifting past.",
+  html: () => { const tot = LAYERS.reduce((a, [, v]) => a + v.length, 0), down = [...LAYERS].reverse();
+    return `${nav()}<div class="hero" id="dive"><div class="shafts"></div><div class="gauge" id="gauge">${down.map(([k, v]) => `<div style="--n:${v.length}" data-k="${k}">${k}</div>`).join("")}</div>
+    <div class="zone" style="height:560px"><div><h3>Dive into the<em>open-source supply chain</em></h3><p>Scroll down inside this panel. ${tot} datasets in ${LAYERS.length} layers, from metadata/lineage.json. Signals, not predictions.</p></div></div>
+    ${down.map(([k, v], i) => `<div class="zone" data-k="${k}" style="height:${(260 + v.length * 22)}px"><div><h3>${k}<em>${v.length} dataset${v.length === 1 ? "" : "s"} · zone ${i + 1} of ${LAYERS.length}</em></h3><p>${k === "published" ? "The surface: what the site and its readers see." : k === "sources" ? "The seabed: GH Archive hours, OSV advisories, package-to-repo mappings." : "Built from the layer below, checked by contracts and dbt tests."}</p></div>
+      <div class="port"><div class="rim">${[0,1,2,3,4,5].map(n => `<i style="--k:${n}"></i>`).join("")}<div class="glass">${v.slice(0, 9).map((n, j) => `<span style="--i:${j}">${esc(n)}</span>`).join("")}${v.length > 9 ? `<span style="--i:9;opacity:.6">and ${v.length - 9} more</span>` : ""}</div></div></div></div>`).join("")}
+    <div class="seabed">Seabed reached. Raw source files are fetched politely, parsed and deleted; never republished.</div></div>${rest()}`; },
+  mount(root) { const dive = root.querySelector("#dive"), g = [...root.querySelectorAll("#gauge div")], zones = [...root.querySelectorAll(".zone[data-k]")];
+    const onScroll = () => { const mid = dive.scrollTop + 320; let cur = null; zones.forEach(z => { if (z.offsetTop <= mid) cur = z.dataset.k; }); g.forEach(x => x.classList.toggle("here", x.dataset.k === cur)); };
+    const mv = e => { const r = dive.getBoundingClientRect(); root.querySelectorAll(".rim").forEach(el => { el.style.setProperty("--py", ((e.clientX - r.left) / r.width - .5) * 40 + "deg"); el.style.setProperty("--px", (.5 - (e.clientY - r.top) / r.height) * 24 + "deg"); }); };
+    dive.addEventListener("scroll", onScroll, { passive: true }); dive.addEventListener("pointermove", mv); onScroll();
+    return () => { dive.removeEventListener("scroll", onScroll); dive.removeEventListener("pointermove", mv); }; } },
+
+{ id: "sC", name: "Siphonophore", idea: "The pipeline as a deep-sea siphonophore: one colonial creature made of specialised units, like the services of a pipeline. Each bell is one real service; bells that ran in the last run glow and pulse at that stage's real duration. Each trailing tentacle is as long as the days since that service last ran. The pointer is the current: drag across to turn the creature.",
+  html: () => `${nav()}<div class="hero"><canvas id="cv" role="img" aria-label="${ENG.length} services drawn as one creature"></canvas><h1 class="title">One creature,<br><em>many</em> organs</h1>
+    <p class="cap">${ENG.length} bells = services in pipeline_metrics.json · glowing = ran in the last run, pulsing at the stage's real duration · tentacle length = days since last ran (measured ${day(M.generated_at)}).</p></div>${rest()}`,
+  mount(root) { const cv = root.querySelector("#cv"), { ctx, dpr, off } = canvas(cv), acc = css(root, "--accent"), mute = css(root, "--mute"), fg = css(root, "--fg");
+    const now = new Date(M.generated_at), units = ENG.map((e, i) => ({ e, i, age: Math.max(0, (now - new Date(e.last_used)) / 864e5), per: STAGE[e.name] ? STAGE[e.name].duration_seconds : (e.active ? 2 : 0) }));
+    let yaw = .4, tgt = .4; const mv = ev => { const r = cv.getBoundingClientRect(); tgt = ((ev.clientX - r.left) / r.width - .5) * 3; }; cv.addEventListener("pointermove", mv);
+    const draw = t => { const W = cv.width, H = cv.height, n = units.length; yaw += (tgt - yaw) * .06; ctx.clearRect(0, 0, W, H);
+      const pts = units.map(u => { const s = u.i / (n - 1), a = s * 7 + yaw, x = W * .64 + Math.cos(a) * W * .06 + (s - .5) * W * .08, y = H * .12 + s * H * .74, z = Math.sin(a); return { u, x, y, z }; });
+      ctx.strokeStyle = mute; ctx.globalAlpha = .5; ctx.lineWidth = 2 * dpr; ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke();
+      [...pts].sort((a, b) => a.z - b.z).forEach(p => { const u = p.u, sc = (1 + p.z * .35) * dpr, pulse = u.e.active && u.per && !REDUCED ? .5 + .5 * Math.sin(t * Math.PI * 2 / u.per) : (u.e.active ? 1 : 0);
+        const len = (20 + Math.min(u.age, 10) * 22) * sc; ctx.globalAlpha = u.e.active ? .9 : .35; ctx.strokeStyle = u.e.active ? acc : mute; ctx.lineWidth = 1 * dpr;
+        for (let k = -1; k <= 1; k++) { ctx.beginPath(); ctx.moveTo(p.x + k * 5 * sc, p.y + 6 * sc); ctx.quadraticCurveTo(p.x + k * 9 * sc - yaw * 8, p.y + len * .5, p.x + k * 4 * sc - yaw * 18, p.y + len); ctx.stroke(); }
+        const r = 13 * sc * (u.e.active ? 1 + pulse * .12 : 1), g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 2.4);
+        g.addColorStop(0, u.e.active ? acc : mute); g.addColorStop(1, "transparent"); ctx.globalAlpha = u.e.active ? .35 + pulse * .4 : .12; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, r * 2.4, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = u.e.active ? .95 : .5; ctx.beginPath(); ctx.ellipse(p.x, p.y, r, r * .75, 0, Math.PI, 0); ctx.quadraticCurveTo(p.x, p.y + r * .5, p.x - r, p.y); ctx.strokeStyle = u.e.active ? acc : mute; ctx.lineWidth = 1.5 * dpr; ctx.stroke();
+        if (p.z > -.2) { ctx.globalAlpha = u.e.active ? 1 : .6; ctx.fillStyle = u.e.active ? fg : mute; ctx.font = `${10 * dpr}px Space Mono`; ctx.fillText(u.e.name + (u.e.active ? "" : " · " + u.age.toFixed(0) + " d"), p.x + r + 8 * dpr, p.y + 3 * dpr); } });
+      ctx.globalAlpha = 1; };
+    const stop = loop(cv, draw); return () => { stop(); off(); cv.removeEventListener("pointermove", mv); }; } },
+
+{ id: "sD", name: "Murk", idea: "Water clarity is data coverage. The radar sits deep in the water behind layers of murk whose thickness is set by the share of the scoring window that has data (now 0.1%). Your pointer is a torch that cuts through; as the backfill lands, the water clears on its own. Rows rise into view when they are scored.",
+  html: () => `${nav()}<div class="hero" id="hz"><div class="depth">${[0,1,2,3,4,5,6].map(i => `<div class="fog" style="--z:${-80 * i}px;--fx:${20 + i * 11}%;--fy:${30 + (i % 3) * 20}%"></div>`).join("")}
+    <div class="rows">${[0,1,2,3,4].map(i => `<div class="r"><span>${i + 1}</span>${sk(200 - i * 20)}${sk(60)}${sk(40)}${sk(40)}</div>`).join("")}</div></div><div class="torch"></div>
+    <h1 class="title">What's<br>down <em>there</em>?</h1><div class="clar"><div class="note">water clarity = scoring coverage</div><div class="v">${COV == null ? "n/a" : (COV * 100).toFixed(1) + "%"}</div><div class="note">${esc(D.radar.status.state)} · ${fmt(D.radar.row_count)} rows scored</div></div>
+    <p class="cap">Murk opacity = 1 − coverage, from radar.json (generated ${utc(D.radar.generated_at)}). Move the pointer to shine the torch. The grey rows are layout only.</p></div>${rest()}`,
+  mount(root) { const hz = root.querySelector("#hz"), o = COV == null ? .9 : Math.max(.05, 1 - COV);
+    root.querySelectorAll(".fog").forEach((f, i) => f.style.setProperty("--o", (o * (.35 + i * .09)).toFixed(3)));
+    const mv = e => { const r = hz.getBoundingClientRect(); hz.style.setProperty("--mx", (e.clientX - r.left) + "px"); hz.style.setProperty("--my", (e.clientY - r.top) + "px"); };
+    hz.addEventListener("pointermove", mv); return () => hz.removeEventListener("pointermove", mv); } },
+
+{ id: "sE", name: "Echo", idea: "One ping, one truth: a 3D water tank where a ping drops from the surface to the newest data hour on the seabed and echoes back. Its round trip takes as long as the real freshness lag (1 s per 20 h); a green line marks the 26 h target. When the echo returns after the line, the page says so in words.",
+  html: () => `${nav()}<div class="hero"><div class="col"><div class="tank" id="tank"><div class="face bk"></div><div class="face lf"></div><div class="face rt"></div><div class="face bt"></div><div class="face fr"></div>
+    <div class="mark" style="top:${(F.slo_hours / Math.max(F.lag_hours, F.slo_hours) * 420).toFixed(0)}px;--c:var(--accent)"><span>target ${F.slo_hours} h</span></div><div class="mark" style="top:420px;--c:var(--warn)"><span>newest data hour<br>${utc(F.newest_data_hour)}</span></div>
+    <div class="pulse" id="ping"></div><div class="ring" id="ring"></div></div></div>
+    <h1 class="title">How late<br>is the <em>echo</em>?</h1><div class="read"><div class="note">freshness lag</div><div class="v">${F.lag_hours.toFixed(1)} h</div><p>Target ${F.slo_hours} h. Status: <b style="color:var(--warn)">${esc(F.status)}</b>. ${F.status === "breach" ? "The echo comes back late: the newest data is older than the target." : "The echo is back in time."}</p></div>
+    <p class="cap">From pipeline_metrics.json freshness, generated ${utc(M.generated_at)}. The ping's round trip is the lag, at 1 second per 20 hours.</p></div>${rest("Contacts · Radar", "Soundings · Pipeline Live")}`,
+  mount(root) { const ping = root.querySelector("#ping"), ring = root.querySelector("#ring"), trip = F.lag_hours / 20, depth = 420;
+    const draw = t => { const p = (t % (trip + 1)) / trip; if (p > 1) { ping.style.opacity = 0; return; } const y = p < .5 ? p * 2 * depth : (1 - p) * 2 * depth; ping.style.opacity = 1; ping.style.top = (y - 6) + "px";
+      const rp = p < .5 ? 0 : (p - .5) * 2; ring.style.top = depth + "px"; ring.style.opacity = p < .5 ? 0 : 1 - rp; ring.style.width = ring.style.height = (10 + rp * 180) + "px"; ring.style.margin = -(5 + rp * 90) + "px"; };
+    if (REDUCED) { ping.style.top = (depth - 6) + "px"; return () => {}; } return loop(root.querySelector(".col"), draw); } }
+];
+
+let cur = 0, light = false, cleanup = () => {};
+const site = document.getElementById("site");
+function draw() { cleanup(); const v = V[cur]; site.className = "site " + v.id; site.dataset.mode = light ? "light" : "dark";
+  site.innerHTML = v.html(); cleanup = v.mount(site) || (() => {});
+  document.getElementById("idea").textContent = `${String.fromCharCode(65 + cur)}. ${v.name}: ${v.idea}`;
+  document.querySelectorAll("#pick button").forEach((b, i) => b.setAttribute("aria-pressed", i === cur)); document.getElementById("mode").setAttribute("aria-pressed", light); }
+document.getElementById("pick").innerHTML = V.map((v, i) => `<button type="button">${String.fromCharCode(65 + i)}. ${v.name}</button>`).join("");
+document.getElementById("pick").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { cur = [...b.parentNode.children].indexOf(b); draw(); } });
+document.getElementById("mode").addEventListener("click", () => { light = !light; draw(); });
+draw();
+</script>
+</body>
+</html>
