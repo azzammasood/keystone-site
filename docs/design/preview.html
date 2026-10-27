@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keystone design options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,700&display=swap">
+<style>
+/* Page chrome (neutral, not part of any concept) */
+:root{--pg-bg:#f4f4f5;--pg-fg:#18181b;--pg-mute:#52525b;--pg-line:#d4d4d8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--pg-bg:#111113;--pg-fg:#f4f4f5;--pg-mute:#a1a1aa;--pg-line:#3f3f46}}
+:root[data-theme="dark"]{--pg-bg:#111113;--pg-fg:#f4f4f5;--pg-mute:#a1a1aa;--pg-line:#3f3f46}
+*{box-sizing:border-box}
+body{margin:0;background:var(--pg-bg);color:var(--pg-fg);font:15px/1.5 system-ui,sans-serif}
+.pg{max-width:1180px;margin:0 auto;padding:24px 16px 64px}
+.pg h1{margin:0 0 4px;font-size:26px}
+.pg p.lead{margin:0 0 12px;color:var(--pg-mute);max-width:820px}
+nav.jump{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 28px}
+nav.jump a{color:var(--pg-fg);border:1px solid var(--pg-line);border-radius:999px;padding:4px 12px;text-decoration:none;font-size:14px}
+.chead{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin:40px 0 8px}
+.chead h2{margin:0;font-size:20px}
+.chead p{margin:0;color:var(--pg-mute);flex-basis:100%}
+.chead button{font:inherit;font-size:13px;border:1px solid var(--pg-line);background:transparent;color:var(--pg-fg);border-radius:6px;padding:4px 10px;cursor:pointer}
+.logos{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:12px}
+.logos figure{margin:0;border:1px solid var(--pg-line);border-radius:10px;padding:16px;text-align:center}
+.logos svg{width:96px;height:96px;color:var(--pg-fg)}
+.logos figcaption{font-size:13px;color:var(--pg-mute);margin-top:8px}
+
+/* Shared concept skeleton: every concept renders the same real data */
+.c{--bg:#fff;--fg:#000;--mute:#555;--line:#ccc;--panel:#fff;--accent:#06c;--warn:#b45309;--ok:#15803d;--dim:.42;
+  background:var(--bg);color:var(--fg);border-radius:12px;overflow:hidden;border:1px solid var(--pg-line)}
+.c .in{padding:24px}
+.c h3{margin:0 0 4px}
+.c .stamp{color:var(--mute);font-size:13px;margin:0 0 14px}
+.c .banner{border:1px solid var(--warn);border-left-width:5px;padding:10px 12px;margin:0 0 14px;background:var(--panel)}
+.c .banner b{color:var(--warn);text-transform:uppercase;letter-spacing:.04em;font-size:12px;margin-right:8px}
+.c .ctrl{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.c .ctrl input,.c .ctrl select{font:inherit;font-size:13px;padding:6px 8px;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:4px;min-width:0}
+.c .tw{overflow-x:auto}
+.c table{border-collapse:collapse;width:100%;font-size:13px}
+.c th,.c td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.c td.empty{white-space:normal;color:var(--mute);padding:18px 8px}
+.c .num{font-variant-numeric:tabular-nums}
+.c hr.sep{border:0;border-top:1px solid var(--line);margin:28px 0}
+.c .strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:0 0 18px}
+.c .kpi{background:var(--panel);padding:10px 12px}
+.c .kpi .l{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}
+.c .kpi .v{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.c .kpi .s{font-size:12px;color:var(--mute)}
+.c .kpi.bad .v{color:var(--warn)}
+.c .badge{display:inline-block;font-size:12px;padding:2px 8px;border:1px solid var(--accent);color:var(--accent);border-radius:999px}
+.c .flow{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;list-style:none;padding:0}
+.c .node{flex:1 1 150px;border:1px solid var(--line);background:var(--panel);padding:8px 10px;font-size:12px;position:relative}
+.c .node .n{font-weight:700;font-size:13px}
+.c .node .r,.c .node .d{color:var(--mute)}
+.c .node.off{opacity:var(--dim)}
+.c .node.on{border-color:var(--accent)}
+.c .node .run{color:var(--accent)}
+.c .charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.c .chart{border:1px solid var(--line);background:var(--panel);padding:10px}
+.c .chart .l{font-size:12px;color:var(--mute);margin-bottom:6px}
+.c .chart svg{width:100%;height:90px;display:block}
+.c .bar{fill:var(--accent)}
+.c .bar.failed{fill:var(--warn)}
+.c .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:16px;font-size:13px}
+.c .facts div{border-top:2px solid var(--line);padding-top:6px}
+.c .facts b{font-variant-numeric:tabular-nums}
+.c a{color:var(--accent)}
+
+/* 1 Ledger: editorial newsprint */
+.c1{--bg:#f6f1e7;--fg:#1d1a16;--mute:#5e564b;--line:#cfc4b0;--panel:#fbf8f1;--accent:#8a2b1f;--warn:#8a5a00;font-family:"Source Serif 4",Georgia,serif}
+.c1[data-mode=dark]{--bg:#1b1916;--fg:#ece5d8;--mute:#b3a893;--line:#4a4338;--panel:#23201b;--accent:#e8836f;--warn:#e0b25a}
+.c1 h3{font-size:34px;font-weight:700;border-bottom:3px double var(--fg);padding-bottom:4px}
+.c1 .kpi .v,.c1 .num,.c1 td,.c1 .node{font-family:"IBM Plex Mono",monospace}
+.c1 .kpi .v{font-size:19px}
+.c1 th{font-variant:small-caps;letter-spacing:.05em;border-bottom:2px solid var(--fg)}
+.c1 .strip{background:transparent;border:0;border-top:2px solid var(--fg);border-bottom:1px solid var(--fg);gap:0}
+.c1 .kpi{background:transparent;border-right:1px solid var(--line)}
+.c1 .node{border-width:0 0 0 2px}
+
+/* 2 Control Room: dark-first operations console */
+.c2{--bg:#0b0f14;--fg:#d7e3ee;--mute:#8aa0b4;--line:#1f2c3a;--panel:#101822;--accent:#5ce1a6;--warn:#f2b84b;--dim:.38;font-family:"JetBrains Mono",ui-monospace,monospace}
+.c2[data-mode=light]{--bg:#e9eef2;--fg:#0f1a24;--mute:#4a5b6b;--line:#b8c6d3;--panel:#f6f9fb;--accent:#047857;--warn:#9a5b00}
+.c2 h3{font-size:16px;text-transform:uppercase;letter-spacing:.2em;color:var(--accent)}
+.c2 .kpi .v{color:var(--accent)}
+.c2 .flow{flex-direction:column;gap:0;border:1px solid var(--line)}
+.c2 .node{flex:none;display:grid;grid-template-columns:22px 1fr 1fr auto;gap:10px;align-items:center;border:0;border-bottom:1px solid var(--line)}
+.c2 .node::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--mute)}
+.c2 .node.on::before{background:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
+.c2 .banner{border-color:var(--warn);background:color-mix(in srgb,var(--warn) 8%,var(--panel))}
+@media (max-width:640px){.c2 .node{grid-template-columns:22px 1fr}}
+
+/* 3 Blueprint: technical drawing */
+.c3{--bg:#0f2a4a;--fg:#e6f2ff;--mute:#9fc0e0;--line:#2f5680;--panel:#123459;--accent:#8fd3ff;--warn:#ffcf70;font-family:"IBM Plex Sans",sans-serif;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:24px 24px}
+.c3[data-mode=light]{--bg:#f7fbff;--fg:#0b2545;--mute:#3d5a80;--line:#cfe0f2;--panel:#ffffffd9;--accent:#1d5fbf;--warn:#a15c00}
+.c3 h3{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:22px}
+.c3 h3::before{content:"FIG. ";color:var(--mute);font-size:13px}
+.c3 .node,.c3 .kpi,.c3 .chart{border-style:dashed}
+.c3 .flow{gap:0}
+.c3 .node{border-right:0}
+.c3 .node:not(:last-child)::after{content:"→";position:absolute;right:-6px;top:8px;color:var(--accent)}
+.c3 .kpi .v{font-family:"IBM Plex Mono",monospace}
+
+/* 4 Swiss: strict grid, big numerals, one red */
+.c4{--bg:#ffffff;--fg:#0a0a0a;--mute:#5a5a5a;--line:#0a0a0a;--panel:#fff;--accent:#d61f14;--warn:#d61f14;font-family:Inter,Helvetica,Arial,sans-serif}
+.c4[data-mode=dark]{--bg:#0a0a0a;--fg:#fafafa;--mute:#a3a3a3;--line:#fafafa;--panel:#0a0a0a;--accent:#ff5a4e;--warn:#ff5a4e}
+.c4 h3{font-size:56px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.c4 .strip{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));background:transparent;border:0;gap:0}
+.c4 .kpi{border-top:4px solid var(--fg);padding:8px 12px 14px 0}
+.c4 .kpi .v{font-size:36px;font-weight:800;letter-spacing:-.02em}
+.c4 .node{border:0;border-top:2px solid var(--fg)}
+.c4 .node.on{border-top-color:var(--accent)}
+.c4 .banner{border:0;border-left:8px solid var(--accent);background:transparent}
+.c4 th{border-bottom:2px solid var(--fg);text-transform:uppercase;font-size:11px;letter-spacing:.06em}
+
+/* 5 Field Survey: cartographic, earth tones */
+.c5{--bg:#efe8da;--fg:#2b2a24;--mute:#6a6555;--line:#cbbf9f;--panel:#f7f2e7;--accent:#4d6b4a;--warn:#b5562b;font-family:Inter,sans-serif;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Cg fill='none' stroke='%23b9ab88' stroke-opacity='.35'%3E%3Cpath d='M0 150 C80 110 160 170 240 120 S360 90 400 110'/%3E%3Cpath d='M0 120 C90 80 170 140 250 90 S360 60 400 80'/%3E%3Cpath d='M0 90 C100 50 180 110 260 60 S360 30 400 50'/%3E%3C/g%3E%3C/svg%3E")}
+.c5[data-mode=dark]{--bg:#1d1f1a;--fg:#e8e2d2;--mute:#a8a18c;--line:#3e4136;--panel:#25281f;--accent:#9cc28f;--warn:#e7895a}
+.c5 h3{font-family:Fraunces,serif;font-size:32px;font-weight:700}
+.c5 .node{border-radius:18px 4px 18px 4px}
+.c5 .kpi .v{font-family:Fraunces,serif}
+.c5 .strip{border-radius:8px;overflow:hidden}
+
+/* 6 Quiet Signal: minimal, accessibility-first */
+.c6{--bg:#fafaf9;--fg:#1c1917;--mute:#57534e;--line:#e7e5e4;--panel:#ffffff;--accent:#0f766e;--warn:#a16207;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.c6[data-mode=dark]{--bg:#0c0a09;--fg:#f5f5f4;--mute:#a8a29e;--line:#292524;--panel:#1c1917;--accent:#5eead4;--warn:#facc15}
+.c6 h3{font-size:24px;font-weight:600}
+.c6 .strip{background:transparent;border:0;gap:12px}
+.c6 .kpi,.c6 .node,.c6 .chart{border:1px solid var(--line);border-radius:10px}
+.c6 .banner{border-radius:10px;border-width:1px;border-left-width:1px}
+.c6 .node.on{box-shadow:inset 3px 0 0 var(--accent)}
+
+@media (prefers-reduced-motion:no-preference){.c2 .node.on.moving::before{animation:pulse var(--period,0s) linear infinite}}
+@keyframes pulse{50%{opacity:.3}}
+</style>
+</head>
+<body>
+<div class="pg">
+  <h1>Keystone: six site design options</h1>
+  <p class="lead">Each concept renders the same real export files from the pipeline (generated 2026-10-23): <code>radar.json</code>, <code>pipeline_metrics.json</code> and <code>backtests.json</code>. No number on this page is made up. The radar has no scored rows yet, so every concept shows its honest "partial data" state. Each concept has its own light and dark toggle. Details per concept are in <code>docs/design/options.md</code>.</p>
+  <nav class="jump" aria-label="Concepts" id="jump"></nav>
+  <div id="concepts"></div>
+  <div class="chead"><h2 id="logos">Logo directions</h2><p>Four SVG marks, single colour (they follow the text colour), in <code>docs/design/logos/</code>.</p></div>
+  <div class="logos"><figure><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"><title>Keystone arch</title><path d="M14 84V52a34 34 0 0 1 68 0v32"/><path d="M40 20h16l-3 20H43z" fill="currentColor"/><path d="M14 64h12M70 64h12"/></svg><figcaption>A. Arch</figcaption></figure><figure><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><title>Keystone sweep</title><path d="M30 14h36L56 82H40z" stroke-linejoin="round"/><path d="M48 70a10 10 0 0 0 0-20M48 80a22 22 0 0 0 0-44" stroke-width="3"/><circle cx="48" cy="60" r="3" fill="currentColor"/></svg><figcaption>B. Sweep</figcaption></figure><figure><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="currentColor"><title>Keystone blocks</title><rect x="16" y="16" width="16" height="64" rx="2"/><path d="M38 44h12l26-28H58z"/><path d="M38 52h12l26 28H58z" opacity=".55"/></svg><figcaption>C. Blocks</figcaption></figure><figure><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="currentColor"><title>Keystone points</title><g><circle cx="24" cy="20" r="4"/><circle cx="36" cy="20" r="4"/><circle cx="48" cy="20" r="4"/><circle cx="60" cy="20" r="4"/><circle cx="72" cy="20" r="4"/><circle cx="30" cy="34" r="4"/><circle cx="42" cy="34" r="4"/><circle cx="54" cy="34" r="4"/><circle cx="66" cy="34" r="4"/><circle cx="36" cy="48" r="4"/><circle cx="48" cy="48" r="4"/><circle cx="60" cy="48" r="4"/><circle cx="42" cy="62" r="4"/><circle cx="54" cy="62" r="4"/><circle cx="48" cy="76" r="5" opacity=".5"/></g></svg><figcaption>D. Points</figcaption></figure></div>
+</div>
+<script>
+const D = {"radar":{"generated_at":"2026-10-23T05:57:30.060036+00:00","status":{"state":"partial data","detail":"partial data: the rollup holds 0.1% of the window's hours; not scored"},"row_count":0,"window":{"start":"2025-10-01T00:00:00+00:00","end":"2026-10-01T00:00:00+00:00","periods":[]},"produced_by":{"profile":"free","fallback":true,"run_id":"0f8a5bad-75b4-4418-b62d-cc519975648f","keystone_version":"0.1.0"},"corrections":"https://github.com/azzammasood/keystone-pipeline/issues"},"pm":{"generated_at":"2026-10-23T05:27:16.215346+00:00","profile":"free","produced_by":{"profile":"free","fallback":true,"reason":"full unhealthy: redpanda, redpanda-registry, flink, lakekeeper, rustfs down","run_id":"0f8a5bad-75b4-4418-b62d-cc519975648f","decided_at":"2026-10-23T05:27:03.449294+00:00","status":"ok","probes":[{"name":"redpanda","ok":false},{"name":"redpanda-registry","ok":false},{"name":"flink","ok":false},{"name":"lakekeeper","ok":false},{"name":"rustfs","ok":false}]},"engines":[{"name":"datacontract-cli","version":"1.2.7","role":"ODCS data contract tests","active":false,"last_used":"2026-10-21T06:38:39.230353+00:00"},{"name":"datahub","version":"v1.7.0.1","role":"metadata catalog (lineage, glossary, owners, assertions)","active":false,"last_used":"2026-10-21T06:46:16.055365+00:00"},{"name":"dbt","version":"1.12.6","role":"warehouse models and tests","active":false,"last_used":"2026-10-22T07:44:21.570418+00:00"},{"name":"duckdb","version":"1.5.6","role":"free rollup engine","active":true,"last_used":"2026-10-23T05:27:03.447168+00:00"},{"name":"duckdb-iceberg","version":"1.5.6","role":"Iceberg publish of the marts","active":false,"last_used":"2026-10-21T06:36:42.230092+00:00"},{"name":"flink","version":"2.2.1","role":"full rollup engine (stream and batch)","active":false,"last_used":"2026-10-21T06:36:30.567323+00:00"},{"name":"grafana","version":"13.2.4","role":"dashboards","active":false,"last_used":"2026-10-21T06:47:12.168611+00:00"},{"name":"keystone","version":"0.1.0","role":"metadata export and metrics","active":true,"last_used":"2026-10-23T05:27:03.449294+00:00"},{"name":"keystone-llm","version":"nvidia/nemotron-3-ultra-550b-a55b:free","role":"","active":false,"last_used":"2026-10-22T07:36:29.489919+00:00"},{"name":"keystone-parser","version":"0.1.0","role":"era-aware parsing to typed Parquet","active":false,"last_used":"2026-10-21T06:33:25.337575+00:00"},{"name":"keystone-registry","version":"0.1.0","role":"","active":false,"last_used":"2026-10-21T17:50:20.025518+00:00"},{"name":"keystone-resolve","version":"0.1.0","role":"","active":false,"last_used":"2026-10-22T07:42:18.438493+00:00"},{"name":"marquez","version":"0.51.1","role":"OpenLineage server","active":false,"last_used":"2026-10-21T06:40:12.947997+00:00"},{"name":"openlineage-dbt","version":"1.54.0","role":"dbt lineage events (dbt-ol)","active":false,"last_used":"2026-10-21T06:34:03.213634+00:00"},{"name":"otel-collector","version":"0.163.1","role":"OpenTelemetry metrics pipeline","active":false,"last_used":"2026-10-21T06:47:12.168611+00:00"},{"name":"prometheus","version":"3.15.0","role":"metrics store","active":false,"last_used":"2026-10-21T06:47:12.168611+00:00"},{"name":"redpanda","version":"v26.2.5","role":"event stream (Kafka API, schema registry)","active":false,"last_used":"2026-10-21T06:34:54.061825+00:00"},{"name":"spark","version":"4.1.3","role":"lakehouse reader (Iceberg)","active":false,"last_used":"2026-10-21T06:38:09.582432+00:00"}],"totals":{"events_processed":882216,"events_stored":2363426,"bytes_downloaded":null,"bytes_parsed":412610898,"files_parsed":24,"rollup_rows":2189426,"date_range":{"first_event":"2011-02-12T00:00:00+00:00","newest_event":"2026-10-19T23:59:59+00:00","source_hours":151},"backfill_window":{"start":"2011-02-12T00:00:00+00:00","end":"present","decision":"ADR-009"}},"last_run":{"run_id":"0f8a5bad-75b4-4418-b62d-cc519975648f","stages":[{"name":"rollup","service":"duckdb","version":"1.5.6","records_in":null,"records_out":0,"bytes_in":null,"bytes_out":null,"duration_seconds":2.167,"records_per_second":0.0,"mb_per_second":null,"status":"ok","started_at":"2026-10-23T05:27:01.279941+00:00"},{"name":"profile","service":"keystone","version":"0.1.0","records_in":5,"records_out":0,"bytes_in":null,"bytes_out":null,"duration_seconds":4.81,"records_per_second":0.0,"mb_per_second":null,"status":"ok","started_at":"2026-10-23T05:26:58.641072+00:00"}]},"freshness":{"newest_data_hour":"2026-10-19T23:00:00+00:00","lag_hours":77.455,"slo_hours":26,"status":"breach"},"quality":{"checks_passed":653,"dbt_tests_failed":0,"quarantined_rows":0,"contract_violations":0},"cost":{"usd":0.0,"basis":"no billing account exists for any service used (CLAUDE.md $0 rule)","free_quota":[{"name":"disk budget (70% of free disk, config/policy.yml)","used_pct":5.34},{"name":"GitHub Actions minutes (private repository)","used_pct":null},{"name":"ecosyste.ms anonymous API, hour of the last fetch (policy.yml)","used_pct":0.06}]},"lineage_summary":{"nodes":109,"edges":123,"documented_pct":100.0}},"runs":[{"run_id":"01a15d00-21a4-7455-80a8-4559cdd00979","started_at":"2026-10-21T05:47:36.841807+00:00","ended_at":"2026-10-21T06:00:19.380213+00:00","wall_seconds":762.538,"stages":13,"events_processed":294072,"status":"failed"},{"run_id":"01a15d0b-fe9f-7df6-b948-91feabd693d2","started_at":"2026-10-21T06:00:29.599161+00:00","ended_at":"2026-10-21T06:00:29.814465+00:00","wall_seconds":0.215,"stages":1,"events_processed":0,"status":"failed"},{"run_id":"01a15d0d-18e3-7707-9c69-6feb6b793e3a","started_at":"2026-10-21T06:01:45.708262+00:00","ended_at":"2026-10-21T06:17:12.206535+00:00","wall_seconds":926.498,"stages":14,"events_processed":294072,"status":"ok"},{"run_id":"01a15d29-6991-74e1-a8bd-b357daa00a32","started_at":"2026-10-21T06:32:42.145814+00:00","ended_at":"2026-10-21T06:47:12.168611+00:00","wall_seconds":870.023,"stages":14,"events_processed":294072,"status":"ok"},{"run_id":"01a15f70-c081-7117-9ab5-0d74146cc4ad","started_at":"2026-10-21T17:09:47.265572+00:00","ended_at":"2026-10-21T17:10:23.123543+00:00","wall_seconds":35.858,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f72-1016-7a8a-8685-6217adace5e6","started_at":"2026-10-21T17:11:13.174411+00:00","ended_at":"2026-10-21T17:11:32.194099+00:00","wall_seconds":19.02,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f73-b56a-77fe-a373-f9ca2acd1e5b","started_at":"2026-10-21T17:13:01.034263+00:00","ended_at":"2026-10-21T17:13:01.949509+00:00","wall_seconds":0.915,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f75-7573-75e5-b7f1-436742d4d0a6","started_at":"2026-10-21T17:14:55.731236+00:00","ended_at":"2026-10-21T17:15:13.002060+00:00","wall_seconds":17.271,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f75-ecb2-707b-81a8-e3790b5a6b49","started_at":"2026-10-21T17:15:26.258520+00:00","ended_at":"2026-10-21T17:15:38.377176+00:00","wall_seconds":12.119,"stages":1,"events_processed":0,"status":"failed"},{"run_id":"01a15f85-7664-7467-b9b1-8efd581d718d","started_at":"2026-10-21T17:32:24.548953+00:00","ended_at":"2026-10-21T17:32:48.231913+00:00","wall_seconds":23.683,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f6c-19c3-718b-8566-37022fc04e47","started_at":"2026-10-21T17:04:42.435659+00:00","ended_at":"2026-10-21T17:49:39.172503+00:00","wall_seconds":2696.737,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f95-9577-7dd9-a2d4-2430bc289cb3","started_at":"2026-10-21T17:50:01.079003+00:00","ended_at":"2026-10-21T17:50:20.025518+00:00","wall_seconds":18.947,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f95-fb47-7b5f-ac35-e795fa41df3e","started_at":"2026-10-21T17:50:27.143627+00:00","ended_at":"2026-10-21T17:51:15.310771+00:00","wall_seconds":48.167,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f96-ecec-7577-af62-236b7111093b","started_at":"2026-10-21T17:51:29.004207+00:00","ended_at":"2026-10-21T17:51:30.006040+00:00","wall_seconds":1.002,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15f97-7e03-78dc-b403-7597f0d9a652","started_at":"2026-10-21T17:52:06.147519+00:00","ended_at":"2026-10-21T17:52:07.639524+00:00","wall_seconds":1.492,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15fa0-edc6-7e11-a182-3ee0f2bb652b","started_at":"2026-10-21T18:02:24.582323+00:00","ended_at":"2026-10-21T18:03:35.270954+00:00","wall_seconds":70.689,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15fa2-3725-74b4-a990-a51dad0721bd","started_at":"2026-10-21T18:03:48.901710+00:00","ended_at":"2026-10-21T18:03:50.228529+00:00","wall_seconds":1.327,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a15fa3-c9ad-7da9-8c48-25d59ead1988","started_at":"2026-10-21T18:05:31.949096+00:00","ended_at":"2026-10-21T18:05:34.192219+00:00","wall_seconds":2.243,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a161a7-6f59-7880-b586-ff6786d7a7ae","started_at":"2026-10-22T03:28:45.401317+00:00","ended_at":"2026-10-22T03:30:10.170520+00:00","wall_seconds":84.769,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a161a8-efc7-7403-a109-a284d65d4b7a","started_at":"2026-10-22T03:30:23.815630+00:00","ended_at":"2026-10-22T03:30:25.232307+00:00","wall_seconds":1.417,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a161a9-37c2-762d-98ca-ed63b6f96059","started_at":"2026-10-22T03:30:42.242182+00:00","ended_at":"2026-10-22T03:30:44.998935+00:00","wall_seconds":2.757,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1626e-a925-72e9-bcd9-b3c8724b8f98","started_at":"2026-10-22T07:06:21.861760+00:00","ended_at":"2026-10-22T07:06:23.093026+00:00","wall_seconds":1.231,"stages":1,"events_processed":0,"status":"failed"},{"run_id":"01a1626f-d964-7edb-abb7-a901e5034e77","started_at":"2026-10-22T07:07:39.748430+00:00","ended_at":"2026-10-22T07:11:20.282384+00:00","wall_seconds":220.534,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a16273-c0ae-74e8-a5e2-bed630d54f96","started_at":"2026-10-22T07:11:55.566357+00:00","ended_at":"2026-10-22T07:15:48.499892+00:00","wall_seconds":232.934,"stages":1,"events_processed":0,"status":"failed"},{"run_id":"01a16278-76bc-7020-9462-2ec02caa9211","started_at":"2026-10-22T07:17:04.316068+00:00","ended_at":"2026-10-22T07:18:07.312479+00:00","wall_seconds":62.996,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a16279-90f4-74a2-8731-4cc5a6915b8d","started_at":"2026-10-22T07:18:16.564719+00:00","ended_at":"2026-10-22T07:18:17.963996+00:00","wall_seconds":1.399,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a16287-f686-72a5-85d5-de9f90f6cce8","started_at":"2026-10-22T07:34:00.070459+00:00","ended_at":"2026-10-22T07:36:29.489919+00:00","wall_seconds":149.419,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628a-6c83-709d-8c5a-bfa290bfbc69","started_at":"2026-10-22T07:36:41.347360+00:00","ended_at":"2026-10-22T07:37:50.409725+00:00","wall_seconds":69.062,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628b-9245-7256-b747-3e09255bf9a5","started_at":"2026-10-22T07:37:56.549574+00:00","ended_at":"2026-10-22T07:37:58.037511+00:00","wall_seconds":1.488,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628d-b043-7cb9-9341-0cdf65a51ece","started_at":"2026-10-22T07:40:15.300955+00:00","ended_at":"2026-10-22T07:40:44.117823+00:00","wall_seconds":28.817,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628e-389a-7621-b3bc-e2113b90b798","started_at":"2026-10-22T07:40:50.202362+00:00","ended_at":"2026-10-22T07:40:50.975051+00:00","wall_seconds":0.773,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628e-f81c-7fea-913c-3b2a26b3d5c3","started_at":"2026-10-22T07:41:39.228064+00:00","ended_at":"2026-10-22T07:42:08.313327+00:00","wall_seconds":29.085,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a1628f-8b63-749d-a2a9-17bafd0f6696","started_at":"2026-10-22T07:42:16.931719+00:00","ended_at":"2026-10-22T07:42:18.438493+00:00","wall_seconds":1.507,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a16290-f728-7b26-bb69-2bdfc4b0e0f8","started_at":"2026-10-22T07:43:50.056949+00:00","ended_at":"2026-10-22T07:44:21.570418+00:00","wall_seconds":31.513,"stages":1,"events_processed":0,"status":"ok"},{"run_id":"01a16739-deec-7895-b888-acd6e21f4ca2","started_at":"2026-10-23T05:26:48.300877+00:00","ended_at":"2026-10-23T05:26:48.313083+00:00","wall_seconds":0.012,"stages":1,"events_processed":0,"status":"failed"},{"run_id":"0f8a5bad-75b4-4418-b62d-cc519975648f","started_at":"2026-10-23T05:26:58.641072+00:00","ended_at":"2026-10-23T05:27:03.449294+00:00","wall_seconds":4.808,"stages":2,"events_processed":0,"status":"ok"}],"daily":[{"date":"2026-10-21","events_processed":882216}],"backtests":{"status":{"state":"pending data","detail":"windows not loaded: event-stream, colors-faker, xz"},"rows":[{"id":"event-stream","month":"2018-11","outcome":"pending data","summary":"A new maintainer, given publish rights, added the dependency flatmap-stream with code that targeted a cryptocurrency wallet."},{"id":"colors-faker","month":"2022-01","outcome":"pending data","summary":"The maintainer of colors and faker published versions that broke dependants on purpose."},{"id":"xz","month":"2024-03","outcome":"pending data","summary":"A backdoor in the xz release tarballs (CVE-2024-3094), added by a contributor who had become a maintainer over about two years."}]}}
+;
+const CONCEPTS = [
+  ["c1","Ledger","An editorial ledger: the radar reads like a newspaper table of record.","light"],
+  ["c2","Control Room","An operations console: the pipeline is a rack of services with live lamps.","dark"],
+  ["c3","Blueprint","A technical drawing: every figure is a labelled plate of the machine.","dark"],
+  ["c4","Swiss","A strict typographic grid: huge numerals, black rules, one red.","light"],
+  ["c5","Field Survey","A survey map: repositories as terrain, signals as contour readings.","light"],
+  ["c6","Quiet Signal","Calm and plain: lots of space, one teal accent, accessibility first.","light"]
+];
+const fmt = n => n == null ? "not recorded" : Number(n).toLocaleString("en-US");
+const day = s => s ? s.slice(0,10) : "n/a";
+const utc = s => s ? s.slice(0,16).replace("T"," ") + " UTC" : "n/a";
+const mb = b => b == null ? "not recorded" : (b/1e6).toFixed(1) + " MB";
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ORDER = ["keystone-parser","datacontract-cli","great-expectations","duckdb","redpanda","flink","dbt","duckdb-iceberg","spark","trino","keystone-resolve","keystone-registry","openlineage-dbt","marquez","datahub","otel-collector","prometheus","grafana","keystone-llm","keystone"];
+
+function bars(vals, cls, label) {
+  const w = 300, h = 90, max = Math.max(...vals.map(v => v.v), 0) || 1, bw = w / Math.max(vals.length, 1);
+  const r = vals.map((v, i) => { const bh = Math.max(1, v.v / max * (h - 4));
+    return `<rect class="bar ${v.s || ""}" x="${(i*bw+1).toFixed(1)}" y="${(h-bh).toFixed(1)}" width="${Math.max(bw-2,1).toFixed(1)}" height="${bh.toFixed(1)}"><title>${esc(v.t)}</title></rect>`; }).join("");
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="${esc(label)}">${r}</svg>`;
+}
+
+function render(id, name) {
+  const r = D.radar, m = D.pm, t = m.totals, f = m.freshness, q = m.quality, pb = m.produced_by;
+  const last = m.last_run.stages, lastByService = Object.fromEntries(last.map(s => [s.service, s]));
+  const rps = last.reduce((a, s) => a + (s.records_out || 0), 0) / Math.max(last.reduce((a, s) => a + s.duration_seconds, 0), 1e-9);
+  const eng = [...m.engines].sort((a, b) => (ORDER.indexOf(a.name) + 1 || 99) - (ORDER.indexOf(b.name) + 1 || 99));
+  const runs = D.runs.slice(-48);
+  return `
+  <div class="in">
+    <h3>Radar</h3>
+    <p class="stamp">Export generated ${utc(r.generated_at)} · window ${day(r.window.start)} to ${day(r.window.end)} · profile ${esc(r.produced_by.profile)}${r.produced_by.fallback ? " (fallback from full)" : ""}</p>
+    <div class="banner" role="status"><b>${esc(r.status.state)}</b>${esc(r.status.detail)}</div>
+    <div class="ctrl"><input type="search" placeholder="Search repositories or packages" aria-label="Search" disabled>
+      <select aria-label="Ecosystem" disabled><option>All ecosystems</option></select>
+      <select aria-label="Sort" disabled><option>Sort by risk signal</option></select></div>
+    <div class="tw"><table><thead><tr><th>#</th><th>Repository</th><th>Packages</th><th>Risk</th><th>Fragility</th><th>Criticality</th><th>Coverage</th><th>Top signals</th></tr></thead>
+    <tbody><tr><td class="empty" colspan="8">${fmt(r.row_count)} rows. The radar lists repositories only once the scoring window holds enough measured hours. Signals, not predictions. <a href="${esc(r.corrections)}">Corrections and removal</a>.</td></tr></tbody></table></div>
+    <hr class="sep">
+    <h3>Pipeline Live</h3>
+    <p class="stamp">From pipeline_metrics.json, generated ${utc(m.generated_at)} · <span class="badge">profile ${esc(m.profile)}${pb.fallback ? " · fallback" : ""}</span> ${pb.fallback ? "· " + esc(pb.reason) : ""}</p>
+    <div class="strip">
+      <div class="kpi"><div class="l">Events processed</div><div class="v">${fmt(t.events_processed)}</div><div class="s">${fmt(t.events_stored)} stored</div></div>
+      <div class="kpi"><div class="l">Bytes parsed</div><div class="v">${mb(t.bytes_parsed)}</div><div class="s">downloaded: ${mb(t.bytes_downloaded)}</div></div>
+      <div class="kpi"><div class="l">Files parsed</div><div class="v">${fmt(t.files_parsed)}</div><div class="s">${fmt(t.date_range.source_hours)} source hours</div></div>
+      <div class="kpi"><div class="l">Date range</div><div class="v" style="font-size:15px">${day(t.date_range.first_event)} to ${day(t.date_range.newest_event)}</div><div class="s">backfill window from ${day(t.backfill_window.start)}</div></div>
+      <div class="kpi"><div class="l">Last run rate</div><div class="v">${fmt(Math.round(rps))}/s</div><div class="s">events per second, ${last.length} stages</div></div>
+      <div class="kpi ${f.status === "breach" ? "bad" : ""}"><div class="l">Freshness lag</div><div class="v">${f.lag_hours == null ? "n/a" : f.lag_hours.toFixed(1) + " h"}</div><div class="s">target ${f.slo_hours} h · ${esc(f.status)}</div></div>
+      <div class="kpi"><div class="l">Cost</div><div class="v">$${m.cost.usd.toFixed(2)}</div><div class="s">no billing account</div></div>
+    </div>
+    <ul class="flow" aria-label="Pipeline services">${eng.map(e => { const s = lastByService[e.name];
+      return `<li class="node ${e.active ? "on" : "off"}"><div class="n">${esc(e.name)} <span class="d">${esc(e.version)}</span></div><div class="r">${esc(e.role || "role not recorded")}</div>
+      <div class="d">${e.active ? "active" : "inactive"} · last ran ${day(e.last_used)}</div>${s ? `<div class="run">last run: ${esc(s.name)}, ${fmt(s.records_out)} rows out, ${s.duration_seconds.toFixed(1)} s, ${esc(s.status)}</div>` : ""}</li>`; }).join("")}</ul>
+    <div class="charts">
+      <div class="chart"><div class="l">Run wall time, last ${runs.length} runs (orange = failed)</div>${bars(runs.map(x => ({v: x.wall_seconds, s: x.status, t: `${utc(x.started_at)}: ${x.wall_seconds} s, ${x.status}`})), "", "Run wall time per run")}</div>
+      <div class="chart"><div class="l">Daily events processed: ${D.daily.length} of 30 days recorded</div>${bars(D.daily.map(x => ({v: x.events_processed, t: `${x.date}: ${fmt(x.events_processed)}`})), "", "Daily events processed")}</div>
+    </div>
+    <div class="facts">
+      <div>Checks passed<br><b>${fmt(q.checks_passed)}</b></div><div>dbt tests failed<br><b>${fmt(q.dbt_tests_failed)}</b></div>
+      <div>Quarantined rows<br><b>${fmt(q.quarantined_rows)}</b></div><div>Contract violations<br><b>${fmt(q.contract_violations)}</b></div>
+      <div>Lineage<br><b>${fmt(m.lineage_summary.nodes)} nodes, ${fmt(m.lineage_summary.edges)} edges</b></div><div>Documented<br><b>${m.lineage_summary.documented_pct}%</b></div>
+      <div>Backtests<br><b>${D.backtests.rows.map(b => esc(b.id)).join(", ")}: ${esc(D.backtests.status.state)}</b></div>
+    </div>
+  </div>`;
+}
+
+const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches;
+document.getElementById("jump").innerHTML = CONCEPTS.map(([id, n], i) => `<a href="#h-${id}">${i+1}. ${n}</a>`).join("") + `<a href="#logos">Logos</a>`;
+document.getElementById("concepts").innerHTML = CONCEPTS.map(([id, n, idea, home], i) => `
+  <div class="chead"><h2 id="h-${id}">${i+1}. ${n}</h2><button type="button" data-for="${id}">Toggle light / dark</button><p>${idea} Native mode: ${home}.</p></div>
+  <section class="c ${id}" id="${id}" data-mode="${prefersDark ? "dark" : "light"}" aria-label="${n} concept">${render(id, n)}</section>`).join("");
+document.querySelectorAll("button[data-for]").forEach(b => b.addEventListener("click", () => {
+  const s = document.getElementById(b.dataset.for); s.dataset.mode = s.dataset.mode === "dark" ? "light" : "dark"; }));
+// Motion rule (Control Room): lamps pulse only when the last run moved events; period scales with the measured rate.
+const st = D.pm.last_run.stages, rate = st.reduce((a, s) => a + (s.records_out || 0), 0) / Math.max(st.reduce((a, s) => a + s.duration_seconds, 0), 1e-9);
+if (rate > 0) document.querySelectorAll(".c2 .node.on").forEach(n => { n.classList.add("moving"); n.style.setProperty("--period", Math.max(0.4, 4 - Math.log10(rate)) + "s"); });
+</script>
+</body>
+</html>
