@@ -87,9 +87,9 @@ footer{position:relative;z-index:2;padding:26px 48px;font-size:11px;color:var(--
 /* intro: what GH Archive is, and what Keystone does with it */
 #intro{position:fixed;inset:0;z-index:50;background:radial-gradient(ellipse at 50% 55%,var(--bg2),var(--bg) 75%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;transition:opacity 1s ease,filter 1s ease}
 #intro.done{opacity:0;filter:blur(10px);pointer-events:none}
-#intro .st{position:absolute;left:0;right:0;top:15%;padding:0 24px;opacity:0;transform:translateY(16px);filter:blur(6px);transition:opacity .7s,transform .7s,filter .7s}
+#intro .st{position:absolute;left:0;right:0;top:18%;padding:0 24px;opacity:0;transform:translateY(16px);filter:blur(6px);transition:opacity .7s,transform .7s,filter .7s}
 #intro .st.on{opacity:1;transform:none;filter:none}
-#intro .st p{margin:0 auto;max-width:860px;font:800 clamp(24px,3.6vw,46px)/1.12 Syne,sans-serif}
+#intro .st p{margin:0 auto;max-width:640px;font:800 clamp(22px,3vw,38px)/1.15 Syne,sans-serif}
 #intro .st p em{font-style:normal;color:var(--accent)}
 #intro .st small{display:block;margin-top:14px;font-size:13px;color:var(--mute)}
 #intro .files{perspective:900px;margin-top:120px}
@@ -99,11 +99,10 @@ footer{position:relative;z-index:2;padding:26px 48px;font-size:11px;color:var(--
 @keyframes drop{to{opacity:1;transform:none}}
 #intro.pour .grid i{animation:pour 1.3s cubic-bezier(.6,0,.4,1) forwards;animation-delay:calc(var(--r) * 3ms)}
 @keyframes pour{from{opacity:1;transform:none}to{opacity:0;transform:translateY(340px) translateZ(-260px)}}
-#intro .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:34px}
-#intro .chips span{border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:12px;text-align:left;opacity:0;transform:translateY(14px);transition:.6s;max-width:240px}
-#intro .chips span b{display:block;color:var(--accent);font-size:13px}
-#intro.s2 .chips span{opacity:1;transform:none}#intro.s2 .chips span:nth-child(2){transition-delay:.25s}#intro.s2 .chips span:nth-child(3){transition-delay:.5s}
-#intro.pour .chips span{opacity:0;transform:translateY(40px);transition-delay:0s!important}
+#intro .pager{position:absolute;left:0;right:0;bottom:56px;display:flex;flex-direction:column;align-items:center;gap:14px}
+#intro .next{font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;background:none;border:1px solid var(--accent);color:var(--accent);border-radius:999px;padding:8px 20px;cursor:pointer}
+#intro .dots{display:flex;gap:8px}#intro .dots i{width:6px;height:6px;border-radius:50%;background:var(--line);transition:.3s}#intro .dots i.on{background:var(--accent)}
+#intro.s2 .grid i{opacity:.35!important}
 #intro .skip{position:absolute;right:24px;bottom:22px;font:inherit;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:none;border:1px solid var(--line);color:var(--mute);border-radius:999px;padding:5px 12px;cursor:pointer}
 @media (max-width:700px){#intro .grid{grid-template-columns:repeat(13,12px);gap:4px}#intro .grid i{width:12px;height:15px}#intro .files{margin-top:150px}}
 @media (max-width:900px){section{padding:90px 24px 60px}.gauges{grid-template-columns:repeat(2,minmax(0,1fr))}.rail,.layers,.nav a{display:none}.cue{left:24px}.ghost div{grid-template-columns:24px 1fr 50px}.ghost div>:last-child{display:none}}
@@ -114,11 +113,11 @@ footer{position:relative;z-index:2;padding:26px 48px;font-size:11px;color:var(--
 <div id="water"></div>
 <canvas id="sea" aria-hidden="true"></canvas>
 <div id="intro" role="dialog" aria-label="Introduction">
-  <div class="st" id="st1"><p>Every public action on GitHub is archived, <em>one file per hour</em>.</p><small id="st1n"></small></div>
-  <div class="st" id="st2"><p>Keystone links those repositories to the <em>packages you install</em> and the <em>vulnerabilities</em> they carry.</p></div>
-  <div class="st" id="st3"><p>Then it looks for the projects everyone relies on that show <em>signs of strain</em>.</p></div>
+  <div class="st" id="st1"><p>GitHub's public activity is archived, <em>one file per hour</em>.</p><small id="st1n"></small></div>
+  <div class="st" id="st2"><p>Keystone links it to the <em>packages</em> you install and their known <em>vulnerabilities</em>.</p><small>sources: GH Archive · ecosyste.ms · OSV</small></div>
+  <div class="st" id="st3"><p>And shows which projects everyone relies on show <em>signs of strain</em>.</p></div>
   <div class="files"><div class="grid" id="tiles"></div></div>
-  <div class="chips"><span><b>GH Archive</b>every public GitHub event</span><span><b>ecosyste.ms</b>which repository each package comes from</span><span><b>OSV</b>known vulnerabilities</span></div>
+  <div class="pager"><button class="next" type="button" id="next">continue</button><div class="dots" aria-hidden="true"><i></i><i></i><i></i></div></div>
   <button class="skip" type="button" id="skip">skip intro</button>
 </div>
 
@@ -211,18 +210,24 @@ document.getElementById("mode").addEventListener("click", e => { const light = d
 /* ---- landing: one sonar ping, then the title surfaces ---- */
 /* ---- intro: GH Archive hours (one tile per real hour loaded) -> sources -> landing ---- */
 const intro = document.getElementById("intro"), hours = T.date_range.source_hours;
-document.getElementById("st1n").textContent = `${fmt(hours)} hours loaded so far · ${fmt(T.events_processed)} events read · ${day(T.date_range.first_event).slice(0, 4)} → ${day(T.date_range.newest_event).slice(0, 4)}`;
+document.getElementById("st1n").textContent = `${fmt(hours)} hours read so far`;
 document.getElementById("tiles").innerHTML = Array.from({ length: hours }, (_, k) => `<i style="--k:${k};--r:${(k * 37) % hours}"></i>`).join("");
 const step = id => ["st1", "st2", "st3"].forEach(s => document.getElementById(s)?.classList.toggle("on", s === id));
-const timers = [];
-function land() { timers.forEach(clearTimeout); intro.classList.add("done"); setTimeout(() => intro.remove(), 1100);
+let at = 0, busy = false;
+const dots = [...intro.querySelectorAll(".dots i")], nextBtn = document.getElementById("next");
+function show(n) { at = n; step("st" + n); dots.forEach((d, i) => d.classList.toggle("on", i === n - 1)); nextBtn.textContent = n === 3 ? "enter" : "continue";
+  if (n === 2) intro.classList.add("s2"); }
+function advance() { if (busy || !intro.isConnected) return; if (at < 3) { show(at + 1); busy = true; setTimeout(() => busy = false, 500); return; }
+  busy = true; intro.classList.add("pour"); step(null); setTimeout(land, 1100); }
+function land() { removeEventListener("keydown", onKey); intro.classList.add("done"); setTimeout(() => intro.remove(), 1100);
   t0 = performance.now(); document.body.classList.add("landing"); setTimeout(() => document.body.classList.add("landed"), 60); }
-document.getElementById("skip").addEventListener("click", land);
+const onKey = e => { if (["Enter", " ", "ArrowRight", "ArrowDown", "PageDown"].includes(e.key)) { e.preventDefault(); advance(); } else if (e.key === "Escape") land(); };
+document.getElementById("skip").addEventListener("click", e => { e.stopPropagation(); land(); });
+nextBtn.addEventListener("click", e => { e.stopPropagation(); advance(); });
+intro.addEventListener("click", advance); addEventListener("keydown", onKey);
+intro.addEventListener("wheel", e => { if (e.deltaY > 20) advance(); }, { passive: true });
 if (REDUCED) { intro.remove(); t0 = performance.now() - 5000; document.body.classList.add("landed"); }
-else { requestAnimationFrame(() => { intro.classList.add("s1"); step("st1"); });
-  timers.push(setTimeout(() => { intro.classList.add("s2"); step("st2"); }, 2200));
-  timers.push(setTimeout(() => { intro.classList.add("pour"); step("st3"); }, 4400));
-  timers.push(setTimeout(land, 5800)); }
+else { show(1); setTimeout(() => intro.classList.add("s1"), 50); nextBtn.focus({ preventScroll: true }); }
 
 </script>
 </body>
