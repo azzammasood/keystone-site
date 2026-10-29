@@ -92,19 +92,22 @@ footer{position:relative;z-index:2;padding:26px 48px;font-size:11px;color:var(--
 #intro .st p{margin:0 auto;max-width:640px;font:800 clamp(22px,3vw,38px)/1.15 Syne,sans-serif}
 #intro .st p em{font-style:normal;color:var(--accent)}
 #intro .st small{display:block;margin-top:14px;font-size:13px;color:var(--mute)}
-#intro .files{perspective:900px;margin-top:120px}
-#intro .grid{display:grid;grid-template-columns:repeat(19,16px);gap:6px;justify-content:center;transform:rotateX(55deg) rotateZ(-10deg);transform-style:preserve-3d;transition:transform 1.6s cubic-bezier(.6,0,.2,1)}
-#intro .grid i{width:16px;height:20px;border:1px solid var(--accent);border-radius:2px;background:color-mix(in srgb,var(--accent) 14%,transparent);opacity:0;transform:translateZ(90px)}
-#intro.s1 .grid i{animation:drop .45s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--k) * 4ms)}
-@keyframes drop{to{opacity:1;transform:none}}
-#intro.pour .grid i{animation:pour 1.3s cubic-bezier(.6,0,.4,1) forwards;animation-delay:calc(var(--r) * 3ms)}
-@keyframes pour{from{opacity:1;transform:none}to{opacity:0;transform:translateY(340px) translateZ(-260px)}}
+#intro .files{perspective:1100px;margin-top:150px;height:260px;width:100%}
+#intro .world{position:relative;width:0;height:0;margin:0 auto;top:150px;transform-style:preserve-3d;transform:rotateX(62deg)}
+#intro .spin{position:absolute;transform-style:preserve-3d;animation:turn 48s linear infinite}
+@keyframes turn{from{transform:rotateZ(-14deg)}to{transform:rotateZ(346deg)}}
+#intro .world i{position:absolute;left:-8px;top:-10px;width:16px;height:20px;border:1px solid var(--accent);border-radius:2px;background:color-mix(in srgb,var(--accent) 14%,transparent);opacity:0;
+  transition:transform 1.3s cubic-bezier(.6,0,.2,1),opacity .7s ease,background .6s,border-color .6s,box-shadow .6s;transition-delay:calc(var(--r) * 4ms)}
+#intro .world i.key{background:var(--warn);border-color:var(--warn);box-shadow:0 0 18px var(--warn)}
+#intro .pl{position:absolute;left:-230px;top:-120px;width:460px;height:240px;border:1px solid var(--accent);border-radius:6px;background:color-mix(in srgb,var(--accent) 7%,transparent);opacity:0;
+  transform:translateZ(0);transition:transform 1.3s cubic-bezier(.6,0,.2,1),opacity .8s;display:flex;align-items:flex-end;justify-content:flex-end;padding:8px 12px;font-size:12px;color:var(--accent)}
+#intro .pl.v{border-color:var(--warn);color:var(--warn);background:color-mix(in srgb,var(--warn) 6%,transparent);transition-delay:.25s}
+#intro.s2 .pl{opacity:1;transform:translateZ(80px)}#intro.s2 .pl.v{transform:translateZ(160px)}
 #intro .pager{position:absolute;left:0;right:0;bottom:56px;display:flex;flex-direction:column;align-items:center;gap:14px}
 #intro .next{font:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;background:none;border:1px solid var(--accent);color:var(--accent);border-radius:999px;padding:8px 20px;cursor:pointer}
 #intro .dots{display:flex;gap:8px}#intro .dots i{width:6px;height:6px;border-radius:50%;background:var(--line);transition:.3s}#intro .dots i.on{background:var(--accent)}
-#intro.s2 .grid i{opacity:.35!important}
 #intro .skip{position:absolute;right:24px;bottom:22px;font:inherit;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:none;border:1px solid var(--line);color:var(--mute);border-radius:999px;padding:5px 12px;cursor:pointer}
-@media (max-width:700px){#intro .grid{grid-template-columns:repeat(13,12px);gap:4px}#intro .grid i{width:12px;height:15px}#intro .files{margin-top:150px}}
+@media (max-width:700px){#intro .world{transform:rotateX(62deg) scale(.62)}}
 @media (max-width:900px){section{padding:90px 24px 60px}.gauges{grid-template-columns:repeat(2,minmax(0,1fr))}.rail,.layers,.nav a{display:none}.cue{left:24px}.ghost div{grid-template-columns:24px 1fr 50px}.ghost div>:last-child{display:none}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal,h1.big .w,.later{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important;transition:none!important}section::after,.ping,.cue i{animation:none!important;display:none}}
 </style>
@@ -116,7 +119,7 @@ footer{position:relative;z-index:2;padding:26px 48px;font-size:11px;color:var(--
   <div class="st" id="st1"><p>GitHub's public activity is archived, <em>one file per hour</em>.</p><small id="st1n"></small></div>
   <div class="st" id="st2"><p>Keystone links it to the <em>packages</em> you install and their known <em>vulnerabilities</em>.</p><small>sources: GH Archive · ecosyste.ms · OSV</small></div>
   <div class="st" id="st3"><p>And shows which projects everyone relies on show <em>signs of strain</em>.</p></div>
-  <div class="files"><div class="grid" id="tiles"></div></div>
+  <div class="files" aria-hidden="true"><div class="world"><div class="spin" id="tiles"><div class="pl">packages</div><div class="pl v">vulnerabilities</div></div></div></div>
   <div class="pager"><button class="next" type="button" id="next">continue</button><div class="dots" aria-hidden="true"><i></i><i></i><i></i></div></div>
   <button class="skip" type="button" id="skip">skip intro</button>
 </div>
@@ -211,14 +214,24 @@ document.getElementById("mode").addEventListener("click", e => { const light = d
 /* ---- intro: GH Archive hours (one tile per real hour loaded) -> sources -> landing ---- */
 const intro = document.getElementById("intro"), hours = T.date_range.source_hours;
 document.getElementById("st1n").textContent = `${fmt(hours)} hours read so far`;
-document.getElementById("tiles").innerHTML = Array.from({ length: hours }, (_, k) => `<i style="--k:${k};--r:${(k * 37) % hours}"></i>`).join("");
+// One tile per real archive hour loaded. Step 1: they land as a grid. Step 3: they stand up as an arch whose keystone glows.
+document.getElementById("tiles").insertAdjacentHTML("beforeend", Array.from({ length: hours }, (_, k) => `<i style="--r:${(k * 37) % hours}"></i>`).join(""));
+const tiles = [...document.querySelectorAll("#tiles i")], COLS = 19, ROWS = Math.ceil(hours / COLS);
+const gridPos = k => `translate3d(${(k % COLS - (COLS - 1) / 2) * 22}px,${(Math.floor(k / COLS) - (ROWS - 1) / 2) * 26}px,0)`;
+const PER = Math.ceil(hours / 6), archAt = k => { const j = k % PER, L = Math.floor(k / PER), a = Math.PI * (j + .5) / PER, r = 130 + Math.floor(L / 3) * 24;
+  return { tf: `translate3d(${(r * Math.cos(a)).toFixed(1)}px,${((L % 3) - 1) * 20}px,${(r * Math.sin(a) + 10).toFixed(1)}px) rotateX(90deg) rotateY(${(90 - a * 180 / Math.PI).toFixed(1)}deg)`, key: Math.abs(j - (PER - 1) / 2) < 1 }; };
+tiles.forEach((el, k) => el.style.transform = gridPos(k) + " translateZ(260px)");
+function stage(n) { tiles.forEach((el, k) => { if (n === 1) { el.style.transform = gridPos(k); el.style.opacity = 1; }
+  if (n === 2) { el.style.opacity = .55; }
+  if (n === 3) { const p = archAt(k); el.style.transform = p.tf; el.style.opacity = 1; el.classList.toggle("key", p.key); }
+  if (n === 4) { el.style.transform += " translateZ(-520px)"; el.style.opacity = 0; } }); }
 const step = id => ["st1", "st2", "st3"].forEach(s => document.getElementById(s)?.classList.toggle("on", s === id));
 let at = 0, busy = false;
 const dots = [...intro.querySelectorAll(".dots i")], nextBtn = document.getElementById("next");
 function show(n) { at = n; step("st" + n); dots.forEach((d, i) => d.classList.toggle("on", i === n - 1)); nextBtn.textContent = n === 3 ? "enter" : "continue";
-  if (n === 2) intro.classList.add("s2"); }
+  intro.classList.toggle("s2", n === 2); stage(n); }
 function advance() { if (busy || !intro.isConnected) return; if (at < 3) { show(at + 1); busy = true; setTimeout(() => busy = false, 500); return; }
-  busy = true; intro.classList.add("pour"); step(null); setTimeout(land, 1100); }
+  busy = true; stage(4); step(null); setTimeout(land, 1300); }
 function land() { removeEventListener("keydown", onKey); intro.classList.add("done"); setTimeout(() => intro.remove(), 1100);
   t0 = performance.now(); document.body.classList.add("landing"); setTimeout(() => document.body.classList.add("landed"), 60); }
 const onKey = e => { if (["Enter", " ", "ArrowRight", "ArrowDown", "PageDown"].includes(e.key)) { e.preventDefault(); advance(); } else if (e.key === "Escape") land(); };
@@ -227,7 +240,7 @@ nextBtn.addEventListener("click", e => { e.stopPropagation(); advance(); });
 intro.addEventListener("click", advance); addEventListener("keydown", onKey);
 intro.addEventListener("wheel", e => { if (e.deltaY > 20) advance(); }, { passive: true });
 if (REDUCED) { intro.remove(); t0 = performance.now() - 5000; document.body.classList.add("landed"); }
-else { show(1); setTimeout(() => intro.classList.add("s1"), 50); nextBtn.focus({ preventScroll: true }); }
+else { step("st1"); dots[0].classList.add("on"); at = 1; setTimeout(() => stage(1), 80); nextBtn.focus({ preventScroll: true }); }
 
 </script>
 </body>
