@@ -15,9 +15,9 @@ export function repoLabel(r: { repo_name: string | null; repo_id: number }, file
   );
 }
 
-// Rows in export order (the export is ranked). `limit` shows the top of the list only.
-export function RadarTable({ env, limit }: { env: Envelope<RadarRow>; limit?: number }) {
-  const rows = limit ? env.rows.slice(0, limit) : env.rows;
+// Rows in export order (the export is ranked): `limit` rows from row `start` (0-based).
+export function RadarTable({ env, start = 0, limit }: { env: Envelope<RadarRow>; start?: number; limit?: number }) {
+  const rows = env.rows.slice(start, limit ? start + limit : undefined);
   return (
     <div className="tbl">
       <table>
@@ -38,7 +38,8 @@ export function RadarTable({ env, limit }: { env: Envelope<RadarRow>; limit?: nu
           </tr>
         </thead>
         <tbody>
-          {rows.map((r, i) => {
+          {rows.map((r, k) => {
+            const i = start + k;
             const at = ptr("rows", i);
             return (
               <tr key={r.repo_id}>
