@@ -1,0 +1,112 @@
+{
+  "envelope_version": "1.1",
+  "dataset": "backtest",
+  "dataset_version": "v1",
+  "generated_at": "2026-10-23T05:57:30.060036+00:00",
+  "produced_by": {
+    "profile": "free",
+    "fallback": true,
+    "run_id": "0f8a5bad-75b4-4418-b62d-cc519975648f",
+    "keystone_version": "0.1.0"
+  },
+  "window": {
+    "start": null,
+    "end": null,
+    "periods": []
+  },
+  "sources": [
+    {
+      "name": "GH Archive",
+      "url": "https://www.gharchive.org/"
+    },
+    {
+      "name": "OSV",
+      "url": "https://osv.dev/",
+      "terms": "CC-BY 4.0 (osv.dev data license)"
+    },
+    {
+      "name": "ecosyste.ms",
+      "url": "https://ecosyste.ms/",
+      "terms": "CC-BY-SA 4.0"
+    }
+  ],
+  "privacy": {
+    "level": "repository",
+    "people": "aggregate-only"
+  },
+  "corrections": "https://github.com/azzammasood/keystone-pipeline/issues",
+  "row_count": 3,
+  "rows": [
+    {
+      "id": "event-stream",
+      "month": "2018-11",
+      "cut": "2018-11-01T00:00:00+00:00",
+      "summary": "A new maintainer, given publish rights, added the dependency flatmap-stream with code that targeted a cryptocurrency wallet.",
+      "sources": [
+        "https://github.com/dominictarr/event-stream/issues/116",
+        "https://blog.npmjs.org/post/180565383195/details-about-the-event-stream-incident"
+      ],
+      "outcome": "pending data",
+      "points": [
+        {
+          "cut": "2018-11-01T00:00:00+00:00",
+          "hour_coverage": 0.0,
+          "status": "pending data",
+          "reference_size": 0,
+          "leakage_check": null,
+          "repos": []
+        }
+      ],
+      "sensitivity": null
+    },
+    {
+      "id": "colors-faker",
+      "month": "2022-01",
+      "cut": "2022-01-01T00:00:00+00:00",
+      "summary": "The maintainer of colors and faker published versions that broke dependants on purpose.",
+      "sources": [
+        "https://github.com/Marak/colors.js/issues/285",
+        "https://github.com/advisories/GHSA-5rqg-jm4f-cqx7",
+        "https://snyk.io/blog/open-source-npm-packages-colors-faker/"
+      ],
+      "outcome": "pending data",
+      "points": [
+        {
+          "cut": "2022-01-01T00:00:00+00:00",
+          "hour_coverage": 0.0,
+          "status": "pending data",
+          "reference_size": 0,
+          "leakage_check": null,
+          "repos": []
+        }
+      ],
+      "sensitivity": null
+    },
+    {
+      "id": "xz",
+      "month": "2024-03",
+      "cut": "2024-03-01T00:00:00+00:00",
+      "summary": "A backdoor in the xz release tarballs (CVE-2024-3094), added by a contributor who had become a maintainer over about two years.",
+      "sources": [
+        "https://www.openwall.com/lists/oss-security/2024/03/29/4",
+        "https://nvd.nist.gov/vuln/detail/CVE-2024-3094"
+      ],
+      "outcome": "pending data",
+      "points": [
+        {
+          "cut": "2024-03-01T00:00:00+00:00",
+          "hour_coverage": 0.0,
+          "status": "pending data",
+          "reference_size": 0,
+          "leakage_check": null,
+          "repos": []
+        }
+      ],
+      "sensitivity": null
+    }
+  ],
+  "status": {
+    "state": "pending data",
+    "detail": "windows not loaded: event-stream, colors-faker, xz"
+  }
+}
