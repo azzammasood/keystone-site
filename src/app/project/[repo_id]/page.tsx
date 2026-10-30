@@ -20,11 +20,13 @@ export function generateStaticParams() {
 
 type Props = { params: Promise<{ repo_id: string }> };
 
+let byId: Map<string, number> | undefined;
 function find(id: string) {
   const p = data.projects();
   if (!p.ok) return null;
-  const i = p.data.rows.findIndex((r) => String(r.repo_id) === id);
-  return i < 0 ? null : { env: p.data, row: p.data.rows[i]!, i };
+  byId ??= new Map(p.data.rows.map((r, i) => [String(r.repo_id), i]));
+  const i = byId.get(id);
+  return i === undefined ? null : { env: p.data, row: p.data.rows[i]!, i };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -38,7 +40,7 @@ export default async function Project({ params }: Props) {
   const { env, row, i } = hit;
   const at = ptr("rows", i);
   return (
-    <Page eyebrow="repository" title={row.repo_name ?? "Repository"}>
+    <Page eyebrow="repository" title={row.repo_name ? <V src={F} at={`${at}/repo_name`} value={row.repo_name} /> : "Repository"}>
       <Status file={F} env={env} />
       <p className="sub" style={{ marginTop: 14 }}>
         {repoLabel(row, F, at)} · packages:{" "}
