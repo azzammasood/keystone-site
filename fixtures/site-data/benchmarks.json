@@ -1,0 +1,202 @@
+{
+  "envelope_version": "1.1",
+  "dataset": "benchmark",
+  "dataset_version": "v1",
+  "generated_at": "2026-10-23T05:57:30.060036+00:00",
+  "produced_by": {
+    "profile": "free",
+    "fallback": true,
+    "run_id": "0f8a5bad-75b4-4418-b62d-cc519975648f",
+    "keystone_version": "0.1.0"
+  },
+  "window": {
+    "start": null,
+    "end": null,
+    "periods": []
+  },
+  "sources": [
+    {
+      "name": "Keystone benchmarks",
+      "url": "https://github.com/azzammasood/keystone-pipeline/blob/main/docs/benchmarks.md"
+    }
+  ],
+  "privacy": {
+    "level": "repository",
+    "people": "aggregate-only"
+  },
+  "corrections": "https://github.com/azzammasood/keystone-pipeline/issues",
+  "row_count": 9,
+  "rows": [
+    {
+      "rung": "1 hour (2026-10-19 12h)",
+      "input_rows": 46849,
+      "input_mb": 1.7,
+      "engine": "DuckDB",
+      "wall_s": [
+        2.9,
+        1.6
+      ],
+      "engine_s": [
+        0.5,
+        0.3
+      ],
+      "peak_mb": [
+        86.1,
+        86.0
+      ],
+      "rows_out": 60114,
+      "mb_out": 0.8
+    },
+    {
+      "rung": "1 hour (2026-10-19 12h)",
+      "input_rows": 46849,
+      "input_mb": 1.7,
+      "engine": "Spark",
+      "wall_s": [
+        58.2,
+        43.4
+      ],
+      "engine_s": [
+        55.4,
+        41.8
+      ],
+      "peak_mb": [
+        680.0,
+        650.4
+      ],
+      "rows_out": 60114,
+      "mb_out": 0.8
+    },
+    {
+      "rung": "1 hour (2026-10-19 12h)",
+      "input_rows": 46849,
+      "input_mb": 1.7,
+      "engine": "Flink",
+      "wall_s": [
+        46.7,
+        42.5
+      ],
+      "engine_s": null,
+      "peak_mb": [
+        2348.0,
+        2167.1
+      ],
+      "rows_out": 60114,
+      "mb_out": 1.3
+    },
+    {
+      "rung": "1 day (2026-10-19)",
+      "input_rows": 1042693,
+      "input_mb": 37.0,
+      "engine": "DuckDB",
+      "wall_s": [
+        4.7,
+        2.9
+      ],
+      "engine_s": [
+        2.3,
+        1.4
+      ],
+      "peak_mb": [
+        369.3,
+        453.3
+      ],
+      "rows_out": 1146460,
+      "mb_out": 12.8
+    },
+    {
+      "rung": "1 day (2026-10-19)",
+      "input_rows": 1042693,
+      "input_mb": 37.0,
+      "engine": "Spark",
+      "wall_s": [
+        64.9,
+        67.4
+      ],
+      "engine_s": [
+        63.1,
+        64.2
+      ],
+      "peak_mb": [
+        1082.5,
+        1055.8
+      ],
+      "rows_out": 1146460,
+      "mb_out": 12.9
+    },
+    {
+      "rung": "1 day (2026-10-19)",
+      "input_rows": 1042693,
+      "input_mb": 37.0,
+      "engine": "Flink",
+      "wall_s": [
+        92.5,
+        81.3
+      ],
+      "engine_s": null,
+      "peak_mb": [
+        2553.3,
+        2578.9
+      ],
+      "rows_out": 1146460,
+      "mb_out": 19.6
+    },
+    {
+      "rung": "1 day (2026-08-01)",
+      "input_rows": 4071556,
+      "input_mb": 77.5,
+      "engine": "DuckDB",
+      "wall_s": [
+        4.6,
+        4.4
+      ],
+      "engine_s": [
+        2.7,
+        2.7
+      ],
+      "peak_mb": [
+        565.2,
+        558.5
+      ],
+      "rows_out": 1247387,
+      "mb_out": 13.0
+    },
+    {
+      "rung": "1 day (2026-08-01)",
+      "input_rows": 4071556,
+      "input_mb": 77.5,
+      "engine": "Spark",
+      "wall_s": [
+        71.1,
+        71.4
+      ],
+      "engine_s": [
+        67.1,
+        69.3
+      ],
+      "peak_mb": [
+        1188.3,
+        1004.1
+      ],
+      "rows_out": 1247387,
+      "mb_out": 13.1
+    },
+    {
+      "rung": "1 day (2026-08-01)",
+      "input_rows": 4071556,
+      "input_mb": 77.5,
+      "engine": "Flink",
+      "wall_s": [
+        80.0,
+        94.1
+      ],
+      "engine_s": null,
+      "peak_mb": [
+        2696.5,
+        2606.7
+      ],
+      "rows_out": 1247387,
+      "mb_out": 19.4
+    }
+  ]
+}

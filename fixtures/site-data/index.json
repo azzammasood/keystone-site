@@ -1,0 +1,113 @@
+{
+  "envelope_version": "1.1",
+  "dataset": "index",
+  "dataset_version": "v1",
+  "generated_at": "2026-10-23T05:57:47.058264+00:00",
+  "produced_by": {
+    "profile": "free",
+    "fallback": true,
+    "run_id": "0f8a5bad-75b4-4418-b62d-cc519975648f",
+    "keystone_version": "0.1.0"
+  },
+  "window": {
+    "start": null,
+    "end": null,
+    "periods": []
+  },
+  "sources": [
+    {
+      "name": "GH Archive",
+      "url": "https://www.gharchive.org/"
+    },
+    {
+      "name": "OSV",
+      "url": "https://osv.dev/",
+      "terms": "CC-BY 4.0 (osv.dev data license)"
+    },
+    {
+      "name": "ecosyste.ms",
+      "url": "https://ecosyste.ms/",
+      "terms": "CC-BY-SA 4.0"
+    }
+  ],
+  "privacy": {
+    "level": "repository",
+    "people": "aggregate-only"
+  },
+  "corrections": "https://github.com/azzammasood/keystone-pipeline/issues",
+  "row_count": 9,
+  "rows": [
+    {
+      "path": "backtests.json",
+      "asset": "backtests.json",
+      "dataset": "backtest",
+      "sha256": "25c184a0784e1e66f1c09232269ed27140320e1077e650036ca9af0e547a8f6e",
+      "bytes": 3187,
+      "schema": "backtest_row.schema.json"
+    },
+    {
+      "path": "benchmarks.json",
+      "asset": "benchmarks.json",
+      "dataset": "benchmark",
+      "sha256": "2dda3a398a91fa60c7a65eca30315e6fad3855594030ac301853c33a4780483d",
+      "bytes": 3695,
+      "schema": "benchmark_row.schema.json"
+    },
+    {
+      "path": "brief.json",
+      "asset": "brief.json",
+      "dataset": "brief",
+      "sha256": "a29f3b7ac4132399c7e22e6d0ea96ef2e44c4143a569f549a143e9fd99b8ac8d",
+      "bytes": 1464,
+      "schema": "brief_row.schema.json"
+    },
+    {
+      "path": "metadata/catalog.json",
+      "asset": "metadata__catalog.json",
+      "dataset": "metadata_catalog",
+      "sha256": "b10bc4242d5a11dc7a98166cd53e386673fd2132f7b4918b9d963db9758dbded",
+      "bytes": 130131,
+      "schema": "metadata_catalog.schema.json"
+    },
+    {
+      "path": "metadata/glossary.json",
+      "asset": "metadata__glossary.json",
+      "dataset": "metadata_glossary",
+      "sha256": "f57a21561f3d082ab990650374c62a7042154de076c0e8f56e99cb1544425ee1",
+      "bytes": 4654,
+      "schema": "metadata_glossary.schema.json"
+    },
+    {
+      "path": "metadata/lineage.json",
+      "asset": "metadata__lineage.json",
+      "dataset": "metadata_lineage",
+      "sha256": "6c1f6ad6fcf279c0ce613dbac6d067a4b4857abf648a70256012bf6a6686112c",
+      "bytes": 131491,
+      "schema": "metadata_lineage.schema.json"
+    },
+    {
+      "path": "pipeline_metrics.json",
+      "asset": "pipeline_metrics.json",
+      "dataset": "pipeline_metrics",
+      "sha256": "0f3bf660fa36aa17a23760295e34ed6d63267fa358c996883aaffe22a02ea039",
+      "bytes": 15815,
+      "schema": "pipeline_metrics.schema.json"
+    },
+    {
+      "path": "project_pages.json",
+      "asset": "project_pages.json",
+      "dataset": "project_page",
+      "sha256": "42794a4bf786a9cf8524fd2a0f424e7c3cffc6933f508addfabb8cb24b2e64a2",
+      "bytes": 1064,
+      "schema": "project_page_row.schema.json"
+    },
+    {
+      "path": "radar.json",
+      "asset": "radar.json",
+      "dataset": "radar",
+      "sha256": "b24d47797cf94f9ee3ac0d0453217d2c6b4a428e64a9809da8234a127fc6ae17",
+      "bytes": 1057,
+      "schema": "radar_row.schema.json"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "envelope_version": "1.1",
+  "dataset": "brief",
+  "dataset_version": "v1",
+  "generated_at": "2026-10-23T05:57:35.109382+00:00",
+  "produced_by": {
+    "profile": "free",
+    "fallback": true,
+    "run_id": "0f8a5bad-75b4-4418-b62d-cc519975648f",
+    "keystone_version": "0.1.0"
+  },
+  "window": {
+    "start": null,
+    "end": null,
+    "periods": []
+  },
+  "sources": [
+    {
+      "name": "Keystone site exports",
+      "url": "https://github.com/azzammasood/keystone-pipeline"
+    }
+  ],
+  "privacy": {
+    "level": "repository",
+    "people": "aggregate-only"
+  },
+  "corrections": "https://github.com/azzammasood/keystone-pipeline/issues",
+  "row_count": 1,
+  "rows": [
+    {
+      "week": "2026-W43",
+      "text": "The radar for week 2026-W43 shows partial data with the rollup holding 0.1% of the window's hours and not scored. The signals component is not scored because of the partial data. Backtest outcomes for event-stream, colors-faker, and xz are all pending data. Data freshness target was missed and the engine profile is free with a fallback from full. There are 0 repositories in the radar top list.",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+      "input_sha256": "f9f206ceade0db5eed1cd257c46de35f59d35238621ed0f9fb2648573afbfa7b",
+      "outcome": "written",
+      "detail": "every number checked against the facts"
+    }
+  ],
+  "status": {
+    "state": "ok",
+    "detail": "every number checked against the facts"
+  }
+}
