@@ -1,0 +1,3 @@
+* text=auto eol=lf
+# Hashes in index.json cover these bytes exactly.
+fixtures/** -text
