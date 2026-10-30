@@ -40,3 +40,24 @@ export function resolve(src: string): { value: unknown; found: boolean; array?: 
   const v = pointer(file(src.slice(0, hash)), src.slice(hash + 1));
   return { value: v, found: v !== undefined };
 }
+
+export type Traced = { src: string; value: string | null; derive: string | null };
+
+// Every traced value against its export; returns what does not match. Shared by both traces.
+export function mismatches(traced: Traced[]): string[] {
+  const wrong: string[] = [];
+  for (const t of traced) {
+    const r = resolve(t.src);
+    if (!r.found) {
+      wrong.push(`${t.src}: not in the export`);
+      continue;
+    }
+    if (t.derive === "index") {
+      if (!/^[1-9]\d*$/.test(t.value ?? "")) wrong.push(`${t.src}: bad row number ${t.value}`);
+      continue;
+    }
+    const want = asText(derive(r.value, t.derive));
+    if (want !== t.value) wrong.push(`${t.src}${t.derive ? ` (${t.derive})` : ""}: page ${t.value}, export ${want}`);
+  }
+  return wrong;
+}

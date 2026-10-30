@@ -17,8 +17,9 @@ Static Next.js, React, TypeScript and Tailwind, exported for GitHub Pages. Engli
    *pending data* with the reason. An export's own `status` (*partial data*, *pending data*,
    *skipped*) is always shown.
 3. Every figure is rendered through `<V>` (`src/components/V.tsx`), which records the file and
-   JSON Pointer it came from. `tests/e2e/trace.spec.ts` resolves every one against the data and
-   fails on any mismatch, or on any digit in the page that is not traced.
+   JSON Pointer it came from. `tests/e2e/html-trace.spec.ts` resolves every one on every built
+   page against the data and fails on any mismatch, or on any digit in the page that is not
+   traced. `tests/e2e/trace.spec.ts` repeats this in the browser after hydration.
 
 `fixtures/site-data/` is a snapshot of real exports (generated 2026-10-23). It is used for CI and
 local development only; the deployed site always uses the live release.
@@ -37,7 +38,10 @@ npm run schemas:check       # schemas/ still equal to keystone-pipeline main
 ## Gates
 
 - **CI** (`.github/workflows/ci.yml`): schema sync, lint, types, unit tests, and a strict build from
-  the fixture. Then the trace test and axe (WCAG 2.2 AA tags) on every page in light and dark mode.
+  the fixture. Then the trace on every page's HTML, and in the browser the trace and axe (WCAG 2.2
+  AA tags) in light and dark mode on every page type. A directory of more than 25 pages from one
+  template (`project/`, one page per repository) is checked in the browser on 25 evenly spaced
+  pages, first and last included (`sample()` in `tests/e2e/pages.ts`).
 - **Deploy** (`.github/workflows/deploy.yml`): builds from the live release, runs the same gates,
   and publishes to Pages when the repository variable `PAGES_ENABLED` is `true`. It runs daily
   after the pipeline's publish and on `repository_dispatch` (`site-data`).

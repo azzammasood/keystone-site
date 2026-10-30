@@ -6,6 +6,7 @@ import { loadFrom } from "@/lib/data";
 import { day, fixed, short, share, utc } from "@/lib/format";
 // @ts-expect-error plain ESM script shared with fetch-data.mjs
 import { checkEntry, makeValidator, sha256 } from "../../scripts/exports.mjs";
+import { sample } from "../e2e/pages";
 import { asText, derive, pointer } from "../e2e/resolve";
 
 const FIX = "fixtures/site-data";
@@ -74,6 +75,22 @@ describe("trace resolution", () => {
     expect(derive(doc.a, "len")).toBe(3);
     expect(derive(doc.a, "len:on=true")).toBe(2);
     expect(asText(null)).toBe("null");
+  });
+});
+
+describe("browser sample", () => {
+  const projects = Array.from({ length: 7792 }, (_, i) => `project/${i}/`);
+  const all = ["", "radar/", "pipeline/", "project/", ...projects];
+  it("keeps every page type and cuts a large directory to evenly spaced pages", () => {
+    const s = sample(25, all);
+    expect(s.filter((p) => !p.startsWith("project/") || p === "project/")).toEqual(["", "radar/", "pipeline/", "project/"]);
+    const kept = s.filter((p) => /^project\/\d+\/$/.test(p));
+    expect(kept).toHaveLength(25);
+    expect(kept[0]).toBe("project/0/");
+    expect(kept.at(-1)).toBe("project/7791/");
+  });
+  it("keeps a small directory whole", () => {
+    expect(sample(25, ["", "project/1/", "project/2/"])).toEqual(["", "project/1/", "project/2/"]);
   });
 });
 
