@@ -89,8 +89,8 @@
       "path": "pipeline_metrics.json",
       "asset": "pipeline_metrics.json",
       "dataset": "pipeline_metrics",
-      "sha256": "0f3bf660fa36aa17a23760295e34ed6d63267fa358c996883aaffe22a02ea039",
-      "bytes": 15815,
+      "sha256": "57d1e57b21d8bf0bacd77dc54e8ff5991c7508c16a553e0a02eedb1ecd40431a",
+      "bytes": 14790,
       "schema": "pipeline_metrics.schema.json"
     },
     {

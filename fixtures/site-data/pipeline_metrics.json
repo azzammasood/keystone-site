@@ -1,12 +1,13 @@
 {
- "generated_at": "2026-10-23T05:27:16.215346+00:00",
+ "metrics_version": 2,
+ "generated_at": "2026-10-31T07:57:30.604186+00:00",
  "profile": "free",
  "produced_by": {
   "profile": "free",
   "fallback": true,
   "reason": "full unhealthy: redpanda, redpanda-registry, flink, lakekeeper, rustfs down",
-  "run_id": "0f8a5bad-75b4-4418-b62d-cc519975648f",
-  "decided_at": "2026-10-23T05:27:03.449294+00:00",
+  "run_id": "86864e5f-513c-4a87-974f-b41651ab921c",
+  "decided_at": "2026-10-31T07:54:22.123742+00:00",
   "status": "ok",
   "probes": [
    {
@@ -33,143 +34,101 @@
  },
  "engines": [
   {
+   "name": "bigquery",
+   "version": "sandbox",
+   "role": "BigQuery sandbox: in-place rollup and bytes per column set",
+   "active": false,
+   "last_used": "2026-10-26T18:08:18.770218+00:00"
+  },
+  {
+   "name": "databricks-lakeflow",
+   "version": "serverless",
+   "role": "Lakeflow Declarative Pipeline over the marts (CI fixtures)",
+   "active": false,
+   "last_used": "2026-10-30T11:43:45.272940+00:00"
+  },
+  {
+   "name": "databricks-sql",
+   "version": "serverless",
+   "role": "Unity Catalog staging on Databricks Free Edition (CI fixtures)",
+   "active": false,
+   "last_used": "2026-10-30T11:40:33.251557+00:00"
+  },
+  {
    "name": "datacontract-cli",
    "version": "1.2.7",
    "role": "ODCS data contract tests",
-   "active": false,
-   "last_used": "2026-10-21T06:38:39.230353+00:00"
-  },
-  {
-   "name": "datahub",
-   "version": "v1.7.0.1",
-   "role": "metadata catalog (lineage, glossary, owners, assertions)",
-   "active": false,
-   "last_used": "2026-10-21T06:46:16.055365+00:00"
+   "active": true,
+   "last_used": "2026-10-31T07:56:25.083544+00:00"
   },
   {
    "name": "dbt",
    "version": "1.12.6",
    "role": "warehouse models and tests",
+   "active": true,
+   "last_used": "2026-10-31T07:56:05.394980+00:00"
+  },
+  {
+   "name": "dbt-databricks",
+   "version": "1.10.9",
+   "role": "the dbt project built on Databricks (Unity Catalog, CI fixtures)",
    "active": false,
-   "last_used": "2026-10-22T07:44:21.570418+00:00"
+   "last_used": "2026-10-30T11:42:21.918064+00:00"
   },
   {
    "name": "duckdb",
    "version": "1.5.6",
    "role": "free rollup engine",
    "active": true,
-   "last_used": "2026-10-23T05:27:03.447168+00:00"
+   "last_used": "2026-10-31T07:54:22.121369+00:00"
   },
   {
-   "name": "duckdb-iceberg",
-   "version": "1.5.6",
-   "role": "Iceberg publish of the marts",
+   "name": "gharchive-fetch",
+   "version": "0.1.0",
+   "role": "polite GH Archive download, MD5/SHA-256 verification",
    "active": false,
-   "last_used": "2026-10-21T06:36:42.230092+00:00"
-  },
-  {
-   "name": "flink",
-   "version": "2.2.1",
-   "role": "full rollup engine (stream and batch)",
-   "active": false,
-   "last_used": "2026-10-21T06:36:30.567323+00:00"
-  },
-  {
-   "name": "grafana",
-   "version": "13.2.4",
-   "role": "dashboards",
-   "active": false,
-   "last_used": "2026-10-21T06:47:12.168611+00:00"
+   "last_used": "2026-10-31T05:57:53.405715+00:00"
   },
   {
    "name": "keystone",
    "version": "0.1.0",
-   "role": "metadata export and metrics",
+   "role": "metadata export, metrics and site exports",
    "active": true,
-   "last_used": "2026-10-23T05:27:03.449294+00:00"
+   "last_used": "2026-10-31T07:57:23.108487+00:00"
   },
   {
    "name": "keystone-llm",
    "version": "nvidia/nemotron-3-ultra-550b-a55b:free",
-   "role": "",
+   "role": "free language model (OpenRouter): resolution ties, weekly brief",
    "active": false,
-   "last_used": "2026-10-22T07:36:29.489919+00:00"
+   "last_used": "2026-10-31T07:20:32.104205+00:00"
   },
   {
    "name": "keystone-parser",
    "version": "0.1.0",
    "role": "era-aware parsing to typed Parquet",
-   "active": false,
-   "last_used": "2026-10-21T06:33:25.337575+00:00"
+   "active": true,
+   "last_used": "2026-10-31T07:54:56.346255+00:00"
   },
   {
    "name": "keystone-registry",
    "version": "0.1.0",
    "role": "",
-   "active": false,
-   "last_used": "2026-10-21T17:50:20.025518+00:00"
-  },
-  {
-   "name": "keystone-resolve",
-   "version": "0.1.0",
-   "role": "",
-   "active": false,
-   "last_used": "2026-10-22T07:42:18.438493+00:00"
-  },
-  {
-   "name": "marquez",
-   "version": "0.51.1",
-   "role": "OpenLineage server",
-   "active": false,
-   "last_used": "2026-10-21T06:40:12.947997+00:00"
-  },
-  {
-   "name": "openlineage-dbt",
-   "version": "1.54.0",
-   "role": "dbt lineage events (dbt-ol)",
-   "active": false,
-   "last_used": "2026-10-21T06:34:03.213634+00:00"
-  },
-  {
-   "name": "otel-collector",
-   "version": "0.163.1",
-   "role": "OpenTelemetry metrics pipeline",
-   "active": false,
-   "last_used": "2026-10-21T06:47:12.168611+00:00"
-  },
-  {
-   "name": "prometheus",
-   "version": "3.15.0",
-   "role": "metrics store",
-   "active": false,
-   "last_used": "2026-10-21T06:47:12.168611+00:00"
-  },
-  {
-   "name": "redpanda",
-   "version": "v26.2.5",
-   "role": "event stream (Kafka API, schema registry)",
-   "active": false,
-   "last_used": "2026-10-21T06:34:54.061825+00:00"
-  },
-  {
-   "name": "spark",
-   "version": "4.1.3",
-   "role": "lakehouse reader (Iceberg)",
-   "active": false,
-   "last_used": "2026-10-21T06:38:09.582432+00:00"
+   "active": true,
+   "last_used": "2026-10-31T07:55:48.182660+00:00"
   }
  ],
  "totals": {
-  "events_processed": 882216,
-  "events_stored": 2363426,
-  "bytes_downloaded": null,
-  "bytes_parsed": 412610898,
-  "files_parsed": 24,
-  "rollup_rows": 2189426,
+  "events_processed": 2243335,
+  "events_stored": 2243335,
+  "bytes_downloaded": 538221937,
+  "bytes_parsed": 538221937,
+  "files_parsed": 69,
+  "rollup_rows": 2218007,
   "date_range": {
-   "first_event": "2011-02-12T00:00:00+00:00",
-   "newest_event": "2026-10-19T23:59:59+00:00",
-   "source_hours": 151
+   "first_event": "2026-10-24T21:00:00+00:00",
+   "newest_event": "2026-10-31T03:59:59+00:00",
+   "source_hours": 69
   },
   "backfill_window": {
    "start": "2011-02-12T00:00:00+00:00",
@@ -177,8 +136,70 @@
    "decision": "ADR-009"
   }
  },
+ "lifetime": {
+  "source": "history backfill chunk records (chunk-*.json, releases data-<window>)",
+  "chunks": 78,
+  "complete_chunks": 78,
+  "days": 1579,
+  "first": "2017-11-01T00:00:00+00:00",
+  "last": "2026-10-27T00:00:00+00:00",
+  "events": 4574059729,
+  "bytes_downloaded": 1873190290497,
+  "job_hours": 37.88,
+  "hours_missing_at_source": 228,
+  "windows": [
+   {
+    "name": "event-stream",
+    "chunks": 13,
+    "complete_chunks": 13,
+    "days": 395,
+    "first": "2017-11-01T00:00:00+00:00",
+    "last": "2018-12-01T00:00:00+00:00",
+    "events": 517146065,
+    "bytes_downloaded": 200932863437,
+    "job_hours": 3.97,
+    "hours_missing_at_source": 3
+   },
+   {
+    "name": "colors-faker",
+    "chunks": 13,
+    "complete_chunks": 13,
+    "days": 396,
+    "first": "2021-01-01T00:00:00+00:00",
+    "last": "2022-02-01T00:00:00+00:00",
+    "events": 1121147780,
+    "bytes_downloaded": 604861529152,
+    "job_hours": 10.22,
+    "hours_missing_at_source": 225
+   },
+   {
+    "name": "xz",
+    "chunks": 26,
+    "complete_chunks": 26,
+    "days": 397,
+    "first": "2023-03-01T00:00:00+00:00",
+    "last": "2024-04-01T00:00:00+00:00",
+    "events": 1678142834,
+    "bytes_downloaded": 781099547536,
+    "job_hours": 15.15,
+    "hours_missing_at_source": 0
+   },
+   {
+    "name": "live",
+    "chunks": 26,
+    "complete_chunks": 26,
+    "days": 391,
+    "first": "2025-10-01T00:00:00+00:00",
+    "last": "2026-10-27T00:00:00+00:00",
+    "events": 1257623050,
+    "bytes_downloaded": 286296350372,
+    "job_hours": 8.54,
+    "hours_missing_at_source": 0
+   }
+  ]
+ },
  "last_run": {
-  "run_id": "0f8a5bad-75b4-4418-b62d-cc519975648f",
+  "run_id": "86864e5f-513c-4a87-974f-b41651ab921c",
   "stages": [
    {
     "name": "rollup",
@@ -188,11 +209,11 @@
     "records_out": 0,
     "bytes_in": null,
     "bytes_out": null,
-    "duration_seconds": 2.167,
+    "duration_seconds": 1.017,
     "records_per_second": 0.0,
     "mb_per_second": null,
     "status": "ok",
-    "started_at": "2026-10-23T05:27:01.279941+00:00"
+    "started_at": "2026-10-31T07:54:21.104441+00:00"
    },
    {
     "name": "profile",
@@ -202,356 +223,325 @@
     "records_out": 0,
     "bytes_in": null,
     "bytes_out": null,
-    "duration_seconds": 4.81,
+    "duration_seconds": 1.508,
     "records_per_second": 0.0,
     "mb_per_second": null,
     "status": "ok",
-    "started_at": "2026-10-23T05:26:58.641072+00:00"
+    "started_at": "2026-10-31T07:54:20.615986+00:00"
+   },
+   {
+    "name": "parse-osv",
+    "service": "keystone-parser",
+    "version": "0.1.0",
+    "records_in": 292664,
+    "records_out": 292664,
+    "bytes_in": 303205840,
+    "bytes_out": null,
+    "duration_seconds": 22.749,
+    "records_per_second": 12864.945,
+    "mb_per_second": 13.328,
+    "status": "ok",
+    "started_at": "2026-10-31T07:54:33.597254+00:00"
+   },
+   {
+    "name": "warehouse",
+    "service": "dbt",
+    "version": "1.12.6",
+    "records_in": null,
+    "records_out": 3926915,
+    "bytes_in": null,
+    "bytes_out": null,
+    "duration_seconds": 16.345,
+    "records_per_second": 240245.233,
+    "mb_per_second": null,
+    "status": "ok",
+    "started_at": "2026-10-31T07:55:49.049505+00:00"
+   },
+   {
+    "name": "resolve-fetch",
+    "service": "keystone-registry",
+    "version": "0.1.0",
+    "records_in": null,
+    "records_out": 1102,
+    "bytes_in": 3366296,
+    "bytes_out": null,
+    "duration_seconds": 33.794,
+    "records_per_second": 32.61,
+    "mb_per_second": 0.1,
+    "status": "ok",
+    "started_at": "2026-10-31T07:55:14.389007+00:00"
+   },
+   {
+    "name": "quality-contracts",
+    "service": "datacontract-cli",
+    "version": "1.2.7",
+    "records_in": 983,
+    "records_out": 852,
+    "bytes_in": null,
+    "bytes_out": null,
+    "duration_seconds": 18.236,
+    "records_per_second": 46.722,
+    "mb_per_second": null,
+    "status": "ok",
+    "started_at": "2026-10-31T07:56:06.847890+00:00"
+   },
+   {
+    "name": "metadata-export",
+    "service": "keystone",
+    "version": "0.1.0",
+    "records_in": null,
+    "records_out": 95,
+    "bytes_in": null,
+    "bytes_out": null,
+    "duration_seconds": 0.458,
+    "records_per_second": 207.64,
+    "mb_per_second": null,
+    "status": "ok",
+    "started_at": "2026-10-31T07:57:22.650934+00:00"
    }
   ]
  },
  "history": {
   "runs": [
    {
-    "run_id": "01a15d00-21a4-7455-80a8-4559cdd00979",
-    "started_at": "2026-10-21T05:47:36.841807+00:00",
-    "ended_at": "2026-10-21T06:00:19.380213+00:00",
-    "wall_seconds": 762.538,
-    "stages": 13,
-    "events_processed": 294072,
-    "status": "failed"
-   },
-   {
-    "run_id": "01a15d0b-fe9f-7df6-b948-91feabd693d2",
-    "started_at": "2026-10-21T06:00:29.599161+00:00",
-    "ended_at": "2026-10-21T06:00:29.814465+00:00",
-    "wall_seconds": 0.215,
-    "stages": 1,
+    "run_id": "01a18c9b-dad9-70ae-8a59-89d33c8cc2ed",
+    "started_at": "2026-10-30T11:39:46.777485+00:00",
+    "ended_at": "2026-10-30T11:43:45.272940+00:00",
+    "wall_seconds": 238.495,
+    "stages": 3,
     "events_processed": 0,
-    "status": "failed"
-   },
-   {
-    "run_id": "01a15d0d-18e3-7707-9c69-6feb6b793e3a",
-    "started_at": "2026-10-21T06:01:45.708262+00:00",
-    "ended_at": "2026-10-21T06:17:12.206535+00:00",
-    "wall_seconds": 926.498,
-    "stages": 14,
-    "events_processed": 294072,
     "status": "ok"
    },
    {
-    "run_id": "01a15d29-6991-74e1-a8bd-b357daa00a32",
-    "started_at": "2026-10-21T06:32:42.145814+00:00",
-    "ended_at": "2026-10-21T06:47:12.168611+00:00",
-    "wall_seconds": 870.023,
-    "stages": 14,
-    "events_processed": 294072,
-    "status": "ok"
-   },
-   {
-    "run_id": "01a15f70-c081-7117-9ab5-0d74146cc4ad",
-    "started_at": "2026-10-21T17:09:47.265572+00:00",
-    "ended_at": "2026-10-21T17:10:23.123543+00:00",
-    "wall_seconds": 35.858,
+    "run_id": "01a17965-8e20-792b-a08b-f8f7663099f2",
+    "started_at": "2026-10-26T18:07:41.088615+00:00",
+    "ended_at": "2026-10-26T18:08:18.770218+00:00",
+    "wall_seconds": 37.682,
     "stages": 1,
     "events_processed": 0,
     "status": "ok"
    },
    {
-    "run_id": "01a15f72-1016-7a8a-8685-6217adace5e6",
-    "started_at": "2026-10-21T17:11:13.174411+00:00",
-    "ended_at": "2026-10-21T17:11:32.194099+00:00",
-    "wall_seconds": 19.02,
-    "stages": 1,
+    "run_id": "01a17972-f471-7832-b3c2-0906d3b8944b",
+    "started_at": "2026-10-26T18:22:19.249300+00:00",
+    "ended_at": "2026-10-26T18:25:38.359575+00:00",
+    "wall_seconds": 199.11,
+    "stages": 3,
     "events_processed": 0,
     "status": "ok"
    },
    {
-    "run_id": "01a15f73-b56a-77fe-a373-f9ca2acd1e5b",
-    "started_at": "2026-10-21T17:13:01.034263+00:00",
-    "ended_at": "2026-10-21T17:13:01.949509+00:00",
-    "wall_seconds": 0.915,
+    "run_id": "0d1fceaa-4828-48c1-9f5e-bf4a1b15d4c9",
+    "started_at": "2026-10-25T04:57:05.414863+00:00",
+    "ended_at": "2026-10-25T04:57:13.666291+00:00",
+    "wall_seconds": 8.251,
     "stages": 1,
-    "events_processed": 0,
+    "events_processed": 220386,
     "status": "ok"
    },
    {
-    "run_id": "01a15f75-7573-75e5-b7f1-436742d4d0a6",
-    "started_at": "2026-10-21T17:14:55.731236+00:00",
-    "ended_at": "2026-10-21T17:15:13.002060+00:00",
-    "wall_seconds": 17.271,
+    "run_id": "3302ddec-b1cc-494f-bfd2-5d6af3c5dc48",
+    "started_at": "2026-10-25T11:47:04.295917+00:00",
+    "ended_at": "2026-10-25T11:47:27.231314+00:00",
+    "wall_seconds": 22.935,
     "stages": 1,
-    "events_processed": 0,
+    "events_processed": 378071,
     "status": "ok"
    },
    {
-    "run_id": "01a15f75-ecb2-707b-81a8-e3790b5a6b49",
-    "started_at": "2026-10-21T17:15:26.258520+00:00",
-    "ended_at": "2026-10-21T17:15:38.377176+00:00",
-    "wall_seconds": 12.119,
+    "run_id": "b8dd0bff-02b9-4e8c-9596-16d3f541bd04",
+    "started_at": "2026-10-25T16:35:42.046812+00:00",
+    "ended_at": "2026-10-25T16:36:01.550932+00:00",
+    "wall_seconds": 19.504,
     "stages": 1,
-    "events_processed": 0,
-    "status": "failed"
-   },
-   {
-    "run_id": "01a15f85-7664-7467-b9b1-8efd581d718d",
-    "started_at": "2026-10-21T17:32:24.548953+00:00",
-    "ended_at": "2026-10-21T17:32:48.231913+00:00",
-    "wall_seconds": 23.683,
-    "stages": 1,
-    "events_processed": 0,
+    "events_processed": 402135,
     "status": "ok"
    },
    {
-    "run_id": "01a15f6c-19c3-718b-8566-37022fc04e47",
-    "started_at": "2026-10-21T17:04:42.435659+00:00",
-    "ended_at": "2026-10-21T17:49:39.172503+00:00",
-    "wall_seconds": 2696.737,
+    "run_id": "610e8a10-ebed-4947-89b8-0dac3d59006a",
+    "started_at": "2026-10-25T20:59:01.199676+00:00",
+    "ended_at": "2026-10-25T20:59:14.705385+00:00",
+    "wall_seconds": 13.506,
     "stages": 1,
-    "events_processed": 0,
+    "events_processed": 330723,
     "status": "ok"
    },
    {
-    "run_id": "01a15f95-9577-7dd9-a2d4-2430bc289cb3",
-    "started_at": "2026-10-21T17:50:01.079003+00:00",
-    "ended_at": "2026-10-21T17:50:20.025518+00:00",
-    "wall_seconds": 18.947,
+    "run_id": "c7690022-f20b-4ad3-a08d-510df3fad61e",
+    "started_at": "2026-10-26T05:00:18.006070+00:00",
+    "ended_at": "2026-10-26T05:00:42.244133+00:00",
+    "wall_seconds": 24.238,
     "stages": 1,
-    "events_processed": 0,
+    "events_processed": 499961,
     "status": "ok"
    },
    {
-    "run_id": "01a15f95-fb47-7b5f-ac35-e795fa41df3e",
-    "started_at": "2026-10-21T17:50:27.143627+00:00",
-    "ended_at": "2026-10-21T17:51:15.310771+00:00",
-    "wall_seconds": 48.167,
+    "run_id": "3917627b-907b-47cc-b2d6-75451fd858bc",
+    "started_at": "2026-10-26T13:19:37.853893+00:00",
+    "ended_at": "2026-10-26T13:19:54.006041+00:00",
+    "wall_seconds": 16.152,
     "stages": 1,
-    "events_processed": 0,
+    "events_processed": 266331,
     "status": "ok"
    },
    {
-    "run_id": "01a15f96-ecec-7577-af62-236b7111093b",
-    "started_at": "2026-10-21T17:51:29.004207+00:00",
-    "ended_at": "2026-10-21T17:51:30.006040+00:00",
-    "wall_seconds": 1.002,
+    "run_id": "305a0ca9-b57f-40a3-9c49-8e811564b957",
+    "started_at": "2026-10-29T13:21:28.705146+00:00",
+    "ended_at": "2026-10-29T13:21:32.380571+00:00",
+    "wall_seconds": 3.675,
     "stages": 1,
-    "events_processed": 0,
+    "events_processed": 25271,
     "status": "ok"
    },
    {
-    "run_id": "01a15f97-7e03-78dc-b403-7597f0d9a652",
-    "started_at": "2026-10-21T17:52:06.147519+00:00",
-    "ended_at": "2026-10-21T17:52:07.639524+00:00",
-    "wall_seconds": 1.492,
+    "run_id": "c26aa164-1332-457f-87c6-c72e8877a12c",
+    "started_at": "2026-10-29T22:52:30.061470+00:00",
+    "ended_at": "2026-10-29T22:52:34.372193+00:00",
+    "wall_seconds": 4.311,
     "stages": 1,
-    "events_processed": 0,
+    "events_processed": 21714,
     "status": "ok"
    },
    {
-    "run_id": "01a15fa0-edc6-7e11-a182-3ee0f2bb652b",
-    "started_at": "2026-10-21T18:02:24.582323+00:00",
-    "ended_at": "2026-10-21T18:03:35.270954+00:00",
-    "wall_seconds": 70.689,
-    "stages": 1,
-    "events_processed": 0,
-    "status": "ok"
-   },
-   {
-    "run_id": "01a15fa2-3725-74b4-a990-a51dad0721bd",
-    "started_at": "2026-10-21T18:03:48.901710+00:00",
-    "ended_at": "2026-10-21T18:03:50.228529+00:00",
-    "wall_seconds": 1.327,
-    "stages": 1,
-    "events_processed": 0,
-    "status": "ok"
-   },
-   {
-    "run_id": "01a15fa3-c9ad-7da9-8c48-25d59ead1988",
-    "started_at": "2026-10-21T18:05:31.949096+00:00",
-    "ended_at": "2026-10-21T18:05:34.192219+00:00",
-    "wall_seconds": 2.243,
-    "stages": 1,
-    "events_processed": 0,
-    "status": "ok"
-   },
-   {
-    "run_id": "01a161a7-6f59-7880-b586-ff6786d7a7ae",
-    "started_at": "2026-10-22T03:28:45.401317+00:00",
-    "ended_at": "2026-10-22T03:30:10.170520+00:00",
-    "wall_seconds": 84.769,
-    "stages": 1,
-    "events_processed": 0,
-    "status": "ok"
-   },
-   {
-    "run_id": "01a161a8-efc7-7403-a109-a284d65d4b7a",
-    "started_at": "2026-10-22T03:30:23.815630+00:00",
-    "ended_at": "2026-10-22T03:30:25.232307+00:00",
-    "wall_seconds": 1.417,
-    "stages": 1,
-    "events_processed": 0,
-    "status": "ok"
-   },
-   {
-    "run_id": "01a161a9-37c2-762d-98ca-ed63b6f96059",
-    "started_at": "2026-10-22T03:30:42.242182+00:00",
-    "ended_at": "2026-10-22T03:30:44.998935+00:00",
-    "wall_seconds": 2.757,
-    "stages": 1,
-    "events_processed": 0,
-    "status": "ok"
-   },
-   {
-    "run_id": "01a1626e-a925-72e9-bcd9-b3c8724b8f98",
-    "started_at": "2026-10-22T07:06:21.861760+00:00",
-    "ended_at": "2026-10-22T07:06:23.093026+00:00",
-    "wall_seconds": 1.231,
-    "stages": 1,
+    "run_id": "b2c553ba-6970-4922-ac57-2cc226409977",
+    "started_at": "2026-10-30T05:28:10.885655+00:00",
+    "ended_at": "2026-10-30T06:04:23.919019+00:00",
+    "wall_seconds": 2173.033,
+    "stages": 5,
     "events_processed": 0,
     "status": "failed"
    },
    {
-    "run_id": "01a1626f-d964-7edb-abb7-a901e5034e77",
-    "started_at": "2026-10-22T07:07:39.748430+00:00",
-    "ended_at": "2026-10-22T07:11:20.282384+00:00",
-    "wall_seconds": 220.534,
+    "run_id": "04d7939a-8e51-417e-bb79-6e8286f073a0",
+    "started_at": "2026-10-30T06:05:36.527681+00:00",
+    "ended_at": "2026-10-30T06:05:40.057002+00:00",
+    "wall_seconds": 3.529,
     "stages": 1,
-    "events_processed": 0,
+    "events_processed": 23251,
     "status": "ok"
    },
    {
-    "run_id": "01a16273-c0ae-74e8-a5e2-bed630d54f96",
-    "started_at": "2026-10-22T07:11:55.566357+00:00",
-    "ended_at": "2026-10-22T07:15:48.499892+00:00",
-    "wall_seconds": 232.934,
-    "stages": 1,
+    "run_id": "f1656624-16a8-4248-88cb-046dcc3a4186",
+    "started_at": "2026-10-30T06:49:04.612694+00:00",
+    "ended_at": "2026-10-30T07:25:06.355940+00:00",
+    "wall_seconds": 2161.743,
+    "stages": 6,
     "events_processed": 0,
     "status": "failed"
    },
    {
-    "run_id": "01a16278-76bc-7020-9462-2ec02caa9211",
-    "started_at": "2026-10-22T07:17:04.316068+00:00",
-    "ended_at": "2026-10-22T07:18:07.312479+00:00",
-    "wall_seconds": 62.996,
-    "stages": 1,
+    "run_id": "adc73e51-47ca-49d3-938e-6deebfb81398",
+    "started_at": "2026-10-30T07:46:57.027103+00:00",
+    "ended_at": "2026-10-30T08:23:44.117546+00:00",
+    "wall_seconds": 2207.09,
+    "stages": 9,
     "events_processed": 0,
     "status": "ok"
    },
    {
-    "run_id": "01a16279-90f4-74a2-8731-4cc5a6915b8d",
-    "started_at": "2026-10-22T07:18:16.564719+00:00",
-    "ended_at": "2026-10-22T07:18:17.963996+00:00",
-    "wall_seconds": 1.399,
-    "stages": 1,
+    "run_id": "9e986af4-7afa-4f89-8382-1a27745fc7a8",
+    "started_at": "2026-10-30T08:28:40.107737+00:00",
+    "ended_at": "2026-10-30T08:33:05.638977+00:00",
+    "wall_seconds": 265.531,
+    "stages": 6,
     "events_processed": 0,
     "status": "ok"
    },
    {
-    "run_id": "01a16287-f686-72a5-85d5-de9f90f6cce8",
-    "started_at": "2026-10-22T07:34:00.070459+00:00",
-    "ended_at": "2026-10-22T07:36:29.489919+00:00",
-    "wall_seconds": 149.419,
-    "stages": 1,
+    "run_id": "42a64d5b-b733-4658-a760-c505e7d546d6",
+    "started_at": "2026-10-30T08:37:47.952363+00:00",
+    "ended_at": "2026-10-30T08:42:05.860561+00:00",
+    "wall_seconds": 257.908,
+    "stages": 9,
     "events_processed": 0,
     "status": "ok"
    },
    {
-    "run_id": "01a1628a-6c83-709d-8c5a-bfa290bfbc69",
-    "started_at": "2026-10-22T07:36:41.347360+00:00",
-    "ended_at": "2026-10-22T07:37:50.409725+00:00",
-    "wall_seconds": 69.062,
-    "stages": 1,
+    "run_id": "e2694034-ba0b-42e5-9e1c-b2cf8ad2d36f",
+    "started_at": "2026-10-30T10:25:48.634581+00:00",
+    "ended_at": "2026-10-30T10:29:16.862039+00:00",
+    "wall_seconds": 208.227,
+    "stages": 9,
     "events_processed": 0,
     "status": "ok"
    },
    {
-    "run_id": "01a1628b-9245-7256-b747-3e09255bf9a5",
-    "started_at": "2026-10-22T07:37:56.549574+00:00",
-    "ended_at": "2026-10-22T07:37:58.037511+00:00",
-    "wall_seconds": 1.488,
+    "run_id": "e6617fc5-6260-4310-a04d-3b42ff4190a3",
+    "started_at": "2026-10-30T13:13:09.368868+00:00",
+    "ended_at": "2026-10-30T13:13:13.024687+00:00",
+    "wall_seconds": 3.656,
     "stages": 1,
+    "events_processed": 23170,
+    "status": "ok"
+   },
+   {
+    "run_id": "8f00a54f-d87e-4b41-835c-fac47faddda1",
+    "started_at": "2026-10-30T22:30:02.002792+00:00",
+    "ended_at": "2026-10-30T22:30:06.070279+00:00",
+    "wall_seconds": 4.067,
+    "stages": 1,
+    "events_processed": 27579,
+    "status": "ok"
+   },
+   {
+    "run_id": "6495d474-b171-4179-918f-1124c4b24d17",
+    "started_at": "2026-10-31T05:57:49.135616+00:00",
+    "ended_at": "2026-10-31T05:57:53.405715+00:00",
+    "wall_seconds": 4.27,
+    "stages": 1,
+    "events_processed": 24743,
+    "status": "ok"
+   },
+   {
+    "run_id": "c5f80259-fb08-4264-a6fe-b3033dad9674",
+    "started_at": "2026-10-31T07:16:34.504018+00:00",
+    "ended_at": "2026-10-31T07:20:32.104205+00:00",
+    "wall_seconds": 237.6,
+    "stages": 9,
     "events_processed": 0,
     "status": "ok"
    },
    {
-    "run_id": "01a1628d-b043-7cb9-9341-0cdf65a51ece",
-    "started_at": "2026-10-22T07:40:15.300955+00:00",
-    "ended_at": "2026-10-22T07:40:44.117823+00:00",
-    "wall_seconds": 28.817,
-    "stages": 1,
-    "events_processed": 0,
-    "status": "ok"
-   },
-   {
-    "run_id": "01a1628e-389a-7621-b3bc-e2113b90b798",
-    "started_at": "2026-10-22T07:40:50.202362+00:00",
-    "ended_at": "2026-10-22T07:40:50.975051+00:00",
-    "wall_seconds": 0.773,
-    "stages": 1,
-    "events_processed": 0,
-    "status": "ok"
-   },
-   {
-    "run_id": "01a1628e-f81c-7fea-913c-3b2a26b3d5c3",
-    "started_at": "2026-10-22T07:41:39.228064+00:00",
-    "ended_at": "2026-10-22T07:42:08.313327+00:00",
-    "wall_seconds": 29.085,
-    "stages": 1,
-    "events_processed": 0,
-    "status": "ok"
-   },
-   {
-    "run_id": "01a1628f-8b63-749d-a2a9-17bafd0f6696",
-    "started_at": "2026-10-22T07:42:16.931719+00:00",
-    "ended_at": "2026-10-22T07:42:18.438493+00:00",
-    "wall_seconds": 1.507,
-    "stages": 1,
-    "events_processed": 0,
-    "status": "ok"
-   },
-   {
-    "run_id": "01a16290-f728-7b26-bb69-2bdfc4b0e0f8",
-    "started_at": "2026-10-22T07:43:50.056949+00:00",
-    "ended_at": "2026-10-22T07:44:21.570418+00:00",
-    "wall_seconds": 31.513,
-    "stages": 1,
-    "events_processed": 0,
-    "status": "ok"
-   },
-   {
-    "run_id": "01a16739-deec-7895-b888-acd6e21f4ca2",
-    "started_at": "2026-10-23T05:26:48.300877+00:00",
-    "ended_at": "2026-10-23T05:26:48.313083+00:00",
-    "wall_seconds": 0.012,
-    "stages": 1,
-    "events_processed": 0,
-    "status": "failed"
-   },
-   {
-    "run_id": "0f8a5bad-75b4-4418-b62d-cc519975648f",
-    "started_at": "2026-10-23T05:26:58.641072+00:00",
-    "ended_at": "2026-10-23T05:27:03.449294+00:00",
-    "wall_seconds": 4.808,
-    "stages": 2,
+    "run_id": "86864e5f-513c-4a87-974f-b41651ab921c",
+    "started_at": "2026-10-31T07:54:20.615986+00:00",
+    "ended_at": "2026-10-31T07:57:23.108487+00:00",
+    "wall_seconds": 182.493,
+    "stages": 7,
     "events_processed": 0,
     "status": "ok"
    }
   ],
   "daily_volume": [
    {
-    "date": "2026-10-21",
-    "events_processed": 882216
+    "date": "2026-10-25",
+    "events_processed": 1331315
+   },
+   {
+    "date": "2026-10-26",
+    "events_processed": 766292
+   },
+   {
+    "date": "2026-10-29",
+    "events_processed": 46985
+   },
+   {
+    "date": "2026-10-30",
+    "events_processed": 74000
+   },
+   {
+    "date": "2026-10-31",
+    "events_processed": 24743
    }
   ]
  },
  "freshness": {
-  "newest_data_hour": "2026-10-19T23:00:00+00:00",
-  "lag_hours": 77.455,
+  "newest_data_hour": "2026-10-31T03:00:00+00:00",
+  "lag_hours": 3.959,
   "slo_hours": 26,
-  "status": "breach"
+  "status": "ok"
  },
  "quality": {
-  "checks_passed": 653,
+  "checks_passed": 946,
   "dbt_tests_failed": 0,
   "quarantined_rows": 0,
   "contract_violations": 0
@@ -562,21 +552,21 @@
   "free_quota": [
    {
     "name": "disk budget (70% of free disk, config/policy.yml)",
-    "used_pct": 5.34
+    "used_pct": 1.55
    },
    {
-    "name": "GitHub Actions minutes (private repository)",
+    "name": "GitHub Actions minutes (public repository: standard runners not metered)",
     "used_pct": null
    },
    {
     "name": "ecosyste.ms anonymous API, hour of the last fetch (policy.yml)",
-    "used_pct": 0.06
+    "used_pct": 0.26
    }
   ]
  },
  "lineage_summary": {
-  "nodes": 109,
-  "edges": 123,
+  "nodes": 95,
+  "edges": 92,
   "documented_pct": 100.0
  }
 }
