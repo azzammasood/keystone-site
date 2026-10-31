@@ -43,7 +43,7 @@ export default function Home() {
         </h1>
         <p className="tag later">
           A keystone holds an arch together. In open source, it is the project thousands of packages
-          quietly depend on. Keystone reads every public GitHub event, links repositories to their
+          quietly depend on. Keystone reads GitHub&apos;s public event archive (GH Archive), links repositories to their
           packages and known vulnerabilities, and shows where those projects show signs of strain.
           Signals, never predictions.
         </p>
@@ -66,12 +66,17 @@ export default function Home() {
           <>
             <div className="hero-num reveal">
               <b>
-                <V src="radar.json" at="/row_count" value={radar.data.row_count} />
+                <V src="radar.json" at="/rows" derive="len:risk!=null" value={radar.data.rows.filter((r) => r.risk !== null).length} />
               </b>
               <span>
-                {radar.data.row_count === 0
-                  ? "repositories scored so far. Scoring starts once enough history has loaded."
-                  : "repositories on the radar, ranked by signs of strain."}
+                {radar.data.row_count === 0 ? (
+                  "repositories scored so far. Scoring starts once enough history has loaded."
+                ) : (
+                  <>
+                    scored of <V src="radar.json" at="/row_count" value={radar.data.row_count} /> mapped
+                    repositories, ranked by signs of strain. The rest have too little data to rank.
+                  </>
+                )}
               </span>
             </div>
             <div className="reveal">
@@ -104,7 +109,7 @@ export default function Home() {
 
       <section className="dive" id="pipeline">
         <p className="eyebrow reveal">pipeline live</p>
-        <h2 className="reveal">What we&apos;ve read so far</h2>
+        <h2 className="reveal">What the daily ingest has read</h2>
         {m.ok ? (
           <>
             <div className="reveal">

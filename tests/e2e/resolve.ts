@@ -21,16 +21,17 @@ export function pointer(doc: unknown, ptr: string): unknown {
   return cur;
 }
 
-// The counts a page may derive from an array (see components/V.tsx): "len", "len:key=value".
+// The counts a page may derive from an array (see components/V.tsx): "len", "len:key=value",
+// "len:key!=value".
 export function derive(v: unknown, how: string | null): unknown {
   if (!how) return v;
   if (how === "index") return undefined; // a row number; checked separately
   if (!Array.isArray(v)) throw new Error(`derive ${how} on a non-array`);
   if (how === "len") return v.length;
-  const m = /^len:([^=]+)=(.*)$/.exec(how);
+  const m = /^len:([^=!]+)(!?)=(.*)$/.exec(how);
   if (!m) throw new Error(`unknown derive ${how}`);
-  const [, key, want] = m;
-  return v.filter((x) => String((x as Record<string, unknown>)[key!]) === want).length;
+  const [, key, not, want] = m;
+  return v.filter((x) => (String((x as Record<string, unknown>)[key!]) === want) !== (not === "!")).length;
 }
 
 export const asText = (v: unknown) => (v !== null && typeof v === "object" ? JSON.stringify(v) : String(v));
