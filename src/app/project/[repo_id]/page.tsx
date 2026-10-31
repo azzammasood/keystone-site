@@ -78,25 +78,27 @@ export default async function Project({ params }: Props) {
         </p>
       ) : null}
       <h3>Signals</h3>
+      {/* A table on desktop; below 640px each row stacks as a card (globals.css, table.stack).
+          The explicit roles keep the table semantics when the CSS changes the display. */}
       <div className="tbl">
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">signal</th>
-              <th scope="col">data</th>
-              <th scope="col" className="n">sub-score</th>
-              <th scope="col" className="n">weight</th>
-              <th scope="col">why</th>
+        <table className="stack" role="table">
+          <thead role="rowgroup">
+            <tr role="row">
+              <th role="columnheader" scope="col">signal</th>
+              <th role="columnheader" scope="col">data</th>
+              <th role="columnheader" scope="col" className="n">sub-score</th>
+              <th role="columnheader" scope="col" className="n">weight</th>
+              <th role="columnheader" scope="col">why</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody role="rowgroup">
             {row.components.map((c, j) => (
-              <tr key={c.name}>
-                <td><V src={F} at={`${at}/components/${j}/name`} value={c.name} /></td>
-                <td><V src={F} at={`${at}/components/${j}/available`} value={c.available}>{c.available ? "available" : "not available"}</V></td>
-                <td className="n"><V src={F} at={`${at}/components/${j}/sub`} value={c.sub}>{fixed(c.sub)}</V></td>
-                <td className="n"><V src={F} at={`${at}/components/${j}/weight`} value={c.weight}>{fixed(c.weight)}</V></td>
-                <td><V src={F} at={`${at}/components/${j}/reason`} value={c.reason} /></td>
+              <tr role="row" key={c.name}>
+                <td role="cell" className="c-name"><V src={F} at={`${at}/components/${j}/name`} value={c.name} /></td>
+                <td role="cell" className="c-data"><V src={F} at={`${at}/components/${j}/available`} value={c.available}>{c.available ? "available" : "not available"}</V></td>
+                <td role="cell" className="n c-sub" data-label="sub"><V src={F} at={`${at}/components/${j}/sub`} value={c.sub}>{fixed(c.sub)}</V></td>
+                <td role="cell" className="n c-weight" data-label="weight"><V src={F} at={`${at}/components/${j}/weight`} value={c.weight}>{fixed(c.weight)}</V></td>
+                <td role="cell" className="c-why"><V src={F} at={`${at}/components/${j}/reason`} value={c.reason} /></td>
               </tr>
             ))}
           </tbody>
