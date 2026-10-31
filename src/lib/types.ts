@@ -37,9 +37,13 @@ export interface RadarRow {
   coverage: number;
   note: string;
   top_signals: Signal[];
+  // radar v2 (ADR-084): set by the pipeline, not derived here.
+  scored: boolean;
+  unscored_reason: string | null;
+  rank: number | null;
 }
 
-export interface ProjectRow extends Omit<RadarRow, "top_signals"> {
+export interface ProjectRow extends Omit<RadarRow, "top_signals" | "scored" | "unscored_reason" | "rank"> {
   components: Signal[];
   criticality_inputs: Record<string, unknown>;
 }
@@ -125,8 +129,23 @@ export interface Run {
   status: string;
 }
 
+export interface LifetimeSpan {
+  chunks: number;
+  complete_chunks: number;
+  days: number;
+  first: string;
+  last: string;
+  events: number;
+  bytes_downloaded: number;
+  job_hours: number;
+  hours_missing_at_source: number;
+}
+
 export interface PipelineMetrics {
   generated_at: string;
+  metrics_version?: number;
+  // History backfill totals (ADR-084); null when no chunk records were read. Absent before v2.
+  lifetime?: (LifetimeSpan & { source: string; windows: (LifetimeSpan & { name: string })[] }) | null;
   profile: string;
   produced_by: {
     profile: string;

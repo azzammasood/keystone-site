@@ -1,5 +1,5 @@
 import type { PipelineMetrics } from "@/lib/types";
-import { day, full, megabytes, short } from "@/lib/format";
+import { day, full, gigabytes, megabytes, short } from "@/lib/format";
 import { V } from "./V";
 
 const F = "pipeline_metrics.json";
@@ -104,6 +104,80 @@ export function Gauges({ m }: { m: PipelineMetrics }) {
             </span>
           ) : null,
         )}
+      </div>
+    </>
+  );
+}
+
+// Lifetime totals of the history backfill (ADR-084): the windows read once, separate from the
+// daily ingest above. Range ends ("last") are exclusive, so they read "until".
+export function Lifetime({ m }: { m: PipelineMetrics }) {
+  const l = m.lifetime;
+  if (!l) return null;
+  return (
+    <>
+      <div className="gauges">
+        <div className="g">
+          <div className="l">events read</div>
+          <div className="v">
+            <V src={F} at="/lifetime/events" value={l.events} title={full(l.events)}>
+              {short(l.events)}
+            </V>
+          </div>
+          <div className="s">GH Archive, backfill</div>
+        </div>
+        <div className="g">
+          <div className="l">downloaded</div>
+          <div className="v">
+            <V src={F} at="/lifetime/bytes_downloaded" value={l.bytes_downloaded} title={`${full(l.bytes_downloaded)} bytes`}>
+              {gigabytes(l.bytes_downloaded)}
+            </V>
+            <small>GB</small>
+          </div>
+          <div className="s">
+            <V src={F} at="/lifetime/complete_chunks" value={l.complete_chunks} /> of{" "}
+            <V src={F} at="/lifetime/chunks" value={l.chunks} /> chunks complete
+          </div>
+        </div>
+        <div className="g">
+          <div className="l">days covered</div>
+          <div className="v">
+            <V src={F} at="/lifetime/days" value={l.days} title={full(l.days)}>
+              {full(l.days)}
+            </V>
+          </div>
+          <div className="s">
+            in <V src={F} at="/lifetime/windows" derive="len" value={l.windows.length} /> windows
+          </div>
+        </div>
+        <div className="g">
+          <div className="l">hours missing</div>
+          <div className="v">
+            <V src={F} at="/lifetime/hours_missing_at_source" value={l.hours_missing_at_source} />
+          </div>
+          <div className="s">absent from GH Archive itself</div>
+        </div>
+      </div>
+      <div className="line">
+        {l.windows.map((w, i) => (
+          <span key={w.name}>
+            <b>
+              <V src={F} at={`/lifetime/windows/${i}/name`} value={w.name} />
+            </b>{" "}
+            <V src={F} at={`/lifetime/windows/${i}/first`} value={w.first}>
+              {day(w.first)}
+            </V>{" "}
+            until{" "}
+            <V src={F} at={`/lifetime/windows/${i}/last`} value={w.last}>
+              {day(w.last)}
+            </V>{" "}
+            ·{" "}
+            <V src={F} at={`/lifetime/windows/${i}/events`} value={w.events} title={full(w.events)}>
+              {short(w.events)}
+            </V>{" "}
+            events
+          </span>
+        ))}
       </div>
     </>
   );

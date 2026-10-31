@@ -4,7 +4,7 @@ import { RadarSkeleton, RadarTable } from "@/components/RadarTable";
 import { Status, Unavailable } from "@/components/Status";
 import { V } from "@/components/V";
 import { Sea, type Bed } from "@/components/home/Sea";
-import { Gauges } from "@/components/Gauges";
+import { Gauges, Lifetime } from "@/components/Gauges";
 import * as data from "@/lib/data";
 import { utc } from "@/lib/format";
 
@@ -66,15 +66,16 @@ export default function Home() {
           <>
             <div className="hero-num reveal">
               <b>
-                <V src="radar.json" at="/rows" derive="len:risk!=null" value={radar.data.rows.filter((r) => r.risk !== null).length} />
+                <V src="radar.json" at="/rows" derive="len:scored=true" value={radar.data.rows.filter((r) => r.scored).length} />
               </b>
               <span>
                 {radar.data.row_count === 0 ? (
                   "repositories scored so far. Scoring starts once enough history has loaded."
                 ) : (
                   <>
-                    scored of <V src="radar.json" at="/row_count" value={radar.data.row_count} /> mapped
-                    repositories, ranked by signs of strain. The rest have too little data to rank.
+                    scored of <V src="radar.json" at="/row_count" value={radar.data.row_count} /> repositories
+                    with activity in the window, ranked by signs of strain. The rest have too little
+                    data to rank.
                   </>
                 )}
               </span>
@@ -109,10 +110,17 @@ export default function Home() {
 
       <section className="dive" id="pipeline">
         <p className="eyebrow reveal">pipeline live</p>
-        <h2 className="reveal">What the daily ingest has read</h2>
+        <h2 className="reveal">What Keystone has read</h2>
         {m.ok ? (
           <>
+            {m.data.lifetime ? (
+              <div className="reveal">
+                <h3>History backfill, all windows</h3>
+                <Lifetime m={m.data} />
+              </div>
+            ) : null}
             <div className="reveal">
+              <h3>Daily ingest</h3>
               <Gauges m={m.data} />
             </div>
             <p className="sub reveal" style={{ marginTop: 18 }}>

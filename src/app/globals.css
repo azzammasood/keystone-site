@@ -240,6 +240,7 @@ footer.site nav { display: flex; flex-wrap: wrap; gap: 6px 18px; width: 100%; }
   .nav { padding: 14px 16px; gap: 14px; }
   .nav .links { display: none; }
   .gauges { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; }
+  .g .v { white-space: normal; }
   .cue { left: 16px; }
   .ghost div { grid-template-columns: 24px 1fr 50px; }
   .ghost div > :last-child { display: none; }

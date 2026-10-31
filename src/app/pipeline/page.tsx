@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Gauges } from "@/components/Gauges";
+import { Gauges, Lifetime } from "@/components/Gauges";
 import { Page } from "@/components/Page";
 import { RunChart } from "@/components/RunChart";
 import { SourceAt, Unavailable } from "@/components/Status";
@@ -29,8 +29,15 @@ export default function Pipeline() {
     <Page
       eyebrow="pipeline live"
       title="Pipeline Live"
-      lede="What the pipeline read, how fresh it is, what it checked and what it cost, from the last published run."
+      lede="What the pipeline read, how fresh it is, what it checked and what it cost: the history backfill's lifetime totals, then the daily ingest."
     >
+      {m.lifetime ? (
+        <>
+          <h3>History backfill, all windows</h3>
+          <Lifetime m={m} />
+          <h3>Daily ingest</h3>
+        </>
+      ) : null}
       <Gauges m={m} />
 
       <h3>Last run</h3>
