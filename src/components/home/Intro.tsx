@@ -18,7 +18,6 @@ export function Intro({ hours }: { hours: number }) {
   const [gone, setGone] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const next = useRef<HTMLButtonElement>(null);
-  const busy = useRef(false);
 
   useEffect(() => {
     const el = root.current;
@@ -62,22 +61,23 @@ export function Intro({ hours }: { hours: number }) {
     document.documentElement.classList.remove("intro");
     document.body.classList.add("landed");
     window.dispatchEvent(new Event("keystone-landed"));
-    setTimeout(() => setGone(true), 1100);
+    setTimeout(() => setGone(true), 500);
   }
 
+  // Each step takes about 0.6 s. A click during a step starts the next one at once (the CSS
+  // transitions retarget), and a click after "enter" lands straight away.
   function advance() {
-    if (busy.current || done) return;
-    busy.current = true;
+    if (done) return;
     if (at < 3) {
       const n = at + 1;
       setAt(n);
       stage(n);
-      setTimeout(() => (busy.current = false), 500);
       return;
     }
+    if (at === 4) return land();
     stage(4);
     setAt(4);
-    setTimeout(land, 1300);
+    setTimeout(land, 550);
   }
 
   useEffect(() => {

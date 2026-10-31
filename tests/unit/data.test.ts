@@ -74,6 +74,8 @@ describe("trace resolution", () => {
   it("derives counts", () => {
     expect(derive(doc.a, "len")).toBe(3);
     expect(derive(doc.a, "len:on=true")).toBe(2);
+    expect(derive(doc.a, "len:on!=true")).toBe(1);
+    expect(derive([{ r: null }, { r: 0.5 }], "len:r!=null")).toBe(1);
     expect(asText(null)).toBe("null");
   });
 });

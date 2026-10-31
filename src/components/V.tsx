@@ -5,7 +5,8 @@ import type { ReactNode } from "react";
 // built data and fails on any mismatch, and fails on any digit in <main> that is not inside a <V>
 // (or an explicit <Static> for fixed facts such as a standard's version).
 //
-// `derive` covers counts the page computes from an array: "len" or "len:key=value".
+// `derive` covers counts the page computes from an array: "len", "len:key=value" or
+// "len:key!=value" (values compared as text, so null is "null").
 export function V({
   src,
   at,

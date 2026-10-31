@@ -1,5 +1,5 @@
 import type { PipelineMetrics } from "@/lib/types";
-import { full, megabytes, short, year } from "@/lib/format";
+import { day, full, megabytes, short } from "@/lib/format";
 import { V } from "./V";
 
 const F = "pipeline_metrics.json";
@@ -66,14 +66,14 @@ export function Gauges({ m }: { m: PipelineMetrics }) {
         <span>
           <b>
             <V src={F} at="/totals/date_range/first_event" value={t.date_range.first_event}>
-              {year(t.date_range.first_event)}
+              {day(t.date_range.first_event)}
             </V>{" "}
             →{" "}
             <V src={F} at="/totals/date_range/newest_event" value={t.date_range.newest_event}>
-              {year(t.date_range.newest_event)}
+              {day(t.date_range.newest_event)}
             </V>
           </b>{" "}
-          history
+          daily ingest
         </span>
         <span>
           <b>
