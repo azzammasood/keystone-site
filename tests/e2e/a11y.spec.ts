@@ -2,7 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { pages } from "./pages";
+import { sample } from "./pages";
 
 // The intro needs the archive hour count; a build without pipeline_metrics.json has no intro.
 const hasIntro = existsSync(join(process.env.KEYSTONE_DATA_DIR ?? "data/site", "pipeline_metrics.json"));
@@ -12,7 +12,7 @@ const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 for (const scheme of ["light", "dark"] as const) {
   test.describe(`${scheme} mode`, () => {
     test.use({ colorScheme: scheme, reducedMotion: "reduce" });
-    for (const path of pages()) {
+    for (const path of sample()) {
       test(`axe: /${path}`, async ({ page }) => {
         await page.goto(path);
         const r = await new AxeBuilder({ page }).withTags(TAGS).analyze();

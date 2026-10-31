@@ -40,8 +40,11 @@ export function loadFrom<T>(dir: string, file: string): Loaded<T> {
   return { ok: true, file, data: JSON.parse(readFileSync(join(dir, file), "utf8")) as T };
 }
 
+// Each export is read once per build worker: thousands of project pages share project_pages.json.
+const cache = new Map<string, Loaded<unknown>>();
 function load<T>(file: string): Loaded<T> {
-  return loadFrom<T>(DATA_DIR, file);
+  if (!cache.has(file)) cache.set(file, loadFrom<T>(DATA_DIR, file));
+  return cache.get(file) as Loaded<T>;
 }
 
 export const radar = () => load<Envelope<RadarRow>>("radar.json");

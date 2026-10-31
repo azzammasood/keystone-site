@@ -7,7 +7,7 @@ export function Page({
   children,
 }: {
   eyebrow: string;
-  title: string;
+  title: ReactNode;
   lede?: ReactNode;
   children: ReactNode;
 }) {
