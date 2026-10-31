@@ -16,12 +16,11 @@ export function repoLabel(r: { repo_name: string | null; repo_id: number }, file
   );
 }
 
-// Rows in export order: `limit` rows from row `start` (0-based). Only scored rows (risk not null)
-// get a rank; the rest follow under their own heading, each with the export's reason (`note`).
+// Rows in export order: `limit` rows from row `start` (0-based). Scored rows show the export's
+// rank; unscored rows follow under their own heading with the export's unscored_reason.
 export function RadarTable({ env, start = 0, limit }: { env: Envelope<RadarRow>; start?: number; limit?: number }) {
   const rows = env.rows.slice(start, limit ? start + limit : undefined);
-  const firstUnscored = env.rows.findIndex((r) => r.risk === null);
-  const rank = (i: number) => env.rows.slice(0, i + 1).filter((r) => r.risk !== null).length;
+  const firstUnscored = env.rows.findIndex((r) => !r.scored);
   return (
     <div className="tbl">
       <table>
@@ -46,20 +45,20 @@ export function RadarTable({ env, start = 0, limit }: { env: Envelope<RadarRow>;
           {rows.map((r, k) => {
             const i = start + k;
             const at = ptr("rows", i);
-            const scored = r.risk !== null;
+            const scored = r.scored;
             return (
               <Fragment key={r.repo_id}>
               {i === firstUnscored ? (
                 <tr>
                   <th scope="rowgroup" colSpan={8} className="group">
                     Not scored (
-                    <V src={F} at="/rows" derive="len:risk=null" value={env.rows.filter((x) => x.risk === null).length} />
+                    <V src={F} at="/rows" derive="len:scored=false" value={env.rows.filter((x) => !x.scored).length} />
                     ): too little data to rank
                   </th>
                 </tr>
               ) : null}
               <tr>
-                <td className="n">{scored ? <V src={F} at={at} derive="index" value={rank(i)} /> : "–"}</td>
+                <td className="n">{r.rank !== null ? <V src={F} at={`${at}/rank`} value={r.rank} /> : "–"}</td>
                 <td>
                   <Link href={`/project/${r.repo_id}/`}>{repoLabel(r, F, at)}</Link>
                 </td>
@@ -76,8 +75,8 @@ export function RadarTable({ env, start = 0, limit }: { env: Envelope<RadarRow>;
                 <td className="n"><V src={F} at={`${at}/criticality`} value={r.criticality}>{fixed(r.criticality)}</V></td>
                 <td className="n"><V src={F} at={`${at}/coverage`} value={r.coverage}>{share(r.coverage, 0)}</V></td>
                 <td>
-                  {!scored && r.note ? (
-                    <V src={F} at={`${at}/note`} value={r.note} className="sub" />
+                  {!scored && r.unscored_reason ? (
+                    <V src={F} at={`${at}/unscored_reason`} value={r.unscored_reason} className="sub" />
                   ) : r.top_signals
                     .filter((s) => s.available)
                     .map((s, j) => (
