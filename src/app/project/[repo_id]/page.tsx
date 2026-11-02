@@ -8,6 +8,7 @@ import * as data from "@/lib/data";
 import { fixed, share } from "@/lib/format";
 
 const F = "project_pages.json";
+const SHOWN = 10;
 export const dynamicParams = false;
 
 // One static page per repository in project_pages.json. With no rows there are no pages, and
@@ -42,15 +43,29 @@ export default async function Project({ params }: Props) {
   return (
     <Page eyebrow="repository" title={row.repo_name ? <V src={F} at={`${at}/repo_name`} value={row.repo_name} /> : "Repository"}>
       <Status file={F} env={env} />
-      <p className="sub" style={{ marginTop: 14 }}>
+      {/* Up to SHOWN packages inline; a longer list (some repositories publish hundreds) folds away. */}
+      <p className="sub" style={{ marginTop: 14, overflowWrap: "anywhere" }}>
         {repoLabel(row, F, at)} · packages:{" "}
-        {row.packages.map((p, j) => (
+        {row.packages.slice(0, SHOWN).map((p, j) => (
           <V key={p} src={F} at={`${at}/packages/${j}`} value={p}>
             {j ? ", " : ""}
             {p}
           </V>
         ))}
       </p>
+      {row.packages.length > SHOWN ? (
+        <details className="sub" style={{ marginTop: 6, overflowWrap: "anywhere" }}>
+          <summary>
+            all <V src={F} at={`${at}/packages`} derive="len" value={row.packages.length} /> packages
+          </summary>
+          {row.packages.slice(SHOWN).map((p, j) => (
+            <V key={p} src={F} at={`${at}/packages/${j + SHOWN}`} value={p}>
+              {j ? ", " : ""}
+              {p}
+            </V>
+          ))}
+        </details>
+      ) : null}
       <div className="gauges">
         {(["risk", "fragility", "criticality"] as const).map((k) => (
           <div className="g" key={k}>

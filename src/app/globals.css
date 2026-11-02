@@ -62,6 +62,21 @@ code { font-size: .92em; color: var(--mute); }
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background: radial-gradient(ellipse at 50% var(--wy, 60%), var(--bg2), var(--bg) 72%);
 }
+/* page arrival (app/template.tsx): a scan line passes down the screen and reveals the page behind
+   it. `backwards` only, so clip-path is released when it ends and fixed layers are never clipped. */
+.js .sweep { animation: sweep .65s cubic-bezier(.3, .6, .2, 1) backwards; }
+@keyframes sweep {
+  from { clip-path: inset(0 0 100% 0); opacity: .5; }
+  to { clip-path: inset(0 0 calc(100% - 100vh) 0); opacity: 1; }
+}
+.scanline { position: fixed; left: 0; right: 0; top: 0; height: 1px; z-index: 5; pointer-events: none; opacity: 0; background: var(--accent); box-shadow: 0 0 14px var(--accent), 0 0 2px var(--accent); }
+.js .scanline { animation: scan .65s cubic-bezier(.3, .6, .2, 1); }
+@keyframes scan { 0% { opacity: .9; transform: translateY(0); } 85% { opacity: .7; } 100% { opacity: 0; transform: translateY(100vh); } }
+/* landing: two sonar pings from the seabed as the title surfaces (design: sonar-site.html) */
+.ping { position: fixed; left: 50%; top: 58%; z-index: 1; width: 20px; height: 20px; margin: -10px; border-radius: 50%; border: 1px solid var(--accent); pointer-events: none; opacity: 0; }
+.landed .ping { animation: ping 1.8s cubic-bezier(.1, .6, .3, 1) forwards; }
+.landed .ping.p2 { animation-delay: .25s; }
+@keyframes ping { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(90); } }
 #sea { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
 .skip-link { position: absolute; left: 12px; top: -40px; z-index: 60; background: var(--bg); padding: 6px 12px; border: 1px solid var(--accent); }
@@ -70,7 +85,7 @@ code { font-size: .92em; color: var(--mute); }
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 10;
   display: flex; align-items: center; gap: 22px; padding: 16px 32px;
-  background: linear-gradient(var(--bg), color-mix(in srgb, var(--bg) 0%, transparent));
+  background: linear-gradient(var(--bg) 55%, color-mix(in srgb, var(--bg) 0%, transparent));
 }
 .nav .logo { font: 800 20px var(--font-syne), sans-serif; letter-spacing: .22em; margin-right: auto; text-decoration: none; }
 .nav a { font-size: 12px; text-decoration: none; }
@@ -162,6 +177,12 @@ table { border-collapse: collapse; width: 100%; font-size: 13px; }
 th, td { text-align: left; padding: 9px 12px 9px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--mute); font-weight: 400; }
 td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pager-rows { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin-top: 18px; font-size: 13px; }
+.pager-rows .pages { display: flex; flex-wrap: wrap; gap: 4px; }
+.pager-rows .pages > * { min-width: 30px; padding: 4px 6px; text-align: center; border: 1px solid transparent; border-radius: 6px; text-decoration: none; color: var(--mute); }
+.pager-rows .pages a { border-color: var(--line); color: var(--fg); }
+.pager-rows .pages a:hover { border-color: var(--accent); }
+.pager-rows .pages .on { border-color: var(--accent); color: var(--accent); }
 th.group { padding-top: 22px; color: var(--fg); letter-spacing: .08em; }
 /* table.stack: below 640px each row is a card: the name, then data, sub-score and weight on one
    line, then "why" full width. The column headers stay for screen readers only. */
@@ -175,6 +196,26 @@ th.group { padding-top: 22px; color: var(--fg); letter-spacing: .08em; }
   table.stack .c-weight { grid-area: weight; }
   table.stack .c-sub::before, table.stack .c-weight::before { content: attr(data-label) " "; color: var(--mute); font-size: 11px; }
   table.stack .c-why { grid-area: why; color: var(--mute); font-size: 12px; }
+}
+table.radar .r-pkg { max-width: 300px; overflow-wrap: anywhere; }
+table.radar .r-pkg .more, table.radar .r-sig { color: var(--mute); }
+table.radar .r-repo { overflow-wrap: anywhere; }
+/* table.radar: below 900px each row is a card: rank and repository, packages, the four scores
+   (labelled), then the top signals or the reason it is not scored. */
+@media (max-width: 900px) {
+  table.radar thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  table.radar tr { display: grid; grid-template-columns: 2.6em repeat(4, minmax(0, 1fr)); grid-template-areas: "rank repo repo repo repo" ". pkg pkg pkg pkg" ". n1 n2 n3 n4" ". sig sig sig sig"; gap: 4px 10px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  table.radar td, table.radar th.group { display: block; border: 0; padding: 0; text-align: left; }
+  table.radar th.group { grid-column: 1 / -1; padding-top: 18px; }
+  table.radar .r-rank { grid-area: rank; text-align: left; color: var(--mute); }
+  table.radar .r-repo { grid-area: repo; overflow-wrap: anywhere; font-weight: 700; }
+  table.radar .r-pkg { grid-area: pkg; color: var(--mute); overflow-wrap: anywhere; }
+  table.radar .r-num:nth-child(4) { grid-area: n1; } table.radar .r-num:nth-child(5) { grid-area: n2; }
+  table.radar .r-num:nth-child(6) { grid-area: n3; } table.radar .r-num:nth-child(7) { grid-area: n4; }
+  table.radar .r-num { white-space: normal; }
+  table.radar .r-num::before { content: attr(data-label); display: block; color: var(--mute); font-size: 9px; letter-spacing: 0; text-transform: uppercase; }
+  table.radar .r-sig { grid-area: sig; color: var(--mute); font-size: 12px; overflow-wrap: anywhere; }
+  table.radar caption { display: block; }
 }
 caption { text-align: left; font-size: 12px; color: var(--mute); padding-bottom: 8px; }
 
@@ -248,7 +289,7 @@ footer.site nav { display: flex; flex-wrap: wrap; gap: 6px 18px; width: 100%; }
 @media (max-width: 700px) { #intro .world { transform: rotateX(62deg) scale(.62); } }
 @media (max-width: 900px) {
   section.dive, .page { padding: 90px 16px 56px; }
-  h1.title, h2 { font-size: clamp(26px, 8vw, 40px); }
+  h1.title, h2 { font-size: clamp(22px, 6.8vw, 40px); }
   h1.big { font-size: clamp(30px, 10vw, 56px); }
   .nav { padding: 14px 16px; gap: 14px; }
   .nav .links { display: none; }
@@ -264,4 +305,6 @@ footer.site nav { display: flex; flex-wrap: wrap; gap: 6px 18px; width: 100%; }
   html { scroll-behavior: auto; }
   .reveal, h1.big .w, .later { opacity: 1 !important; transform: none !important; transition: none !important; }
   .flow.moving { animation: none; }
+  .ping, .scanline { display: none; }
+  .js .sweep { animation: none; }
 }
