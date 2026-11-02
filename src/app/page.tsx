@@ -22,10 +22,13 @@ export default function Home() {
   const brief = data.briefs();
   const m = data.metrics();
   const lin = data.lineage();
+  // Seabed bump per dataset: its columns plus its lineage links (many sources list no columns).
+  const links = new Map<string, number>();
+  if (lin.ok) for (const e of lin.data.edges) for (const id of [e.from, e.to]) links.set(id, (links.get(id) ?? 0) + 1);
   const bed: Bed = lin.ok
-    ? LAYERS.map((l) => [l, lin.data.datasets.filter((d) => d.layer === l).map((d) => [d.title, d.fields.length])] as Bed[number]).filter(
-        ([, ds]) => ds.length > 0,
-      )
+    ? LAYERS.map(
+        (l) => [l, lin.data.datasets.filter((d) => d.layer === l).map((d) => [d.title, d.fields.length + (links.get(d.id) ?? 0)])] as Bed[number],
+      ).filter(([, ds]) => ds.length > 0)
     : [];
   const latest = brief.ok ? brief.data.rows.at(-1) : undefined;
 

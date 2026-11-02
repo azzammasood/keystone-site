@@ -52,7 +52,7 @@ npm run schemas:check       # schemas/ still equal to keystone-pipeline main
 
 Repository and package level only: no people, no logins, no emails. "Signals", never predictions.
 Motion follows real metrics: the intro shows one tile per archive hour loaded, the seabed's bumps
-are column counts from lineage, and the Pipeline Live flow lines move at measured records per
+are each dataset's columns plus lineage links, and the Pipeline Live flow lines move at measured records per
 second, which keeps them still when nothing moved. `prefers-reduced-motion` turns motion off.
 $0: free tiers only.
 

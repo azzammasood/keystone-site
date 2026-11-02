@@ -26,7 +26,9 @@ export function Intro({ hours }: { hours: number }) {
     const rows = Math.ceil(count / COLS);
     const grid = (k: number) =>
       `translate3d(${((k % COLS) - (COLS - 1) / 2) * 22}px,${(Math.floor(k / COLS) - (rows - 1) / 2) * 26}px,0)`;
-    const arcN = Math.ceil(count / 6);
+    // Fewer layers when there are few tiles, so the arch still reads as an arch.
+    const layers = Math.min(6, Math.max(1, Math.round(count / 40)));
+    const arcN = Math.ceil(count / layers);
     const arch = (k: number) => {
       const j = k % arcN, layer = Math.floor(k / arcN), a = (Math.PI * (j + 0.5)) / arcN;
       const r = 130 + Math.floor(layer / 3) * 24;
@@ -37,7 +39,7 @@ export function Intro({ hours }: { hours: number }) {
     };
     const stage = (n: number) =>
       tiles.forEach((t, k) => {
-        if (n === 0) t.style.transform = grid(k) + " translateZ(260px)";
+        if (n === 0) t.style.transform = grid(k) + " translateZ(-220px)";
         if (n === 1) { t.style.transform = grid(k); t.style.opacity = "1"; t.classList.remove("key"); }
         if (n === 2) t.style.opacity = ".55";
         if (n === 3) { const p = arch(k); t.style.transform = p.tf; t.style.opacity = "1"; t.classList.toggle("key", p.key); }

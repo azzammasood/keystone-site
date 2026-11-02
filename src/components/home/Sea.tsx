@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { INTRO_SEEN, Intro } from "./Intro";
 
-// The seabed: lineage layers as ridge bands (published at the front), one bump per dataset whose
-// height is its column count from metadata/lineage.json. Also runs the landing, the water depth on
-// scroll and the section reveals. Paused when the tab is hidden; still for reduced motion.
+// The seabed: one ridge profile per lineage layer (published at the front), one bump per dataset
+// whose height is its column count plus its lineage links from metadata/lineage.json (square-root
+// scale, so small tables still show). The terrain blends from each layer's profile to the next, so every line carries the
+// data. Also runs the landing (the seabed rises, two sonar pings), the water depth on scroll and the
+// section reveals. Paused when the tab is hidden; still for reduced motion.
 export type Bed = [layer: string, datasets: [title: string, fields: number][]][];
 
 export function Sea({ bed, hours }: { bed: Bed; hours: number }) {
@@ -41,23 +43,26 @@ export function Sea({ bed, hours }: { bed: Bed; hours: number }) {
     };
     size();
 
-    const rowsPer = 7, NX = 90, bands = [...bed].reverse(), NZ = bands.length * rowsPer;
+    const rowsPer = 7, NX = 90, bands = [...bed].reverse();
+    const NZ = Math.max(1, bands.length - 1) * rowsPer + 1;
     const maxF = Math.max(1, ...bed.flatMap(([, ds]) => ds.map((d) => d[1])));
-    const H: number[][] = [];
-    for (let z = 0; z < NZ; z++) {
-      const ds = bands[Math.floor(z / rowsPer)]?.[1] ?? [];
-      const env = Math.sin((Math.PI * (z % rowsPer)) / (rowsPer - 1));
-      const row: number[] = [];
-      for (let x = 0; x < NX; x++) {
+    const profile = (ds: [string, number][]) =>
+      Array.from({ length: NX }, (_, x) => {
         const u = x / (NX - 1);
         let h = 0;
         ds.forEach((d, i) => {
-          const c = (i + 0.5) / ds.length, s = 0.5 / ds.length;
-          h = Math.max(h, (d[1] / maxF) * Math.exp(-(((u - c) / s) ** 2)));
+          const c = (i + 0.5) / ds.length, s = 0.6 / ds.length;
+          h = Math.max(h, Math.sqrt(d[1] / maxF) * Math.exp(-(((u - c) / s) ** 2)));
         });
-        row.push(h * env);
-      }
-      H.push(row);
+        return h;
+      });
+    const P = bands.map(([, ds]) => profile(ds));
+    const smooth = (t: number) => t * t * (3 - 2 * t);
+    const H: number[][] = [];
+    for (let z = 0; z < NZ; z++) {
+      const b = Math.min(Math.floor(z / rowsPer), Math.max(0, P.length - 1));
+      const a = P[b] ?? [], c = P[Math.min(b + 1, P.length - 1)] ?? a, t = smooth((z % rowsPer) / rowsPer);
+      H.push(Array.from({ length: NX }, (_, x) => (a[x] ?? 0) * (1 - t) + (c[x] ?? 0) * t));
     }
 
     const col = (v: string) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
@@ -152,6 +157,8 @@ export function Sea({ bed, hours }: { bed: Bed; hours: number }) {
   return (
     <>
       <canvas id="sea" ref={canvas} aria-hidden="true" />
+      <div className="ping" aria-hidden="true" />
+      <div className="ping p2" aria-hidden="true" />
       {intro ? <Intro hours={hours} /> : null}
     </>
   );
