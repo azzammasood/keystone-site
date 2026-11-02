@@ -9,6 +9,8 @@ import { full } from "@/lib/format";
 export const metadata: Metadata = { title: "Lineage" };
 const F = "metadata/lineage.json";
 const LAYERS = ["sources", "silver", "stream", "rollup", "warehouse", "published"];
+// A layer shows its first FOLD datasets; the rest fold away (sources lists one per file).
+const FOLD = 12;
 const anchor = (id: string) => "d-" + id.replace(/[^a-zA-Z0-9]+/g, "-");
 
 export default function LineagePage() {
@@ -22,6 +24,23 @@ export default function LineagePage() {
   }
   const l = r.data;
   const byId = new Map(l.datasets.map((d) => [d.id, d]));
+  const item = (d: (typeof l.datasets)[number]) => {
+    const i = l.datasets.indexOf(d);
+    return (
+      <li key={d.id} id={anchor(d.id)}>
+        {d.cataloged ? (
+          <Link href={`/catalog/#${anchor(d.id)}`}>
+            <V src={F} at={`/datasets/${i}/title`} value={d.title} />
+          </Link>
+        ) : (
+          <V src={F} at={`/datasets/${i}/title`} value={d.title} />
+        )}
+        <div className="sub">
+          <V src={F} at={`/datasets/${i}/fields`} derive="len" value={d.fields.length} /> columns
+        </div>
+      </li>
+    );
+  };
   return (
     <Page
       eyebrow="lineage"
@@ -46,25 +65,13 @@ export default function LineagePage() {
                   <V src={F} at="/datasets" derive={`len:layer=${layer}`} value={ds.length} />
                 </span>
               </h3>
-              <ol>
-                {ds.map((d) => {
-                  const i = l.datasets.indexOf(d);
-                  return (
-                    <li key={d.id} id={anchor(d.id)}>
-                      {d.cataloged ? (
-                        <Link href={`/catalog/#${anchor(d.id)}`}>
-                          <V src={F} at={`/datasets/${i}/title`} value={d.title} />
-                        </Link>
-                      ) : (
-                        <V src={F} at={`/datasets/${i}/title`} value={d.title} />
-                      )}
-                      <div className="sub">
-                        <V src={F} at={`/datasets/${i}/fields`} derive="len" value={d.fields.length} /> columns
-                      </div>
-                    </li>
-                  );
-                })}
-              </ol>
+              <ol>{ds.slice(0, FOLD).map(item)}</ol>
+              {ds.length > FOLD ? (
+                <details>
+                  <summary className="sub">show all</summary>
+                  <ol>{ds.slice(FOLD).map(item)}</ol>
+                </details>
+              ) : null}
             </section>
           );
         })}

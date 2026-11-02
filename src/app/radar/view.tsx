@@ -8,36 +8,50 @@ import { day } from "@/lib/format";
 
 const F = "radar.json";
 
-// The radar is split into static pages of PER rows in export order, so a page stays light
-// however many repositories the export holds. Page 1 is /radar/, page n is /radar/n/.
-export const PER = 100;
+// The radar is split into static pages of PER rows in export order, so a page stays short however
+// many repositories the export holds. Page 1 is /radar/, page n is /radar/n/.
+export const PER = 25;
 export const pageCount = (rows: number) => Math.max(1, Math.ceil(rows / PER));
 const href = (n: number) => (n === 1 ? "/radar/" : `/radar/${n}/`);
 
-type PagerProps = { n: number; of: number; start: number; end: number; total: number; label: string };
-function Pager({ n, of, start, end, total, label }: PagerProps) {
+// Page numbers to link: the first, the last and two either side of the current one; null is a gap.
+function pages(n: number, of: number): (number | null)[] {
+  const keep = [...new Set([1, n - 2, n - 1, n, n + 1, n + 2, of])].filter((k) => k >= 1 && k <= of).sort((a, b) => a - b);
+  return keep.flatMap((k, i) => (i && k - keep[i - 1]! > 1 ? [null, k] : [k]));
+}
+
+type PagerProps = { n: number; of: number; start: number; end: number; total: number; label: string; unscoredPage: number | null };
+function Pager({ n, of, start, end, total, label, unscoredPage }: PagerProps) {
   return (
-    <nav className="sub" aria-label={label} style={{ marginTop: 18 }}>
-      Rows <V src={F} at={ptr("rows", start)} derive="index" value={start + 1} /> to{" "}
-      <V src={F} at={ptr("rows", end - 1)} derive="index" value={end} /> of{" "}
-      <V src={F} at="/row_count" value={total} />
+    <nav className="pager-rows" aria-label={label}>
+      <span className="sub">
+        Rows <V src={F} at={ptr("rows", start)} derive="index" value={start + 1} />–
+        <V src={F} at={ptr("rows", end - 1)} derive="index" value={end} /> of{" "}
+        <V src={F} at="/row_count" value={total} />
+      </span>
       {of > 1 ? (
-        <>
-          {" "}
-          · page <Static why="page number">{n} of {of}</Static>
-          {n > 1 ? (
-            <>
-              {" "}
-              · <Link href={href(n - 1)} rel="prev">previous</Link>
-            </>
-          ) : null}
-          {n < of ? (
-            <>
-              {" "}
-              · <Link href={href(n + 1)} rel="next">next</Link>
-            </>
-          ) : null}
-        </>
+        <span className="pages">
+          {n > 1 ? <Link href={href(n - 1)} rel="prev" aria-label="Previous page">‹</Link> : <span aria-hidden="true">‹</span>}
+          {pages(n, of).map((k, i) =>
+            k === null ? (
+              <span key={`gap${i}`} aria-hidden="true">…</span>
+            ) : k === n ? (
+              <span key={k} aria-current="page" className="on">
+                <Static why="page number">{k}</Static>
+              </span>
+            ) : (
+              <Link key={k} href={href(k)} aria-label={`Page ${k}`}>
+                <Static why="page number">{k}</Static>
+              </Link>
+            ),
+          )}
+          {n < of ? <Link href={href(n + 1)} rel="next" aria-label="Next page">›</Link> : <span aria-hidden="true">›</span>}
+        </span>
+      ) : null}
+      {unscoredPage && unscoredPage !== n ? (
+        <Link className="sub" href={href(unscoredPage)}>
+          {unscoredPage > n ? "jump to the not-scored list" : "back to the ranked list"}
+        </Link>
       ) : null}
     </nav>
   );
@@ -80,7 +94,9 @@ export function RadarView({ n }: { n: number }) {
               const of = pageCount(r.data.rows.length);
               const start = (n - 1) * PER;
               const end = Math.min(start + PER, r.data.rows.length);
-              const at = { n, of, start, end, total: r.data.row_count };
+              const first = r.data.rows.findIndex((x) => !x.scored);
+              const unscoredPage = first < 0 ? null : Math.floor(first / PER) + 1;
+              const at = { n, of, start, end, total: r.data.row_count, unscoredPage };
               return (
                 <>
                   <Pager {...at} label="Radar pages" />

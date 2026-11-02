@@ -22,10 +22,10 @@ for (const path of sample()) {
         const wrap = t.parentElement!;
         if (t.scrollWidth > wrap.clientWidth + 1) out.push(`table ${t.scrollWidth}px in a ${wrap.clientWidth}px box`);
         for (const tr of t.querySelectorAll<HTMLTableRowElement>("tbody tr")) {
-          const h = (sel: string) => tr.querySelector(sel)?.getBoundingClientRect().height ?? 0;
           const row = tr.getBoundingClientRect();
           const why = tr.querySelector(".c-why")?.getBoundingClientRect();
-          const lines = h(".c-name") + Math.max(h(".c-data"), h(".c-sub"), h(".c-weight")) + h(".c-why");
+          // Cards stack their cells, so a card is never taller than all its cells laid end to end.
+          const lines = [...tr.cells].reduce((sum, c) => sum + c.getBoundingClientRect().height, 0);
           if (why && why.width < row.width * 0.8) out.push(`why is ${Math.round(why.width)}px of a ${Math.round(row.width)}px row`);
           if (row.height > lines + 40) out.push(`row ${Math.round(row.height)}px for ${Math.round(lines)}px of lines`);
         }

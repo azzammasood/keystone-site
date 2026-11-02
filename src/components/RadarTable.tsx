@@ -5,6 +5,8 @@ import { fixed, share } from "@/lib/format";
 import { V, ptr } from "./V";
 
 const F = "radar.json";
+// Packages listed per row; the rest are on the repository page (some repositories publish hundreds).
+const PKGS = 3;
 
 export function repoLabel(r: { repo_name: string | null; repo_id: number }, file: string, at: string) {
   return r.repo_name ? (
@@ -23,25 +25,26 @@ export function RadarTable({ env, start = 0, limit }: { env: Envelope<RadarRow>;
   const firstUnscored = env.rows.findIndex((r) => !r.scored);
   return (
     <div className="tbl">
-      <table>
+      {/* Below 900px each row stacks as a card (globals.css, table.radar); roles keep the semantics. */}
+      <table className="stack radar" role="table">
         <caption>
           Ranked by risk, the product of fragility and criticality signals. Coverage is the share of
           signals that had data. Repositories with too little data are listed after the ranked ones,
           without a rank.
         </caption>
-        <thead>
-          <tr>
-            <th scope="col" className="n">#</th>
-            <th scope="col">repository</th>
-            <th scope="col">packages</th>
-            <th scope="col" className="n">risk</th>
-            <th scope="col" className="n">fragility</th>
-            <th scope="col" className="n">criticality</th>
-            <th scope="col" className="n">coverage</th>
-            <th scope="col">top signals</th>
+        <thead role="rowgroup">
+          <tr role="row">
+            <th role="columnheader" scope="col" className="n">#</th>
+            <th role="columnheader" scope="col">repository</th>
+            <th role="columnheader" scope="col">packages</th>
+            <th role="columnheader" scope="col" className="n">risk</th>
+            <th role="columnheader" scope="col" className="n">fragility</th>
+            <th role="columnheader" scope="col" className="n">criticality</th>
+            <th role="columnheader" scope="col" className="n">coverage</th>
+            <th role="columnheader" scope="col">top signals</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody role="rowgroup">
           {rows.map((r, k) => {
             const i = start + k;
             const at = ptr("rows", i);
@@ -49,32 +52,38 @@ export function RadarTable({ env, start = 0, limit }: { env: Envelope<RadarRow>;
             return (
               <Fragment key={r.repo_id}>
               {i === firstUnscored ? (
-                <tr>
-                  <th scope="rowgroup" colSpan={8} className="group">
+                <tr role="row">
+                  <th role="rowheader" scope="rowgroup" colSpan={8} className="group">
                     Not scored (
                     <V src={F} at="/rows" derive="len:scored=false" value={env.rows.filter((x) => !x.scored).length} />
                     ): too little data to rank
                   </th>
                 </tr>
               ) : null}
-              <tr>
-                <td className="n">{r.rank !== null ? <V src={F} at={`${at}/rank`} value={r.rank} /> : "–"}</td>
-                <td>
+              <tr role="row">
+                <td role="cell" className="n r-rank">{r.rank !== null ? <V src={F} at={`${at}/rank`} value={r.rank} /> : "–"}</td>
+                <td role="cell" className="r-repo">
                   <Link href={`/project/${r.repo_id}/`}>{repoLabel(r, F, at)}</Link>
                 </td>
-                <td>
-                  {r.packages.map((p, j) => (
+                <td role="cell" className="r-pkg">
+                  {r.packages.slice(0, PKGS).map((p, j) => (
                     <V key={p} src={F} at={`${at}/packages/${j}`} value={p}>
                       {j ? ", " : ""}
                       {p}
                     </V>
                   ))}
+                  {r.packages.length > PKGS ? (
+                    <span className="more">
+                      {" "}
+                      (<V src={F} at={`${at}/packages`} derive="len" value={r.packages.length} /> in all)
+                    </span>
+                  ) : null}
                 </td>
-                <td className="n"><V src={F} at={`${at}/risk`} value={r.risk}>{fixed(r.risk)}</V></td>
-                <td className="n"><V src={F} at={`${at}/fragility`} value={r.fragility}>{fixed(r.fragility)}</V></td>
-                <td className="n"><V src={F} at={`${at}/criticality`} value={r.criticality}>{fixed(r.criticality)}</V></td>
-                <td className="n"><V src={F} at={`${at}/coverage`} value={r.coverage}>{share(r.coverage, 0)}</V></td>
-                <td>
+                <td role="cell" className="n r-num" data-label="risk"><V src={F} at={`${at}/risk`} value={r.risk}>{fixed(r.risk)}</V></td>
+                <td role="cell" className="n r-num" data-label="fragility"><V src={F} at={`${at}/fragility`} value={r.fragility}>{fixed(r.fragility)}</V></td>
+                <td role="cell" className="n r-num" data-label="criticality"><V src={F} at={`${at}/criticality`} value={r.criticality}>{fixed(r.criticality)}</V></td>
+                <td role="cell" className="n r-num" data-label="coverage"><V src={F} at={`${at}/coverage`} value={r.coverage}>{share(r.coverage, 0)}</V></td>
+                <td role="cell" className="r-sig">
                   {!scored && r.unscored_reason ? (
                     <V src={F} at={`${at}/unscored_reason`} value={r.unscored_reason} className="sub" />
                   ) : r.top_signals
