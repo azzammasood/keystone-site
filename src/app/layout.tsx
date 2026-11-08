@@ -34,21 +34,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Nav />
         <main id="main">{children}</main>
         <footer className="site">
-          <nav aria-label="All pages">
-            <Link href="/radar/">Radar</Link>
-            <Link href="/pipeline/">Pipeline Live</Link>
-            <Link href="/backtests/">Backtests</Link>
-            <Link href="/lineage/">Lineage</Link>
+          {/* Only pages the top nav does not already link (components/Nav). */}
+          <nav aria-label="More pages">
             <Link href="/catalog/">Catalog</Link>
             <Link href="/scale/">Scale</Link>
             <Link href="/briefs/">Weekly briefs</Link>
-            <Link href="/about/">About the data and method</Link>
             <Link href="/built/">How it&apos;s built</Link>
             <Link href="/corrections/">Corrections and removal</Link>
             <Link href="/maker/">The maker</Link>
           </nav>
-          <span>Data: GH Archive · OSV · ecosyste.ms (terms on the About page)</span>
-          <span>Repository and package level only. Signals, never predictions.</span>
         </footer>
       </body>
     </html>
