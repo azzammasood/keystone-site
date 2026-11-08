@@ -30,7 +30,7 @@ export default function Built() {
         <div className="cards">
           {m.data.engines.map((e, i) => (
             <div className="card" key={e.name}>
-              <h3><V src={F} at={`/engines/${i}/name`} value={e.name} /></h3>
+              <h3><V src={F} at={`/engines/${i}/name`} value={e.name} wrap /></h3>
               <p style={{ margin: 0 }}><V src={F} at={`/engines/${i}/role`} value={e.role} /></p>
               <p className="sub" style={{ marginTop: 8 }}>
                 <V src={F} at={`/engines/${i}/version`} value={e.version}>{e.version ?? "version not recorded"}</V> · last used{" "}

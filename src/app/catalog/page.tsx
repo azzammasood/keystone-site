@@ -56,7 +56,7 @@ export default function CatalogPage() {
               return (
                 <details key={d.id} id={anchor(d.id)} style={{ marginTop: 10 }}>
                   <summary>
-                    <V src={F} at={`${at}/title`} value={d.title} />
+                    <V src={F} at={`${at}/title`} value={d.title} wrap />
                   </summary>
                   <p><V src={F} at={`${at}/description`} value={d.description} /></p>
                   <p className="sub">

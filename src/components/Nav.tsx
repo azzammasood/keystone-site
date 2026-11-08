@@ -9,6 +9,7 @@ const LINKS = [
   ["/pipeline/", "Pipeline Live"],
   ["/backtests/", "Backtests"],
   ["/lineage/", "Lineage"],
+  ["/stack/", "Tech stack"],
   ["/about/", "About"],
 ] as const;
 
@@ -23,13 +24,23 @@ function current(): Mode {
 export function Nav() {
   const path = usePathname();
   const [mode, setMode] = useState<Mode | null>(null);
+  // Phones hide the links behind a menu button; a navigation closes it.
+  const [open, setOpen] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => setOpen(false), [path]);
   // Read the mode the boot script applied; the button stays unlabelled until then.
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMode(current()), []);
 
   function toggle() {
     const next: Mode = current() === "light" ? "dark" : "light";
-    document.documentElement.dataset.mode = next;
+    const html = document.documentElement;
+    // Crossfade the colours (globals.css, html.theming); instant for reduced motion.
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      html.classList.add("theming");
+      window.setTimeout(() => html.classList.remove("theming"), 450);
+    }
+    html.dataset.mode = next;
     try {
       localStorage.setItem("keystone-mode", next);
     } catch {}
@@ -38,11 +49,14 @@ export function Nav() {
   }
 
   return (
-    <nav className="nav" aria-label="Main">
+    <nav className={`nav${open ? " open" : ""}`} aria-label="Main">
       <Link className="logo" href="/">
         KEYSTONE
       </Link>
-      <span className="links">
+      <button type="button" className="menu" aria-expanded={open} aria-controls="nav-links" onClick={() => setOpen((o) => !o)}>
+        {open ? "close" : "menu"}
+      </button>
+      <span className="links" id="nav-links">
         {LINKS.map(([href, label]) => (
           <Link key={href} href={href} aria-current={path === href ? "page" : undefined}>
             {label}

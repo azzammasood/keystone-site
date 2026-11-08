@@ -56,4 +56,9 @@ are each dataset's columns plus lineage links, and the Pipeline Live flow lines 
 second, which keeps them still when nothing moved. `prefers-reduced-motion` turns motion off.
 $0: free tiers only.
 
+The Tech stack page lists a tool only if it ran, with evidence: its `engines[]` entry in
+`pipeline_metrics.json` (version and last run are traced from it) or what the pipeline README and
+docs measured (`src/app/stack/tools.ts`). Logos come from Simple Icons (CC0, pinned); tools without
+an icon show their initials.
+
 Design history: `docs/design/` (the Sonar concept with the seabed scan was chosen).

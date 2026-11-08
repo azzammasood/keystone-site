@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 import type { Envelope, RadarRow } from "@/lib/types";
 import { fixed, share } from "@/lib/format";
-import { V, ptr } from "./V";
+import { V, breakable, ptr } from "./V";
 
 const F = "radar.json";
 // Packages listed per row; the rest are on the repository page (some repositories publish hundreds).
@@ -10,7 +10,7 @@ const PKGS = 3;
 
 export function repoLabel(r: { repo_name: string | null; repo_id: number }, file: string, at: string) {
   return r.repo_name ? (
-    <V src={file} at={`${at}/repo_name`} value={r.repo_name} />
+    <V src={file} at={`${at}/repo_name`} value={r.repo_name} wrap />
   ) : (
     <>
       repository <V src={file} at={`${at}/repo_id`} value={r.repo_id} />
@@ -69,7 +69,7 @@ export function RadarTable({ env, start = 0, limit }: { env: Envelope<RadarRow>;
                   {r.packages.slice(0, PKGS).map((p, j) => (
                     <V key={p} src={F} at={`${at}/packages/${j}`} value={p}>
                       {j ? ", " : ""}
-                      {p}
+                      {breakable(p)}
                     </V>
                   ))}
                   {r.packages.length > PKGS ? (
@@ -91,7 +91,7 @@ export function RadarTable({ env, start = 0, limit }: { env: Envelope<RadarRow>;
                     .map((s, j) => (
                       <V key={s.name} src={F} at={`${at}/top_signals/${r.top_signals.indexOf(s)}/name`} value={s.name} title={s.reason}>
                         {j ? " · " : ""}
-                        {s.name}
+                        {breakable(s.name)}
                       </V>
                     ))}
                 </td>

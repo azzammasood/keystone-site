@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 
 // Every figure on the site goes through <V>: it names the export file and the JSON Pointer the
 // value came from, and keeps the raw value. tests/e2e/trace.spec.ts resolves each one against the
@@ -15,6 +15,7 @@ export function V({
   children,
   title,
   className,
+  wrap,
 }: {
   src: string;
   at: string;
@@ -23,6 +24,8 @@ export function V({
   children?: ReactNode;
   title?: string;
   className?: string;
+  // Identifiers (repo, package, table names): may wrap only after . _ / - : (see breakable).
+  wrap?: boolean;
 }) {
   return (
     <data
@@ -32,7 +35,7 @@ export function V({
       title={title}
       className={className}
     >
-      {children ?? String(value)}
+      {children ?? (wrap ? breakable(String(value)) : String(value))}
     </data>
   );
 }
@@ -45,3 +48,10 @@ export function Static({ why, children }: { why: string; children: ReactNode }) 
 // JSON Pointer escaping for keys that contain "/" or "~".
 export const ptr = (...parts: (string | number)[]) =>
   "/" + parts.map((p) => String(p).replace(/~/g, "~0").replace(/\//g, "~1")).join("/");
+
+// Words never break inside (globals.css). An identifier such as staging.stg_registry__packages may
+// wrap only after its separators: a <wbr> follows each run of . _ / - : characters.
+export function breakable(text: string): ReactNode {
+  const parts = text.split(/(?<=[._/:-])(?![._/:-])/);
+  return parts.length < 2 ? text : parts.map((p, i) => <Fragment key={i}>{i ? <wbr /> : null}{p}</Fragment>);
+}
