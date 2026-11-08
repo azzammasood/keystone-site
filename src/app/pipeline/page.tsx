@@ -71,7 +71,7 @@ export default function Pipeline() {
               return (
                 <tr key={`${s.name}-${i}`}>
                   <td>
-                    <V src={F} at={`${at}/name`} value={s.name} />
+                    <V src={F} at={`${at}/name`} value={s.name} wrap />
                     <div className={`flow ${p ? "moving" : ""}`} style={p ? { ["--period" as string]: `${p}s` } : undefined} aria-hidden="true" />
                   </td>
                   <td>
@@ -184,7 +184,7 @@ export default function Pipeline() {
           <tbody>
             {m.engines.map((e, i) => (
               <tr key={e.name}>
-                <td><V src={F} at={`/engines/${i}/name`} value={e.name} /></td>
+                <td><V src={F} at={`/engines/${i}/name`} value={e.name} wrap /></td>
                 <td><V src={F} at={`/engines/${i}/version`} value={e.version}>{e.version ?? "not recorded"}</V></td>
                 <td><V src={F} at={`/engines/${i}/role`} value={e.role} /></td>
                 <td><V src={F} at={`/engines/${i}/active`} value={e.active}>{e.active ? "active" : "idle"}</V></td>

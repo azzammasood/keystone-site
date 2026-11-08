@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Page } from "@/components/Page";
 import { SourceAt, Unavailable } from "@/components/Status";
-import { V } from "@/components/V";
+import { V, breakable } from "@/components/V";
 import * as data from "@/lib/data";
 import { full } from "@/lib/format";
 
@@ -30,10 +30,10 @@ export default function LineagePage() {
       <li key={d.id} id={anchor(d.id)}>
         {d.cataloged ? (
           <Link href={`/catalog/#${anchor(d.id)}`}>
-            <V src={F} at={`/datasets/${i}/title`} value={d.title} />
+            <V src={F} at={`/datasets/${i}/title`} value={d.title} wrap />
           </Link>
         ) : (
-          <V src={F} at={`/datasets/${i}/title`} value={d.title} />
+          <V src={F} at={`/datasets/${i}/title`} value={d.title} wrap />
         )}
         <div className="sub">
           <V src={F} at={`/datasets/${i}/fields`} derive="len" value={d.fields.length} /> columns
@@ -83,7 +83,7 @@ export default function LineagePage() {
         {l.gate_path.tables.map((id, i) => (
           <li key={`${id}-${i}`} className={id.startsWith("job:") ? "job" : ""}>
             <V src={F} at={`/gate_path/tables/${i}`} value={id}>
-              {byId.get(id)?.title ?? id}
+              {breakable(byId.get(id)?.title ?? id)}
             </V>
           </li>
         ))}

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Page } from "@/components/Page";
 import { repoLabel } from "@/components/RadarTable";
 import { Source, Status } from "@/components/Status";
-import { V, ptr } from "@/components/V";
+import { V, breakable, ptr } from "@/components/V";
 import * as data from "@/lib/data";
 import { fixed, share } from "@/lib/format";
 
@@ -41,7 +41,7 @@ export default async function Project({ params }: Props) {
   const { env, row, i } = hit;
   const at = ptr("rows", i);
   return (
-    <Page eyebrow="repository" title={row.repo_name ? <V src={F} at={`${at}/repo_name`} value={row.repo_name} /> : "Repository"}>
+    <Page eyebrow="repository" title={row.repo_name ? <V src={F} at={`${at}/repo_name`} value={row.repo_name} wrap /> : "Repository"}>
       <Status file={F} env={env} />
       {/* Up to SHOWN packages inline; a longer list (some repositories publish hundreds) folds away. */}
       <p className="sub" style={{ marginTop: 14, overflowWrap: "anywhere" }}>
@@ -49,7 +49,7 @@ export default async function Project({ params }: Props) {
         {row.packages.slice(0, SHOWN).map((p, j) => (
           <V key={p} src={F} at={`${at}/packages/${j}`} value={p}>
             {j ? ", " : ""}
-            {p}
+            {breakable(p)}
           </V>
         ))}
       </p>
@@ -61,7 +61,7 @@ export default async function Project({ params }: Props) {
           {row.packages.slice(SHOWN).map((p, j) => (
             <V key={p} src={F} at={`${at}/packages/${j + SHOWN}`} value={p}>
               {j ? ", " : ""}
-              {p}
+              {breakable(p)}
             </V>
           ))}
         </details>
@@ -109,7 +109,7 @@ export default async function Project({ params }: Props) {
           <tbody role="rowgroup">
             {row.components.map((c, j) => (
               <tr role="row" key={c.name}>
-                <td role="cell" className="c-name"><V src={F} at={`${at}/components/${j}/name`} value={c.name} /></td>
+                <td role="cell" className="c-name"><V src={F} at={`${at}/components/${j}/name`} value={c.name} wrap /></td>
                 <td role="cell" className="c-data"><V src={F} at={`${at}/components/${j}/available`} value={c.available}>{c.available ? "available" : "not available"}</V></td>
                 <td role="cell" className="n c-sub" data-label="sub"><V src={F} at={`${at}/components/${j}/sub`} value={c.sub}>{fixed(c.sub)}</V></td>
                 <td role="cell" className="n c-weight" data-label="weight"><V src={F} at={`${at}/components/${j}/weight`} value={c.weight}>{fixed(c.weight)}</V></td>
@@ -122,10 +122,10 @@ export default async function Project({ params }: Props) {
       <h3>Criticality inputs</h3>
       <dl>
         {Object.entries(row.criticality_inputs).map(([k, v]) => (
-          <div key={k} style={{ display: "flex", gap: 12 }}>
+          <div key={k} style={{ display: "flex", flexWrap: "wrap", gap: "0 12px" }}>
             <dt style={{ color: "var(--mute)" }}>{k}</dt>
-            <dd style={{ margin: 0 }}>
-              <V src={F} at={ptr("rows", i, "criticality_inputs", k)} value={typeof v === "object" ? JSON.stringify(v) : (v as string | number | boolean | null)} />
+            <dd style={{ margin: 0, minWidth: 0 }}>
+              <V src={F} at={ptr("rows", i, "criticality_inputs", k)} value={typeof v === "object" ? JSON.stringify(v) : (v as string | number | boolean | null)} wrap />
             </dd>
           </div>
         ))}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Page } from "@/components/Page";
+import { breakable } from "@/components/V";
 import * as data from "@/lib/data";
 
 export const metadata: Metadata = { title: "Corrections and removal" };
@@ -17,7 +18,7 @@ export default function Corrections() {
       <div className="prose">
         <h3>Ask for a correction</h3>
         <p>
-          Open an issue on the pipeline repository: <a href={url}>{url}</a>. Name the repository or
+          Open an issue on the pipeline repository: <a href={url}>{breakable(url)}</a>. Name the repository or
           package, the page, and what is wrong. A wrong package-to-repository link, a misread signal or
           a missing event are all fair reports. Accepted link corrections are recorded in the
           pipeline as reviewed decisions and used from the next run.
