@@ -29,7 +29,7 @@ export function Gauges({ m }: { m: PipelineMetrics }) {
           <div className="v">
             <V src={F} at="/totals/bytes_parsed" value={t.bytes_parsed} title={`${full(t.bytes_parsed)} bytes`}>
               {megabytes(t.bytes_parsed)}
-            </V>
+            </V>{" "}
             <small>MB</small>
           </div>
           <div className="s">
@@ -41,7 +41,7 @@ export function Gauges({ m }: { m: PipelineMetrics }) {
           <div className="v">
             <V src={F} at="/freshness/lag_hours" value={f.lag_hours} title={`${f.lag_hours} hours`}>
               {Math.round(f.lag_hours)}
-            </V>
+            </V>{" "}
             <small>h</small>
           </div>
           <div className="s">
@@ -131,7 +131,7 @@ export function Lifetime({ m }: { m: PipelineMetrics }) {
           <div className="v">
             <V src={F} at="/lifetime/bytes_downloaded" value={l.bytes_downloaded} title={`${full(l.bytes_downloaded)} bytes`}>
               {gigabytes(l.bytes_downloaded)}
-            </V>
+            </V>{" "}
             <small>GB</small>
           </div>
           <div className="s">
