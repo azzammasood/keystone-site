@@ -126,6 +126,11 @@ h1.big .w { display: inline-block; }
 .landed .later { opacity: 1; }
 .tag { max-width: 540px; margin: 28px 0 0; }
 h1.title, h2 { margin: 0; font: 800 clamp(24px, 3.6vw, 46px)/1.18 var(--font-syne), sans-serif; text-transform: uppercase; letter-spacing: .015em; }
+/* An identifier title (repo, package, table) may wrap only between segments; when its longest
+   segment cannot fit the line, the font shrinks to fit it. --seg is that segment's measured
+   width in em (V.tsx), plus a 3% margin. Never a break inside a word. */
+h1.title { container-type: inline-size; }
+h1.title data[style] { font-size: min(1em, calc(100cqi / (var(--seg) * 1.03))); }
 h3 { font: 800 18px/1.25 var(--font-syne), sans-serif; margin: 40px 0 12px; text-transform: uppercase; letter-spacing: .02em; }
 .lede { max-width: 640px; margin: 18px 0 0; }
 .sub { color: var(--mute); font-size: 13px; margin: 0; }
@@ -314,6 +319,7 @@ footer.site a:hover { text-decoration-thickness: 2px; }
   .nav.open .links a { font-size: 14px; padding: 8px 0; }
   .gauges { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; }
   .g .v { white-space: normal; font-size: clamp(20px, 6vw, 28px); }
+  .g .v data { white-space: normal; } /* "not scored" wraps between its words in a narrow gauge */
   .cue { left: 16px; }
   .ghost div { grid-template-columns: 24px 1fr 50px; }
   .ghost div > :last-child { display: none; }
