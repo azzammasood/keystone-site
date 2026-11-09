@@ -115,7 +115,7 @@ section.dive {
 
 .eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); margin: 0 0 14px; }
 h1.big {
-  margin: 0; font: 800 clamp(30px, 5.6vw, 88px)/1.1 var(--font-syne), sans-serif; text-transform: uppercase;
+  margin: 0; font: 800 clamp(28px, 4.2vw, 64px)/1.2 var(--font-syne), sans-serif; text-transform: uppercase;
   letter-spacing: .01em; color: transparent; -webkit-text-stroke: 1px var(--accent);
 }
 h1.big .solid { color: var(--fg); -webkit-text-stroke: 0; }
@@ -155,7 +155,7 @@ h3 { font: 800 18px/1.25 var(--font-syne), sans-serif; margin: 40px 0 12px; text
 .cue i { display: block; width: 1px; height: 38px; background: linear-gradient(var(--accent), transparent); margin: 10px 0 0 4px; }
 
 .hero-num { display: flex; align-items: baseline; gap: 18px; margin: 26px 0 8px; flex-wrap: wrap; }
-.hero-num b { font: 800 clamp(48px, 7vw, 100px)/1.1 var(--font-syne), sans-serif; color: var(--accent); }
+.hero-num b { font: 800 clamp(40px, 5.4vw, 76px)/1.15 var(--font-syne), sans-serif; color: var(--accent); }
 .hero-num span { max-width: 360px; }
 
 .ghost { margin-top: 30px; max-width: 640px; border-top: 1px solid var(--line); }
@@ -308,7 +308,7 @@ footer.site a:hover { text-decoration-thickness: 2px; }
 @media (max-width: 900px) {
   section.dive, .page { padding: 90px 16px 56px; }
   h1.title, h2 { font-size: clamp(20px, 6.2vw, 34px); }
-  h1.big { font-size: clamp(28px, 9vw, 48px); }
+  h1.big { font-size: clamp(26px, 8vw, 40px); }
   .nav { padding: 14px 16px; gap: 14px; }
   .nav .links { display: none; }
   .nav .menu { display: inline-block; }
