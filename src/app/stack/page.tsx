@@ -4,23 +4,10 @@ import { Static, V } from "@/components/V";
 import * as data from "@/lib/data";
 import { day } from "@/lib/format";
 import { Architecture } from "./Architecture";
-import { LAYERS, type Icon, type Tool } from "./tools";
+import { LAYERS, tint, type Tool } from "./tools";
 
 export const metadata: Metadata = { title: "Tech stack" };
 const F = "pipeline_metrics.json";
-
-// Simple Icons brand colours are kept only where they read as graphics (>= 3:1) on the card
-// background of each theme; otherwise the logo takes the text colour.
-const lum = (hex: string) => {
-  const c = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
-  return 0.2126 * c[0]! + 0.7152 * c[1]! + 0.0722 * c[2]!;
-};
-const contrast = (a: string, b: string) => {
-  const [x, y] = [lum(a), lum(b)];
-  return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
-};
-const CARD = { dark: "04121d", light: "f5f7f6" };
-const tint = (icon: Icon, mode: keyof typeof CARD) => (contrast(icon.hex, CARD[mode]) >= 3 ? `#${icon.hex}` : "var(--fg)");
 
 function Logo({ tool }: { tool: Tool }) {
   if (!tool.icon) {

@@ -1,12 +1,33 @@
 // The pipeline from sources to this site, drawn with the theme's colours so it works in light and
 // dark. Solid accent boxes run in production; dashed boxes are the showcase and cloud rungs.
-type Kind = "src" | "prod" | "show";
-const W = 168, H = 54;
+import * as si from "simple-icons";
+import { tint, type Icon } from "./tools";
 
-function Box({ x, y, title, sub, kind }: { x: number; y: number; title: string; sub?: string; kind: Kind }) {
+type Kind = "src" | "prod" | "show";
+const IC = 20; // logo size in the chip on each box's top edge
+const W = 184, H = 54;
+
+// Logos sit in a chip straddling the box's top edge, clear of the title and subtitle.
+function Chip({ x, y, icons }: { x: number; y: number; icons: Icon[] }) {
+  const w = icons.length * (IC + 4) + 8, cx = x + W - w - 8, cy = y - IC / 2 - 4;
+  return (
+    <g className="arch-chip">
+      <rect x={cx} y={cy} width={w} height={IC + 8} rx={(IC + 8) / 2} />
+      {icons.map((ic, i) => (
+        <svg key={ic.title} x={cx + 6 + i * (IC + 4)} y={cy + 4} width={IC} height={IC} viewBox="0 0 24 24" aria-hidden="true">
+          <title>{ic.title}</title>
+          <path d={ic.path} className="arch-ic" style={{ ["--ic-dark" as string]: tint(ic, "dark"), ["--ic-light" as string]: tint(ic, "light") }} />
+        </svg>
+      ))}
+    </g>
+  );
+}
+
+function Box({ x, y, title, sub, kind, icons }: { x: number; y: number; title: string; sub?: string; kind: Kind; icons?: Icon[] }) {
   return (
     <g className={`arch-box ${kind}`}>
       <rect x={x} y={y} width={W} height={H} rx={6} />
+      {icons?.length ? <Chip x={x} y={y} icons={icons} /> : null}
       <text x={x + 12} y={y + (sub ? 22 : 32)} className="t">
         {title}
       </text>
@@ -33,7 +54,7 @@ export function Architecture() {
   return (
     <figure className="arch" data-static="architecture diagram">
       <div className="arch-scroll">
-        <svg viewBox="0 0 990 400" role="img" aria-labelledby="arch-title arch-desc">
+        <svg viewBox="0 0 1004 400" role="img" aria-labelledby="arch-title arch-desc">
           <title id="arch-title">Keystone architecture</title>
           <desc id="arch-desc">
             GH Archive, OSV and ecosyste.ms feed the ingest on GitHub Actions, which writes typed Parquet.
@@ -50,28 +71,28 @@ export function Architecture() {
           </defs>
 
           <text x={C[0]} y={18} className="lane">sources</text>
-          <Box x={C[0]!} y={30} title="GH Archive" sub="hourly public events" kind="src" />
+          <Box x={C[0]!} y={30} title="GH Archive" sub="hourly public events" kind="src" icons={[si.siGithub]} />
           <Box x={C[0]!} y={100} title="OSV" sub="known vulnerabilities" kind="src" />
           <Box x={C[0]!} y={170} title="ecosyste.ms" sub="packages to repositories" kind="src" />
 
           <text x={C[1]} y={18} className="lane">ingest</text>
-          <Box x={C[1]!} y={100} title="GitHub Actions" sub="keystone CLI, polite fetch" kind="prod" />
-          <Box x={C[1]!} y={170} title="Parquet (silver)" sub="era-aware parser" kind="prod" />
+          <Box x={C[1]!} y={100} title="GitHub Actions" sub="keystone CLI" kind="prod" icons={[si.siGithubactions, si.siPython]} />
+          <Box x={C[1]!} y={170} title="Parquet (silver)" sub="era-aware parser" kind="prod" icons={[si.siApacheparquet]} />
 
           <text x={C[2]} y={18} className="lane">rollup</text>
-          <Box x={C[2]!} y={30} title="DuckDB" sub="free rollup, daily" kind="prod" />
-          <Box x={C[2]!} y={170} title="Redpanda, Flink" sub="stream replay" kind="show" />
+          <Box x={C[2]!} y={30} title="DuckDB" sub="free rollup, daily" kind="prod" icons={[si.siDuckdb]} />
+          <Box x={C[2]!} y={170} title="Redpanda, Flink" sub="stream replay" kind="show" icons={[si.siApacheflink]} />
           <Box x={C[2]!} y={240} title="Iceberg" sub="Lakekeeper, RustFS" kind="show" />
 
           <text x={C[3]} y={18} className="lane">warehouse</text>
-          <Box x={C[3]!} y={30} title="dbt on DuckDB" sub="contracts, schemas" kind="prod" />
-          <Box x={C[3]!} y={100} title="BigQuery, Databricks" sub="cloud rungs at no cost" kind="show" />
-          <Box x={C[3]!} y={240} title="Spark, DuckDB" sub="read the Iceberg tables" kind="show" />
+          <Box x={C[3]!} y={30} title="dbt on DuckDB" sub="contracts, schemas" kind="prod" icons={[si.siDuckdb]} />
+          <Box x={C[3]!} y={100} title="BigQuery, Databricks" sub="cloud rungs at no cost" kind="show" icons={[si.siGooglebigquery, si.siDatabricks]} />
+          <Box x={C[3]!} y={240} title="Spark, DuckDB" sub="read the Iceberg tables" kind="show" icons={[si.siApachespark, si.siDuckdb]} />
 
           <text x={C[4]} y={18} className="lane">publish</text>
-          <Box x={C[4]!} y={30} title="Score and exports" sub="signals, never predictions" kind="prod" />
+          <Box x={C[4]!} y={30} title="Score and exports" sub="signals, not predictions" kind="prod" />
           <Box x={C[4]!} y={100} title="site-data release" sub="schema-checked JSON" kind="prod" />
-          <Box x={C[4]!} y={170} title="This site" sub="Next.js on GitHub Pages" kind="prod" />
+          <Box x={C[4]!} y={170} title="This site" sub="Next.js on GitHub Pages" kind="prod" icons={[si.siNextdotjs, si.siGithub]} />
 
           <Arrow from={r(C[0]!, 30)} to={l(C[1]!, 100)} />
           <Arrow from={r(C[0]!, 100)} to={l(C[1]!, 100)} />
@@ -88,7 +109,7 @@ export function Architecture() {
           <path className="arch-arrow" d={`M${C[4]! + W / 2} ${154} L${C[4]! + W / 2} ${166}`} markerEnd="url(#arch-head)" />
 
           <g className="arch-band">
-            <rect x={C[0]} y={322} width={970} height={62} rx={6} />
+            <rect x={C[0]} y={322} width={984} height={62} rx={6} />
             <text x={C[0]! + 14} y={348} className="t">alongside every stage</text>
             <text x={C[0]! + 14} y={368} className="s">
               lineage: OpenLineage to Marquez and DataHub · telemetry: OpenTelemetry, Prometheus, Grafana · orchestration: GitHub Actions, Airflow

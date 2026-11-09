@@ -34,7 +34,11 @@ export default function Home() {
 
   return (
     <>
-      <Sea bed={bed} hours={m.ok ? m.data.totals.date_range.source_hours : 0} />
+      <Sea
+        bed={bed}
+        hours={m.ok ? m.data.totals.date_range.source_hours : 0}
+        life={m.ok && m.data.lifetime ? { events: m.data.lifetime.events, days: m.data.lifetime.days } : null}
+      />
 
       <section className="dive" id="surface">
         <h1 className="big">
