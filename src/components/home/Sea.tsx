@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { INTRO_SEEN, Intro } from "./Intro";
+import { INTRO_SEEN, Intro, type IntroLife } from "./Intro";
 
 // The seabed: one ridge profile per lineage layer (published at the front), one bump per dataset
 // whose height is its column count plus its lineage links from metadata/lineage.json (square-root
@@ -10,7 +10,7 @@ import { INTRO_SEEN, Intro } from "./Intro";
 // section reveals. Paused when the tab is hidden; still for reduced motion.
 export type Bed = [layer: string, datasets: [title: string, fields: number][]][];
 
-export function Sea({ bed, hours }: { bed: Bed; hours: number }) {
+export function Sea({ bed, hours, life }: { bed: Bed; hours: number; life?: IntroLife | null }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const [intro, setIntro] = useState(false);
 
@@ -159,7 +159,7 @@ export function Sea({ bed, hours }: { bed: Bed; hours: number }) {
       <canvas id="sea" ref={canvas} aria-hidden="true" />
       <div className="ping" aria-hidden="true" />
       <div className="ping p2" aria-hidden="true" />
-      {intro ? <Intro hours={hours} /> : null}
+      {intro ? <Intro hours={hours} life={life} /> : null}
     </>
   );
 }

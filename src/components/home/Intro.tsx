@@ -10,7 +10,12 @@ const MAX_TILES = 240;
 const COLS = 19;
 export const INTRO_SEEN = "keystone-intro-seen";
 
-export function Intro({ hours }: { hours: number }) {
+// `life`: the history backfill's lifetime totals (pipeline_metrics.json#/lifetime); the counter
+// shows them when present, the daily ingest's hours otherwise. Tiles stand for hours either way.
+export type IntroLife = { events: number; days: number };
+
+export function Intro({ hours, life }: { hours: number; life?: IntroLife | null }) {
+  if (life) hours = Math.max(hours, life.days * 24);
   const per = Math.max(1, Math.ceil(hours / MAX_TILES));
   const count = Math.ceil(hours / per);
   const [at, setAt] = useState(1);
@@ -111,10 +116,25 @@ export function Intro({ hours }: { hours: number }) {
           GitHub&apos;s public activity is archived, <em>one file per hour</em>.
         </p>
         <small>
-          <data value={hours} data-src="pipeline_metrics.json#/totals/date_range/source_hours">
-            {hours.toLocaleString("en-US")}
-          </data>{" "}
-          hours read so far
+          {life ? (
+            <>
+              <data value={life.events} data-src="pipeline_metrics.json#/lifetime/events">
+                {life.events.toLocaleString("en-US")}
+              </data>{" "}
+              events across{" "}
+              <data value={life.days} data-src="pipeline_metrics.json#/lifetime/days">
+                {life.days.toLocaleString("en-US")}
+              </data>{" "}
+              days of history read so far
+            </>
+          ) : (
+            <>
+              <data value={hours} data-src="pipeline_metrics.json#/totals/date_range/source_hours">
+                {hours.toLocaleString("en-US")}
+              </data>{" "}
+              hours read so far
+            </>
+          )}
           {per > 1 ? <span data-static="tile scale"> · one tile per {per} hours</span> : null}
         </small>
       </div>
